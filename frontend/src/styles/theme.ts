@@ -5,9 +5,16 @@ export const theme: DefaultTheme = {
     textColor: 'black',
   },
   flex: {
-    flexCenter: ` 
-        display: flex;
-        justify-content: center;
-        align-items: center;`,
+    flexCenter: `
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  `,
+    flexCenterColumn: `
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  `,
   },
 };
