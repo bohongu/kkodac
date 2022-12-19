@@ -1,10 +1,12 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-
+import { Logger, Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeORMConfig } from 'config/typeorm.config';
+import { FileModule } from './file/file.module';
+import { UserModule } from './user/user.module';
+console.log(TypeORMConfig);
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  imports: [UserModule, FileModule, TypeOrmModule.forRoot(TypeORMConfig)],
+  providers: [Logger],
 })
 export class AppModule {}
