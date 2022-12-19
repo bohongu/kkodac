@@ -6,7 +6,7 @@ export const newAcountState = atom({
   default: false,
 });
 
-export const isLoggedIn = atom({
-  key: `isLoggedIn/${v1()}`,
-  default: false,
+export const loggedInState = atom({
+  key: `loggedIn/${v1()}`,
+  default: true,
 });

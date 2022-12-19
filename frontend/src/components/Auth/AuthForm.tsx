@@ -2,8 +2,8 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
-import { newAcountState } from './../recoil/atoms';
-import { theme } from './../styles/theme';
+import { newAcountState } from '../../recoil/atoms';
+import { theme } from '../../styles/theme';
 import { RiKakaoTalkFill } from 'react-icons/ri';
 import { AiOutlineGoogle } from 'react-icons/ai';
 

@@ -1,18 +1,12 @@
 import React from 'react';
-import styled from 'styled-components';
-import Auth from '../components/Auth';
+import Jeju from './../components/Jeju';
 
 const Home = () => {
   return (
-    <HomeWrapper>
-      <Auth />
-    </HomeWrapper>
+    <>
+      <Jeju />
+    </>
   );
 };
 
 export default Home;
-
-const HomeWrapper = styled.div`
-  height: 100vh;
-  ${(props) => (props) => props.theme.flex.flexCenter}
-`;
