@@ -1,13 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
+import { BsFillPencilFill, BsFillMoonFill } from 'react-icons/bs';
+import { FiLogOut } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 
 const Navigation = () => {
   return (
     <NavigationWrapper>
-      <div>글쓰기</div>
       <div>프로필</div>
-      <div>다크모드</div>
-      <div>로그아웃</div>
+      <div>
+        <BsFillPencilFill />
+      </div>
+      <div>
+        <BsFillMoonFill />
+      </div>
+      <div>
+        <FiLogOut />
+      </div>
     </NavigationWrapper>
   );
 };
