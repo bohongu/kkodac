@@ -15,10 +15,4 @@ export class UserService {
 
     return result;
   }
-
-  async findOne(userName: string) {
-    const result = await this.userRepository.findOne(userName);
-
-    return result;
-  }
 }

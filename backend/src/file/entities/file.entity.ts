@@ -21,11 +21,11 @@ export class File {
   @Column({
     name: 'file_id',
     comment: '파일 UUID',
-    type: 'binary',
-    length: 16,
+    type: 'varchar',
+    length: 50,
     nullable: false,
   })
-  fileId: string | Buffer = Buffer.from(replaceAll(uuidv4(), '-', ''), 'hex');
+  fileId: string = uuidv4();
 
   @CreateDateColumn({
     name: 'created_at',
@@ -33,16 +33,6 @@ export class File {
     type: 'datetime',
   })
   createdAt: Date;
-
-  @Index({ unique: false })
-  @Column({
-    name: 'deploy_name',
-    type: 'char',
-    length: 32,
-    nullable: false,
-    comment: '서버에 배포된 파일명 (UUID)',
-  })
-  deployName: string;
 
   @Index({ unique: false })
   @Column({

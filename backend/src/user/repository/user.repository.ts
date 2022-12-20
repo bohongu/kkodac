@@ -27,18 +27,4 @@ export class UserRepository {
       throw Error(error);
     }
   }
-
-  async findOne(userName: string) {
-    console.log(userName);
-    const result = await this.userRepository
-      .createQueryBuilder('user')
-      .where({ userName: userName })
-      .getOne();
-
-    if (result) {
-      return result;
-    } else {
-      throw new Error('해당하는 데이터가 없습니다');
-    }
-  }
 }

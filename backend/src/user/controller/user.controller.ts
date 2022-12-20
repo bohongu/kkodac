@@ -55,23 +55,4 @@ export class UserController {
       throw new Error('서버 측 에러');
     }
   }
-
-  @Get()
-  async findOne(@Body() userName: string, @Res() res: Response) {
-    console.log(userName);
-    const result = await this.userService.findOne(userName);
-    if (result) {
-      this.logger.debug(
-        {
-          message: 'login',
-          query: { id: userName },
-          result: result,
-        },
-        LABEL,
-      );
-      res.status(HttpStatus.OK).json({ massage: 'OK', data: { ...result } });
-    } else {
-      throw new Error('서버 측 에러');
-    }
-  }
 }
