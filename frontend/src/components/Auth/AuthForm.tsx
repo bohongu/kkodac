@@ -6,6 +6,8 @@ import { newAcountState } from '../../recoil/atoms';
 import { theme } from '../../styles/theme';
 import { RiKakaoTalkFill } from 'react-icons/ri';
 import { AiOutlineGoogle } from 'react-icons/ai';
+import { useMutation } from 'react-query';
+import { signUpAtom } from '../../api/api';
 
 interface IAuthForm {
   userId: string;
@@ -29,6 +31,18 @@ const Auth = () => {
     reset();
   };
 
+  const signUp = useMutation(signUpAtom, {
+    onMutate: (variable) => {
+      console.log('onMutate', variable);
+    },
+    onSuccess: (variables) => {
+      console.log('success', variables);
+    },
+    onSettled: () => {
+      console.log('end');
+    },
+  });
+
   const authSubmitHandler = ({
     userId,
     password,
@@ -40,7 +54,7 @@ const Auth = () => {
         setError('confirm', { message: '비밀번호가 일치하지 않습니다' });
       } else {
         /* 회원가입 */
-        console.log('회원가입', userId, password, confirm, nickname);
+        signUp.mutate({ userName: userId, password, nickname });
         reset();
       }
     } else {

@@ -8,5 +8,5 @@ export const newAcountState = atom({
 
 export const loggedInState = atom({
   key: `loggedIn/${v1()}`,
-  default: true,
+  default: false,
 });
