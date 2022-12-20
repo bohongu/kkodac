@@ -10,6 +10,7 @@ import {
   LoggerService,
   HttpStatus,
   Get,
+  Param,
 } from '@nestjs/common';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UserService } from '../service/user.service';
@@ -25,7 +26,7 @@ export class UserController {
     @Inject(Logger) private readonly logger: LoggerService,
   ) {}
 
-  @Post('/signUp')
+  @Post()
   @UseInterceptors(FileInterceptor(''))
   async create(
     @Body()
@@ -55,8 +56,8 @@ export class UserController {
     }
   }
 
-  @Get('/logIn')
-  async findOne(@Body('userName') userName: string, @Res() res: Response) {
+  @Get()
+  async findOne(@Body() userName: string, @Res() res: Response) {
     console.log(userName);
     const result = await this.userService.findOne(userName);
     if (result) {

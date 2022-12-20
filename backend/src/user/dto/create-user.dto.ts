@@ -9,13 +9,13 @@ import {
 
 export class CreateUserDto {
   @IsString()
-  @Matches(/^[^\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]{5,20}$/, {
-    message: '아이디는 5-20자로 입력해주세요 (특수문자 불가)',
+  @Matches(/^[a-zA-Z][0-9a-zA-Z]{4,20}$/, {
+    message: '아이디는 5-20자로 입력해주세요 (특수문자, 한글 불가)',
   })
   userName: string;
 
   @IsString()
-  @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/, {
+  @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{7,20}$/, {
     message: '비밀번호는 8-20자로 입력해주세요 (영문자 + 숫자 + 특수문자)',
   })
   password: string;

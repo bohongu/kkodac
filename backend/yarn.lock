@@ -2444,6 +2444,32 @@
     "consola" "^2.15.0"
     "node-fetch" "^2.6.1"
 
+"@paycoq/code@^1.0.0":
+  "integrity" "sha512-lfgQQfngWv9yMZQ0R7mcqD8vIDKvsWGXqov9MuQABIVtbBbIMqpa2paPFXTNUZWCmvELIpe2Cp/KN8BTJpqdtA=="
+  "resolved" "http://3.39.238.51:4873/@paycoq%2fcode/-/code-1.0.0.tgz"
+  "version" "1.0.0"
+  dependencies:
+    "@nestjs/common" "^9.2.1"
+
+"@paycoq/error@^1.0.6":
+  "integrity" "sha512-iUu7DP3PdpIVsDkgKiS9yiq7X7y91b3UrVmAkBi6i14QVOnx8L6SiHKH4hlcyXW29xUcY6vQQik9Sy3hq2dCiQ=="
+  "resolved" "http://3.39.238.51:4873/@paycoq%2ferror/-/error-1.0.6.tgz"
+  "version" "1.0.6"
+  dependencies:
+    "@nestjs/common" "^9.2.1"
+    "@paycoq/code" "^1.0.0"
+    "@paycoq/utils" "^1.0.0"
+
+"@paycoq/utils@^1.0.0", "@paycoq/utils@^1.0.7":
+  "integrity" "sha512-Etx2wFzcAenPMvoKK78JJ/xVtOj/YMzz3ZsbefxY5Fw1O0N9nKFpypzIkD1MtXHKjoHRuwRc0IGRjxVuhzPD7A=="
+  "resolved" "http://3.39.238.51:4873/@paycoq%2futils/-/utils-1.0.7.tgz"
+  "version" "1.0.7"
+  dependencies:
+    "@nestjs/common" "^9.2.1"
+    "@paycoq/error" "^1.0.6"
+    "express" "^4.18.2"
+    "typeorm" "^0.3.11"
+
 "@serverless/dashboard-plugin@^6.2.2":
   "integrity" "sha512-h3zOprpuWZCdAP7qoOKT2nboB+AaxMkGoSzOD0jIBpt9s0cXqLE2VFjR2vKn8Cvam47Qa3XYnT2/XN6tR6rZgQ=="
   "resolved" "https://registry.npmjs.org/@serverless/dashboard-plugin/-/dashboard-plugin-6.2.2.tgz"
@@ -5412,7 +5438,7 @@
     "jest-message-util" "^28.1.3"
     "jest-util" "^28.1.3"
 
-"express@4.18.2":
+"express@^4.18.2", "express@4.18.2":
   "integrity" "sha512-5/PsL6iGPdfQ/lKM1UuielYgv3BUoJfz1aUwU9vHZ+J7gyvwdQXFEBIEIaxeGf0GIcreATNyBExtalisDbuMqQ=="
   "resolved" "https://registry.npmjs.org/express/-/express-4.18.2.tgz"
   "version" "4.18.2"

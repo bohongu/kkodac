@@ -29,8 +29,13 @@ functions:
     #   }
     events:
       - http:
-          method: any
-          path: /{any+}
+          method: post
+          path: /kkodac
+          cors: true
+      - http:
+          method: get
+          path: /kkodac
+          cors: true
 
 package:
   individually: true

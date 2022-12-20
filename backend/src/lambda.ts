@@ -5,21 +5,17 @@ import { createServer, proxy } from 'aws-serverless-express';
 import { eventContext } from 'aws-serverless-express/middleware';
 
 import { NestFactory } from '@nestjs/core';
+import { ExpressAdapter } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 
 import * as express from 'express';
-import helmet from 'helmet';
-import * as bodyParser from 'body-parser';
-import { ExpressAdapter } from '@nestjs/platform-express';
 import { winstonLogger } from './utils/winston.util';
-import { ipSetting } from './utils/ipSetting.util';
 
 const binaryMimeTypes: string[] = [];
 
 let cachedServer: Server;
-
-console.log(`is offline : ${process.env.IS_OFFLINE}`);
 
 async function bootstrapServer(): Promise<Server> {
   if (!cachedServer) {
@@ -31,16 +27,11 @@ async function bootstrapServer(): Promise<Server> {
         logger: winstonLogger,
       },
     );
+    nestApp.enableCors();
     nestApp.use(eventContext());
 
     //class validator config
     nestApp.useGlobalPipes(new ValidationPipe({ transform: true }));
-
-    nestApp.use(bodyParser.json({ limit: '50mb' }));
-    nestApp.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-
-    nestApp.use(helmet());
-    nestApp.enableCors();
 
     await nestApp.init();
     cachedServer = createServer(expressApp, undefined, binaryMimeTypes);
@@ -48,24 +39,10 @@ async function bootstrapServer(): Promise<Server> {
   return cachedServer;
 }
 
+const insertAt = (str: string | any[], sub: string, pos: number) =>
+  `${str.slice(0, pos)}${sub}${str.slice(pos)}`;
+
 export const handler: Handler = async (event: any, context: Context) => {
-  await config(event);
   cachedServer = await bootstrapServer();
   return proxy(cachedServer, event, context, 'PROMISE').promise;
 };
-
-async function config(event: any) {
-  try {
-    if ('Scheduled Event' === event['detail-type']) {
-      event.headers = {
-        'user-agent': 'warmer',
-        sourceip: 'warmer',
-      };
-    } else {
-      await ipSetting(event);
-    }
-  } catch (error) {
-    event.headers = { sourceip: 'no-identification' };
-    throw new Error('config 에러');
-  }
-}

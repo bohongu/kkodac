@@ -14,6 +14,7 @@ export class UserRepository {
   ) {}
 
   async create(createUserDto: CreateUserDto, req: Request) {
+    console.log(createUserDto);
     try {
       const entity = this.userRepository.create({
         ...createUserDto,
@@ -23,7 +24,7 @@ export class UserRepository {
 
       return result;
     } catch (error) {
-      throw error(error);
+      throw Error(error);
     }
   }
 
@@ -31,7 +32,7 @@ export class UserRepository {
     console.log(userName);
     const result = await this.userRepository
       .createQueryBuilder('user')
-      .where({ user_name: userName })
+      .where({ userName: userName })
       .getOne();
 
     if (result) {

@@ -48,6 +48,7 @@ export class User {
   })
   password: string;
 
+  @Index({ unique: true })
   @Column({
     name: 'user_name',
     type: 'varchar',
