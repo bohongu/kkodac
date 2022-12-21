@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import Modal from '../components/UI/Modal';
 
 const Profile = () => {
   const { userId } = useParams();
@@ -20,6 +21,7 @@ const Profile = () => {
         </Introduce>
         <UserInfoBtn>프로필 변경</UserInfoBtn>
         <Followers>구독 : 4</Followers>
+        <Modal>하잉</Modal>
       </UserInfo>
       <PostsSection>
         <Posts>
