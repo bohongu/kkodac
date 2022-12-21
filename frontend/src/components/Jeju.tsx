@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Map from './Main/Map';
 import styled from 'styled-components';
 import Navigation from './Main/Navigation';
-import Header from './Main/Header';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai';
 
@@ -36,9 +35,8 @@ const Jeju = () => {
   };
   return (
     <MainWrapper>
-      <Navigation />
       <MainSection>
-        <Header />
+        <Navigation />
         <Map />
         <SliderSection>
           <AnimatePresence initial={false} custom={backward}>
@@ -74,8 +72,6 @@ export default Jeju;
 const MainWrapper = styled.div``;
 
 const MainSection = styled.div`
-  border: 1px solid blue;
-  margin-left: 5%;
   display: flex;
   flex-direction: column;
   align-items: center;

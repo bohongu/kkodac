@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { loggedInState } from '../recoil/atoms';
 import Profile from './Profile';
+import Tour from './Tour';
 
 const Router = () => {
   const isLoggedIn = useRecoilValue(loggedInState);
@@ -15,6 +16,7 @@ const Router = () => {
           <>
             <Route path="/" element={<Home />} />
             <Route path="/profile/:userId" element={<Profile />} />
+            <Route path="/tour/:region" element={<Tour />} />
           </>
         ) : (
           <Route path="/" element={<Auth />} />
