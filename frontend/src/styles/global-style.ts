@@ -15,4 +15,13 @@ export const GlobalStyle = createGlobalStyle`
   button {
     cursor: pointer;
   }
+
+  a { text-decoration: none; color: black;
+    &:visited { text-decoration: none; } 
+    &:hover { text-decoration: none; }
+    &:focus { text-decoration: none; }
+    &:hover, a:active { text-decoration: none; }
+  }
+
+  
 `;

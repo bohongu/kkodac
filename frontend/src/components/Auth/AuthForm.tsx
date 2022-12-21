@@ -1,8 +1,8 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
-import { newAcountState } from '../../recoil/atoms';
+import { loggedInState, newAcountState } from '../../recoil/atoms';
 import { theme } from '../../styles/theme';
 import { RiKakaoTalkFill } from 'react-icons/ri';
 import { AiOutlineGoogle } from 'react-icons/ai';
@@ -17,6 +17,7 @@ interface IAuthForm {
 }
 
 const Auth = () => {
+  const loginState = useSetRecoilState(loggedInState);
   const [newAccount, setNewAccount] = useRecoilState(newAcountState);
   const {
     register,
@@ -59,6 +60,7 @@ const Auth = () => {
       }
     } else {
       /* 로그인 */
+      loginState(true);
       console.log('로그인', userId, password);
       reset();
     }

@@ -6,20 +6,29 @@ import { useRecoilValue } from 'recoil';
 import { loggedInState } from '../recoil/atoms';
 import Profile from './Profile';
 import Tour from './Tour';
+import Navigation from '../components/ui/Navigation';
+import Subscription from './Subscription';
+import NotFound from './NotFound';
 
 const Router = () => {
   const isLoggedIn = useRecoilValue(loggedInState);
   return (
     <BrowserRouter>
+      {isLoggedIn && <Navigation />}
       <Routes>
         {isLoggedIn ? (
           <>
             <Route path="/" element={<Home />} />
             <Route path="/profile/:userId" element={<Profile />} />
             <Route path="/tour/:region" element={<Tour />} />
+            <Route path="/subscribe/:userId" element={<Subscription />} />
+            <Route path="/*" element={<NotFound />} />
           </>
         ) : (
-          <Route path="/" element={<Auth />} />
+          <>
+            <Route path="/" element={<Auth />} />
+            <Route path="/*" element={<NotFound />} />
+          </>
         )}
       </Routes>
     </BrowserRouter>

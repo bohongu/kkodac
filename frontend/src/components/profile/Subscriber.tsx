@@ -1,8 +1,10 @@
-import { AnimatePresence, motion } from 'framer-motion';
 import React from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { modalState } from './../../recoil/atoms';
+import { AiOutlineSearch } from 'react-icons/ai';
+import { SlUserUnfollow } from 'react-icons/sl';
 
 const modalVarints = {
   hidden: (exit: boolean) => ({
@@ -32,7 +34,37 @@ const Subscriber = () => {
             exit="exit"
             custom={modal.exit}
           >
-            ㅎㅇ
+            <Search>
+              <label>
+                <Input />
+                <Glass>
+                  <AiOutlineSearch />
+                </Glass>
+              </label>
+            </Search>
+            <Lists>
+              <List>
+                <Img></Img>
+                <Nickname>정재홍</Nickname>
+                <UnFollow>
+                  <SlUserUnfollow />
+                </UnFollow>
+              </List>
+              <List>
+                <Img></Img>
+                <Nickname>엄지혜</Nickname>
+                <UnFollow>
+                  <SlUserUnfollow />
+                </UnFollow>
+              </List>
+              <List>
+                <Img></Img>
+                <Nickname>엄지원</Nickname>
+                <UnFollow>
+                  <SlUserUnfollow />
+                </UnFollow>
+              </List>
+            </Lists>
           </FollowingModal>
         </>
       )}
@@ -62,4 +94,78 @@ const FollowingModal = styled(motion.div)`
   left: 5vh;
   background: white;
   z-index: 30;
+`;
+
+const Search = styled.div`
+  height: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  label {
+    width: 90%;
+    position: relative;
+  }
+`;
+
+const Input = styled.input`
+  height: 45px;
+  width: 100%;
+  padding: 0 15px;
+  border: none;
+  border-radius: 10px;
+  background: white;
+  border: 1px solid black;
+  color: black;
+  margin-bottom: 10px;
+`;
+
+const Glass = styled.div`
+  display: flex;
+  align-items: center;
+  height: 45px;
+  position: absolute;
+  top: 0;
+  right: 5px;
+  border: none;
+  background: none;
+  font-size: 25px;
+  color: black;
+`;
+
+const Lists = styled.ul`
+  display: flex;
+  flex-direction: column;
+`;
+
+const List = styled.li`
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  margin: 2.5px;
+  border-radius: 10px;
+`;
+
+const Img = styled.div`
+  border: 1px solid black;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+`;
+
+const Nickname = styled.div`
+  width: 80%;
+  padding-left: 10px;
+`;
+
+const UnFollow = styled.button`
+  ${(props) => props.theme.flex.flexCenter}
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: none;
+  background: none;
+  font-size: 20px;
 `;

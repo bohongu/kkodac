@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Map from './Map';
 import styled from 'styled-components';
-import Navigation from './Navigation';
+import Navigation from '../ui/Navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai';
 
@@ -35,58 +35,54 @@ const Jeju = () => {
   };
   return (
     <MainWrapper>
-      <MainSection>
-        <Navigation />
-        <Map />
-        <SliderSection>
-          <AnimatePresence initial={false} custom={backward}>
-            <Title>맛집</Title>
-            <Row
-              variants={sliderVariants}
-              custom={backward}
-              initial="right"
-              animate="center"
-              exit="left"
-              key={index}
-              transition={{ type: 'tween', duration: 1 }}
-            >
-              <SlideL onClick={decrease}>
-                <AiOutlineArrowLeft />
-              </SlideL>
-              {DUMMY.slice(offset * index, offset * index + offset).map((i) => (
-                <Box key={i}>{i}</Box>
-              ))}
-              <SlideR onClick={increase}>
-                <AiOutlineArrowRight />
-              </SlideR>
-            </Row>
-          </AnimatePresence>
-        </SliderSection>
-      </MainSection>
+      <Map />
+      <SliderSection>
+        <AnimatePresence initial={false} custom={backward}>
+          <Title>맛집</Title>
+          <Row
+            variants={sliderVariants}
+            custom={backward}
+            initial="right"
+            animate="center"
+            exit="left"
+            key={index}
+            transition={{ type: 'tween', duration: 1 }}
+          >
+            <SlideL onClick={decrease}>
+              <AiOutlineArrowLeft />
+            </SlideL>
+            {DUMMY.slice(offset * index, offset * index + offset).map((i) => (
+              <Box key={i}>{i}</Box>
+            ))}
+            <SlideR onClick={increase}>
+              <AiOutlineArrowRight />
+            </SlideR>
+          </Row>
+        </AnimatePresence>
+      </SliderSection>
     </MainWrapper>
   );
 };
 
 export default Jeju;
 
-const MainWrapper = styled.div``;
-
-const MainSection = styled.div`
+const MainWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 150vh;
+  margin-top: 80px;
 `;
 
 const SliderSection = styled.div`
   position: relative;
   margin: 30px;
   width: 95%;
+  height: 400px;
 `;
 
 const Title = styled.h1`
   font-size: 30px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 `;
 
 const Row = styled(motion.div)`

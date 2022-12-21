@@ -13,10 +13,6 @@ const PostSection = () => {
         <Post>1</Post>
         <Post>1</Post>
         <Post>1</Post>
-        <Post>1</Post>
-        <Post>1</Post>
-        <Post>1</Post>
-        <Post>1</Post>
       </Posts>
     </PostWrapper>
   );

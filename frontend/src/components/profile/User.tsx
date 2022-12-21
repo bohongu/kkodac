@@ -1,30 +1,58 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useSetRecoilState } from 'recoil';
 import { modalState } from '../../recoil/atoms';
 
 const UserSection = () => {
   const setModal = useSetRecoilState(modalState);
+  const [editProfile, setEditProfile] = useState(false);
+  const setEditProfileHandler = () => {
+    setEditProfile(true);
+  };
+  const closeEditProfileHandler = () => {
+    setEditProfile(false);
+  };
   return (
     <UserWrapper>
       <UserImageSection>
         <UserImage />
         <UserImageBtn>O</UserImageBtn>
       </UserImageSection>
-      <UserId>엄지혜</UserId>
-      <Nickname>테스트닉네임</Nickname>
-      <Introduce>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem
-        autem aperiam quis fuga omnis quas cumque officia eveniet ratione minima
-        necessitatibus illo fugiat sint ad eum esse debitis, ab illum?
-      </Introduce>
-      <UserInfoBtn>프로필 변경</UserInfoBtn>
-      <Followers
-        onClick={() => {
-          setModal({ showModal: true, exit: false });
-        }}
-      >
-        구독 : 4
+      {!editProfile ? (
+        <>
+          <UserId>엄지혜</UserId>
+          <Nickname>테스트닉네임</Nickname>
+          <Introduce>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem
+            autem aperiam quis fuga omnis quas cumque officia eveniet ratione
+            minima necessitatibus illo fugiat sint ad eum esse debitis, ab
+            illum?
+          </Introduce>
+        </>
+      ) : (
+        <>
+          <label htmlFor="nickname">Nickname</label>
+          <input id="nickname" />
+          <label htmlFor="introduce">Bio</label>
+          <textarea id="introduce" />
+          <div>
+            <button>Save</button>
+            <button onClick={closeEditProfileHandler}>Cancel</button>
+          </div>
+        </>
+      )}
+      {!editProfile && (
+        <UserInfoBtn onClick={setEditProfileHandler}>프로필 변경</UserInfoBtn>
+      )}
+      <Followers>
+        구독 :
+        <span
+          onClick={() => {
+            setModal({ showModal: true, exit: false });
+          }}
+        >
+          4
+        </span>
       </Followers>
     </UserWrapper>
   );
@@ -47,7 +75,7 @@ const UserImageSection = styled.div`
 `;
 
 const UserImage = styled.img`
-  border: 1px solid black;
+  border: 0.5px solid red;
   width: 300px;
   height: 300px;
   border-radius: 50%;
@@ -75,4 +103,9 @@ const Introduce = styled.div``;
 
 const UserInfoBtn = styled.button``;
 
-const Followers = styled.div``;
+const Followers = styled.span`
+  span {
+    margin-left: 5px;
+    cursor: pointer;
+  }
+`;

@@ -4,25 +4,34 @@ import { CgProfile } from 'react-icons/cg';
 import { BsFillPencilFill } from 'react-icons/bs';
 import { GiThreeFriends } from 'react-icons/gi';
 import { AiOutlineLogout } from 'react-icons/ai';
+import { Link, useNavigate } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
+import { loggedInState } from '../../recoil/atoms';
 
 const Dropdown = () => {
+  const logout = useSetRecoilState(loggedInState);
+  const navigate = useNavigate();
+  const logoutHandler = () => {
+    logout(false);
+    navigate('/');
+  };
   return (
     <DropdownWrapper>
-      <Menus>
+      <Menus to="/profile/재홍">
         <CgProfile /> &nbsp; 프로필
       </Menus>
-      <Menus>
+      <Menus to="/profile/재홍">
         <BsFillPencilFill />
         &nbsp; 글쓰기
       </Menus>
-      <Menus>
+      <Menus to="/subscribe/재홍">
         <GiThreeFriends />
         &nbsp; 구독
       </Menus>
-      <Menus>
+      <Logout onClick={logoutHandler}>
         <AiOutlineLogout />
         &nbsp; 로그아웃
-      </Menus>
+      </Logout>
     </DropdownWrapper>
   );
 };
@@ -36,17 +45,24 @@ const DropdownWrapper = styled.div`
   box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px,
     rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
   width: 150px;
-  top: 20px;
+  top: 30px;
   background: white;
   border-radius: 10px;
 `;
 
-const Menus = styled.button`
-  display: flex;
+const Menus = styled(Link)`
+  ${(props) => props.theme.flex.flexCenter}
   justify-content: flex-start;
-  align-items: center;
-  font-size: 16px;
-  background: none;
-  border: none;
-  margin: 5px 0;
+  font-size: 15px;
+  width: 100%;
+  padding: 8px;
+`;
+
+const Logout = styled.div`
+  ${(props) => props.theme.flex.flexCenter}
+  justify-content: flex-start;
+  font-size: 15px;
+  width: 100%;
+  padding: 8px;
+  color: black;
 `;
