@@ -22,10 +22,6 @@ const Profile = () => {
         <Followers>구독 : 4</Followers>
       </UserInfo>
       <PostsSection>
-        <PostNav>
-          <MyPost>내 게시물</MyPost>
-          <FollowerPost>팔로잉</FollowerPost>
-        </PostNav>
         <Posts>
           <Post>1</Post>
           <Post>1</Post>
@@ -104,18 +100,6 @@ const Introduce = styled.div``;
 const UserInfoBtn = styled.button``;
 
 const Followers = styled.div``;
-
-const PostNav = styled.nav`
-  display: flex;
-  padding: 10px 50px;
-`;
-
-const MyPost = styled.button`
-  border-bottom: 1px solid black;
-  padding: 10px;
-  padding-bottom: 5px;
-  margin-right: 10px;
-`;
 
 const FollowerPost = styled.button`
   border-bottom: 1px solid black;

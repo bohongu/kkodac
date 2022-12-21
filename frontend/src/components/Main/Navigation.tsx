@@ -1,10 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { BsFillPencilFill } from 'react-icons/bs';
-import { CgProfile } from 'react-icons/cg';
-import { FiLogOut } from 'react-icons/fi';
-import { FaUserFriends } from 'react-icons/fa';
+import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
 import { motion, useAnimation, useScroll } from 'framer-motion';
+import Dropdown from './Dropdown';
 
 const navVariants = {
   top: { backgroundColor: 'rgba(0,0,0,0)' },
@@ -17,9 +15,14 @@ const logVariants = {
 };
 
 const Navigation = () => {
+  const [drop, setDrop] = useState(false);
   const navAnimation = useAnimation();
   const logAnimation = useAnimation();
   const { scrollY } = useScroll();
+
+  const toggleDropHandler = () => {
+    setDrop((prev) => !prev);
+  };
 
   useEffect(() => {
     scrollY.onChange(() => {
@@ -42,19 +45,14 @@ const Navigation = () => {
       <Logo variants={logVariants} animate={logAnimation} initial="top">
         꼬닥꼬닥
       </Logo>
-      <Nav>
-        <NavBtn>
-          <CgProfile />
-        </NavBtn>
-        <NavBtn>
-          <BsFillPencilFill />
-        </NavBtn>
-        <NavBtn>
-          <FaUserFriends />
-        </NavBtn>
-        <NavBtn>
-          <FiLogOut />
-        </NavBtn>
+      <Nav
+        variants={logVariants}
+        animate={logAnimation}
+        initial="top"
+        onClick={toggleDropHandler}
+      >
+        반가워요, 엄지혜님{drop ? <IoMdArrowDropup /> : <IoMdArrowDropdown />}
+        {drop && <Dropdown />}
       </Nav>
     </NavigationWrapper>
   );
@@ -76,17 +74,9 @@ const Logo = styled(motion.div)`
   color: white;
 `;
 
-const Nav = styled.nav`
+const Nav = styled(motion.nav)`
   display: flex;
   justify-content: space-between;
-`;
-
-const NavBtn = styled.button`
-  ${(props) => props.theme.flex.flexCenter}
-  font-size: 25px;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin-left: 25px;
-  border: none;
+  position: relative;
+  cursor: pointer;
 `;
