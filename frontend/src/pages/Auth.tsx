@@ -1,18 +1,12 @@
 import React from 'react';
-import styled from 'styled-components';
-import AuthForm from '../components/Auth/AuthForm';
+import AuthScreen from './../components/auth/AuthScreen';
 
 const Auth = () => {
   return (
-    <AuthWrapper>
-      <AuthForm />
-    </AuthWrapper>
+    <>
+      <AuthScreen />
+    </>
   );
 };
 
 export default Auth;
-
-const AuthWrapper = styled.div`
-  height: 100vh;
-  ${(props) => (props) => props.theme.flex.flexCenter}
-`;

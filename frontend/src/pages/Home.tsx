@@ -1,10 +1,10 @@
 import React from 'react';
-import Jeju from './../components/Jeju';
+import HomeScreen from '../components/main/HomeScreen';
 
 const Home = () => {
   return (
     <>
-      <Jeju />
+      <HomeScreen />
     </>
   );
 };

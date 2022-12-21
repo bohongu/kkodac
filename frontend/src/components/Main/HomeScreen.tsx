@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Map from './Main/Map';
+import Map from './Map';
 import styled from 'styled-components';
-import Navigation from './Main/Navigation';
+import Navigation from './Navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai';
 
