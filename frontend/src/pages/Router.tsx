@@ -9,6 +9,7 @@ import Tour from './Tour';
 import Navigation from '../components/ui/Navigation';
 import Subscription from './Subscription';
 import NotFound from './NotFound';
+import Write from './Write';
 
 const Router = () => {
   const isLoggedIn = useRecoilValue(loggedInState);
@@ -19,6 +20,7 @@ const Router = () => {
         {isLoggedIn ? (
           <>
             <Route path="/" element={<Home />} />
+            <Route path="/write" element={<Write />} />
             <Route path="/profile/:userId" element={<Profile />} />
             <Route path="/tour/:region" element={<Tour />} />
             <Route path="/subscribe/:userId" element={<Subscription />} />

@@ -1,12 +1,10 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import User from './User';
 import Posts from './Posts';
 import Subscriber from './Subscriber';
 
 const ProfileScreen = () => {
-  const { userId } = useParams();
   return (
     <ProfileWrapper>
       <User />

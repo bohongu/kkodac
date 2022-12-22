@@ -1,9 +1,12 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import TourScreen from '../components/tour/TourScreen';
 
 const Tour = () => {
-  const { region } = useParams();
-  return <div>{region} 페이지</div>;
+  return (
+    <>
+      <TourScreen />
+    </>
+  );
 };
 
 export default Tour;
