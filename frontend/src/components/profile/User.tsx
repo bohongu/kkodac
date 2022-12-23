@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useSetRecoilState } from 'recoil';
-import { modalState } from '../../recoil/atoms';
+import { subscriberModalState } from './../../recoil/atoms';
 
 const UserSection = () => {
-  const setModal = useSetRecoilState(modalState);
+  const setModal = useSetRecoilState(subscriberModalState);
   const [editProfile, setEditProfile] = useState(false);
   const setEditProfileHandler = () => {
     setEditProfile(true);

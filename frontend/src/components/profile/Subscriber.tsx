@@ -2,9 +2,9 @@ import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
-import { modalState } from './../../recoil/atoms';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { SlUserUnfollow } from 'react-icons/sl';
+import { subscriberModalState } from './../../recoil/atoms';
 
 const modalVarints = {
   hidden: (exit: boolean) => ({
@@ -17,7 +17,7 @@ const modalVarints = {
 };
 
 const Subscriber = () => {
-  const [modal, setModal] = useRecoilState(modalState);
+  const [modal, setModal] = useRecoilState(subscriberModalState);
   return (
     <AnimatePresence initial={false}>
       {modal.showModal && (

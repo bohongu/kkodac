@@ -3,6 +3,9 @@ import Map from './Map';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai';
+import PostModal from '../ui/PostModal';
+import { useRecoilState } from 'recoil';
+import { postModalState } from '../../recoil/atoms';
 
 const DUMMY = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
@@ -36,7 +39,7 @@ const InformationVariants = {
   hover: {
     opacity: 1,
     transition: {
-      delay: 0.4,
+      delay: 0.5,
     },
   },
 };
@@ -44,6 +47,10 @@ const InformationVariants = {
 const Jeju = () => {
   const [index, setIndex] = useState(0);
   const [backward, setBackward] = useState(false);
+  const [modal, setModal] = useRecoilState(postModalState);
+  const showPostModal = () => {
+    setModal(true);
+  };
   const offset = 5;
   const totalData = DUMMY.length;
   const maxIndex = Math.ceil(totalData / offset) - 1;
@@ -75,10 +82,12 @@ const Jeju = () => {
             </SlideL>
             {DUMMY.slice(offset * index, offset * index + offset).map((i) => (
               <ThumbNail
+                onClick={showPostModal}
                 variants={ThumbNailVariants}
                 initial="initial"
                 whileHover="hover"
                 key={i}
+                layoutId={i + ''}
               >
                 <Information variants={InformationVariants}>
                   <h1>제목입니다</h1>
@@ -93,6 +102,7 @@ const Jeju = () => {
           </Row>
         </AnimatePresence>
       </SliderSection>
+      <AnimatePresence>{modal ? <PostModal /> : null}</AnimatePresence>
     </MainWrapper>
   );
 };

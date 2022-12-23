@@ -11,7 +11,12 @@ export const loggedInState = atom({
   default: true,
 });
 
-export const modalState = atom({
-  key: `modal/${v1()}`,
+export const subscriberModalState = atom({
+  key: `subscriberModal/${v1()}`,
   default: { showModal: false, exit: false },
+});
+
+export const postModalState = atom({
+  key: `postModal/${v1()}`,
+  default: false,
 });
