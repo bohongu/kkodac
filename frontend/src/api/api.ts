@@ -11,3 +11,7 @@ interface ISignUp {
 export const signUpAtom = async (data: ISignUp) => {
   await axios.post(`${BASE_URL}/kkodac`, data);
 };
+
+export const test = async (count: number) => {
+  await axios.get(`${BASE_URL}/posts?count=${count}`);
+};

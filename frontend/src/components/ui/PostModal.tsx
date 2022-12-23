@@ -3,6 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useSetRecoilState } from 'recoil';
 import { postModalState } from '../../recoil/atoms';
+import { IoIosSend } from 'react-icons/io';
 
 const PostModal = () => {
   const setModal = useSetRecoilState(postModalState);
@@ -25,7 +26,12 @@ const PostModal = () => {
           <MainContent>
             <ImageSection>
               <Image></Image>
-              <ImageGrid></ImageGrid>
+              <ImageGrid>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+              </ImageGrid>
             </ImageSection>
             <Description>
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint,
@@ -67,7 +73,21 @@ const PostModal = () => {
             </Description>
           </MainContent>
         </Post>
-        <Comment></Comment>
+        <Comment>
+          <Me>
+            <div></div>
+            <h1>엄지혜</h1>
+          </Me>
+          <CommentList></CommentList>
+          <InputSection>
+            <label>
+              <input />
+              <button>
+                <IoIosSend />
+              </button>
+            </label>
+          </InputSection>
+        </Comment>
       </Modal>
     </>
   );
@@ -79,7 +99,7 @@ const Overlay = styled(motion.div)`
   position: fixed;
   top: 0;
   left: 0;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.85);
   width: 100%;
   height: 100%;
 `;
@@ -108,6 +128,8 @@ const Post = styled.div`
 
 const Comment = styled.div`
   border: 1px solid black;
+  display: grid;
+  grid-template-rows: 0.7fr 8fr 0.7fr;
 `;
 
 const TitleAndLike = styled.div`
@@ -149,8 +171,8 @@ const MainContent = styled.div`
 
 const ImageSection = styled.div`
   display: grid;
-  grid-template-columns: 2.5fr 1fr;
-  margin-bottom: 20px;
+  grid-template-columns: 2.5fr 1.5fr;
+  gap: 10px;
 `;
 
 const Image = styled.div`
@@ -160,9 +182,71 @@ const Image = styled.div`
 `;
 
 const ImageGrid = styled.div`
-  border: 1px solid black;
+  display: grid;
+  overflow: scroll;
+  height: 550px;
+  display: grid;
+  gap: 10px;
+  ::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera*/
+  }
+  div {
+    border: 1px solid black;
+    height: 240px;
+  }
 `;
 
 const Description = styled.p`
+  margin-top: 10px;
   height: 30px;
+`;
+
+const Me = styled.div`
+  border-bottom: 1px solid black;
+  ${(props) => props.theme.flex.flexCenter}
+  justify-content: start;
+  padding-left: 10px;
+  div {
+    border: 1px solid black;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+  }
+`;
+
+const CommentList = styled.ul`
+  overflow: scroll;
+  ::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera*/
+  }
+`;
+
+const InputSection = styled.div`
+  ${(props) => props.theme.flex.flexCenter}
+  align-items: flex-end;
+  label {
+    position: relative;
+  }
+  input {
+    height: 45px;
+    width: 440px;
+    padding: 0 15px;
+    border: none;
+    background: none;
+    border-top: 1px solid black;
+    color: black;
+  }
+  button {
+    display: flex;
+    align-items: center;
+    height: 45px;
+    position: absolute;
+    top: 0;
+    right: 5px;
+    border: none;
+    background: none;
+    color: black;
+    font-size: 30px;
+  }
 `;

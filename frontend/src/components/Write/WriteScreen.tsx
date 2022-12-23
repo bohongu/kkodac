@@ -13,6 +13,6 @@ const WriteScreen = () => {
 export default WriteScreen;
 
 const WriteWrapper = styled.div`
-  margin: 10%;
   margin-top: 80px;
+  border: 1px solid black;
 `;

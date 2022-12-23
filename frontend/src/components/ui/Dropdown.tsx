@@ -20,7 +20,7 @@ const Dropdown = () => {
       <Menus to="/profile/재홍">
         <CgProfile /> &nbsp; 프로필
       </Menus>
-      <Menus to="/profile/재홍">
+      <Menus to="/write">
         <BsFillPencilFill />
         &nbsp; 글쓰기
       </Menus>
