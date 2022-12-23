@@ -18,6 +18,29 @@ const sliderVariants = {
   }),
 };
 
+const ThumbNailVariants = {
+  initial: {
+    scale: 1,
+  },
+  hover: {
+    zInedx: 100,
+    scale: 1.2,
+    y: -100,
+    transition: {
+      delay: 0.3,
+    },
+  },
+};
+
+const InformationVariants = {
+  hover: {
+    opacity: 1,
+    transition: {
+      delay: 0.4,
+    },
+  },
+};
+
 const Jeju = () => {
   const [index, setIndex] = useState(0);
   const [backward, setBackward] = useState(false);
@@ -51,7 +74,18 @@ const Jeju = () => {
               <AiOutlineArrowLeft />
             </SlideL>
             {DUMMY.slice(offset * index, offset * index + offset).map((i) => (
-              <Box key={i}>{i}</Box>
+              <ThumbNail
+                variants={ThumbNailVariants}
+                initial="initial"
+                whileHover="hover"
+                key={i}
+              >
+                <Information variants={InformationVariants}>
+                  <h1>제목입니다</h1>
+                  <h2>작성자닉네임</h2>
+                  <h3>❤ 300</h3>
+                </Information>
+              </ThumbNail>
             ))}
             <SlideR onClick={increase}>
               <AiOutlineArrowRight />
@@ -92,12 +126,34 @@ const Row = styled(motion.div)`
   width: 100%;
 `;
 
-const Box = styled(motion.div)`
+const ThumbNail = styled(motion.div)`
   border: 1px solid black;
-  height: 300px;
-  background: black;
-  color: white;
+  height: 350px;
+  background: white;
+  color: black;
+  border-radius: 10px;
   font-size: 60px;
+  cursor: pointer;
+`;
+
+const Information = styled(motion.div)`
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  background: red;
+  position: relative;
+  top: 254px;
+  padding: 10px;
+  border-top: 1px solid black;
+  opacity: 0;
+  h1 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  h2,
+  h3 {
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
 `;
 
 const Slide = styled.div`
