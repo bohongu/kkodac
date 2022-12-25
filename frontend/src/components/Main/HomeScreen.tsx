@@ -6,6 +6,8 @@ import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai';
 import PostModal from '../ui/PostModal';
 import { useRecoilState } from 'recoil';
 import { postModalState } from '../../recoil/atoms';
+import { useQuery } from 'react-query';
+import { test } from '../../api/api';
 
 const DUMMY = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
@@ -44,7 +46,31 @@ const InformationVariants = {
   },
 };
 
+interface ITest {
+  postId: string;
+  createdAt: string;
+  updatedAt: string;
+  title: string;
+  description: string;
+  fileMappers: IFileMappers[];
+  tagMappers: [];
+}
+
+interface IFileMappers {
+  file: {
+    bucket: string;
+    createdAt: string;
+    fileId: string;
+    originalName: string;
+    pathName: string;
+  };
+}
+
 const Jeju = () => {
+  const { data } = useQuery<ITest[]>('hi', test);
+  if (data) {
+    console.log(data[0].fileMappers[0].file.pathName);
+  }
   const [index, setIndex] = useState(0);
   const [backward, setBackward] = useState(false);
   const [modal, setModal] = useRecoilState(postModalState);
@@ -52,8 +78,11 @@ const Jeju = () => {
     setModal(true);
   };
   const offset = 5;
-  const totalData = DUMMY.length;
-  const maxIndex = Math.ceil(totalData / offset) - 1;
+  let maxIndex: number;
+  if (data) {
+    const totalData = data.length;
+    maxIndex = Math.ceil(totalData / offset) - 1;
+  }
   const increase = () => {
     setBackward(false);
     setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
@@ -80,22 +109,25 @@ const Jeju = () => {
             <SlideL onClick={decrease}>
               <AiOutlineArrowLeft />
             </SlideL>
-            {DUMMY.slice(offset * index, offset * index + offset).map((i) => (
-              <ThumbNail
-                onClick={showPostModal}
-                variants={ThumbNailVariants}
-                initial="initial"
-                whileHover="hover"
-                key={i}
-                layoutId={i + ''}
-              >
-                <Information variants={InformationVariants}>
-                  <h1>제목입니다</h1>
-                  <h2>작성자닉네임</h2>
-                  <h3>❤ 300</h3>
-                </Information>
-              </ThumbNail>
-            ))}
+            {data
+              ?.slice(offset * index, offset * index + offset)
+              .map((test) => (
+                <ThumbNail
+                  onClick={showPostModal}
+                  variants={ThumbNailVariants}
+                  initial="initial"
+                  whileHover="hover"
+                  key={test.postId}
+                  layoutId={test + ''}
+                  bg={test.fileMappers[0].file.pathName}
+                >
+                  <Information variants={InformationVariants}>
+                    <h1>{test.title}</h1>
+                    {/* <h2>작성자닉네임</h2>
+                    <h3>❤ 300</h3> */}
+                  </Information>
+                </ThumbNail>
+              ))}
             <SlideR onClick={increase}>
               <AiOutlineArrowRight />
             </SlideR>
@@ -136,10 +168,12 @@ const Row = styled(motion.div)`
   width: 100%;
 `;
 
-const ThumbNail = styled(motion.div)`
+const ThumbNail = styled(motion.div)<{ bg: string }>`
   border: 1px solid black;
   height: 350px;
-  background: white;
+  background-image: url(${(props) => props.bg});
+  background-size: cover;
+  background-position: center center;
   color: black;
   border-radius: 10px;
   font-size: 60px;
