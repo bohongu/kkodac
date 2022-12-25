@@ -68,9 +68,6 @@ interface IFileMappers {
 
 const Jeju = () => {
   const { data } = useQuery<ITest[]>('hi', test);
-  if (data) {
-    console.log(data[0].fileMappers[0].file.pathName);
-  }
   const [index, setIndex] = useState(0);
   const [backward, setBackward] = useState(false);
   const [modal, setModal] = useRecoilState(postModalState);
