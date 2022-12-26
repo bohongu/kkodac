@@ -1,4 +1,3 @@
-import { replaceAll } from 'src/utils/uuid.util';
 import {
   Column,
   CreateDateColumn,
@@ -8,7 +7,7 @@ import {
 } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
-@Entity({ name: 'FILE_TB' })
+@Entity({ name: 'file_tb' })
 export class File {
   @PrimaryGeneratedColumn('increment', {
     type: 'bigint',

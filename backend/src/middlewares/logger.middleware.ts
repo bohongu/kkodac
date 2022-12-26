@@ -21,14 +21,13 @@ export class LoggerMiddleware implements NestMiddleware {
     // 응답이 끝나는 이벤트가 발생하면 로그를 찍는다.
     res.on('finish', () => {
       const { statusCode } = res;
-      this.logger.debug(
+      this.logger.log(
         {
           message: `${method} ${originalUrl} ${statusCode} ${sourceIp} ${userAgent}`,
         },
         'COMMON',
       );
     });
-
     next();
   }
 }

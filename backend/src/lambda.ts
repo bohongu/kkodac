@@ -7,7 +7,6 @@ import { eventContext } from 'aws-serverless-express/middleware';
 import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 
 import * as express from 'express';
@@ -44,5 +43,6 @@ const insertAt = (str: string | any[], sub: string, pos: number) =>
 
 export const handler: Handler = async (event: any, context: Context) => {
   cachedServer = await bootstrapServer();
+  console.log('a');
   return proxy(cachedServer, event, context, 'PROMISE').promise;
 };

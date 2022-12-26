@@ -10,10 +10,9 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { replaceAll } from 'src/utils/uuid.util';
 import { File } from 'src/file/entities/file.entity';
 
-@Entity({ name: 'USER_TB' })
+@Entity({ name: 'user_tb' })
 export class User {
   @Exclude()
   @PrimaryGeneratedColumn('increment', { comment: 'rowId' })
