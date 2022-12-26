@@ -58,10 +58,7 @@ const Header = styled.header`
   justify-content: space-between;
 `;
 
-const Categories = styled.div`
-ppearance: none;
-  }
-`;
+const Categories = styled.div``;
 
 const Title = styled.input`
   height: 60px;
