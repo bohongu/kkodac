@@ -8,9 +8,6 @@ const App = () => {
   const lat = 33.511;
   const lon = 126.964;
   const { data } = useQuery('weather', () => getWeather(lat, lon));
-  if (data) {
-    console.log(data);
-  }
 
   return (
     <>
