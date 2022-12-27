@@ -1,15 +1,51 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaImages } from 'react-icons/fa';
+import { MdDeleteOutline } from 'react-icons/md';
+
+const MAX_SIZE = 3 * 1024 * 1024; /* 3MB */
 
 const Editor = () => {
+  const [title, setTitle] = useState('');
+
+  const [postImage, setPostImage] = useState<string[]>([]);
+  const titleChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(event.currentTarget.value);
+  };
+
+  const addImageHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { files } = event.currentTarget;
+    console.log(files);
+    let imageUrlLists = [...postImage];
+    if (files) {
+      for (let i = 0; i < files.length; i++) {
+        if (files[i].size > MAX_SIZE) {
+          alert('업로드 가능한 최대 용량은 파일 당 3MB입니다.');
+        } else {
+          const currentImageUrl = URL.createObjectURL(files[i]);
+          imageUrlLists.push(currentImageUrl);
+        }
+      }
+      setPostImage(imageUrlLists);
+    }
+  };
+
+  const deleteImageHandler = (url: string) => {
+    setPostImage(postImage.filter((image) => image !== url));
+  };
+
+  const formSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log(postImage, title);
+  };
+
   return (
     <EditorWrapper>
-      <EditorForm>
+      <EditorForm onSubmit={formSubmitHandler}>
         <Header>
           <Categories>
             <select>
-              <option selected>지역</option>
+              <option>지역</option>
               <option>한경면</option>
               <option>한립읍</option>
               <option>애월읍</option>
@@ -17,7 +53,11 @@ const Editor = () => {
           </Categories>
           <button>글쓰기</button>
         </Header>
-        <Title placeholder="제목을 입력하세요" required />
+        <Title
+          value={title}
+          onChange={titleChangeHandler}
+          placeholder="제목을 입력하세요"
+        />
         <Description placeholder="본문"></Description>
         <ImageSection>
           <ImageInput>
@@ -25,13 +65,22 @@ const Editor = () => {
               <FaImages />
               <div>사진을 등록하세요</div>
             </label>
-            <input type="file" multiple id="post_image" />
+            <input
+              type="file"
+              multiple
+              id="post_image"
+              onChange={addImageHandler}
+              accept="image/*"
+            />
           </ImageInput>
           <Images>
-            <Choosen></Choosen>
-            <Choosen></Choosen>
-            <Choosen></Choosen>
-            <Choosen></Choosen>
+            {postImage.map((url, id) => (
+              <Choosen photo={url} key={id}>
+                <Delete onClick={() => deleteImageHandler(url)}>
+                  <MdDeleteOutline />
+                </Delete>
+              </Choosen>
+            ))}
           </Images>
         </ImageSection>
       </EditorForm>
@@ -110,6 +159,22 @@ const Images = styled.div`
   padding-left: 10px;
 `;
 
-const Choosen = styled.div`
+const Choosen = styled.div<{ photo: string }>`
   border: 1px solid black;
+  background-image: url(${(props) => props.photo});
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  position: relative;
+  background-color: black;
+`;
+
+const Delete = styled.div`
+  position: absolute;
+  ${(props) => props.theme.flex.flexCenter}
+  color:white;
+  right: 0;
+  width: 25px;
+  height: 25px;
+  font-size: 23px;
 `;
