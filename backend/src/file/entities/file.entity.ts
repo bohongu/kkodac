@@ -41,23 +41,23 @@ export class File {
     nullable: false,
     comment: '원본 파일명',
   })
-  originalName: string;
+  fileName: string;
 
   @Column({
-    name: 'path_name',
+    name: 'file_url',
     type: 'varchar',
     length: 256,
     nullable: false,
     comment: '서버측 경로명',
   })
-  pathName: string;
+  fileUrl: string;
 
   @Column({
+    name: 'deploy_name',
     type: 'varchar',
-    length: 100,
-    name: 'bucket',
-    nullable: true,
-    comment: 'S3 버킷 이름',
+    length: 256,
+    nullable: false,
+    comment: '서버측 파일명',
   })
-  bucket: string;
+  deployName: string;
 }

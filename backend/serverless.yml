@@ -4,6 +4,7 @@ plugins:
   - serverless-plugin-optimize
   - serverless-offline
   - serverless-dotenv-plugin
+  - serverless-apigw-binary
 
 provider:
   name: aws
@@ -16,7 +17,7 @@ provider:
       - '*/*'
 
 functions:
-  main: ${file(env.yml):functions-dev}
+  main: ${file(env.yml):dev}
 
 package:
   individually: true
@@ -25,3 +26,6 @@ custom:
   serverless-offline:
     httpPort: 3049
     lambdaPort: 3002
+  apigwBinary:
+    types: #list of mime-types
+      - '*/*'

@@ -11,8 +11,25 @@ import { ValidationPipe } from '@nestjs/common';
 
 import * as express from 'express';
 import { winstonLogger } from './utils/winston.util';
+import * as bodyParser from 'body-parser';
 
-const binaryMimeTypes: string[] = [];
+const binaryMimeTypes: string[] = [
+  'application/json',
+  'application/xml',
+  'font/eot',
+  'font/opentype',
+  'font/otf',
+  'image/jpeg',
+  'image/png',
+  'image/svg+xml',
+  'text/comma-separated-values',
+  'text/css',
+  'text/html',
+  'text/javascript',
+  'text/plain',
+  'text/text',
+  'text/xml',
+];
 
 let cachedServer: Server;
 
@@ -27,10 +44,12 @@ async function bootstrapServer(): Promise<Server> {
       },
     );
     nestApp.enableCors();
-    nestApp.use(eventContext());
+    // nestApp.use(eventContext());
+    // nestApp.use(bodyParser.json({ limit: '50mb' }));
+    // nestApp.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
     //class validator config
-    nestApp.useGlobalPipes(new ValidationPipe({ transform: true }));
+    // nestApp.useGlobalPipes(new ValidationPipe({ transform: true }));
 
     await nestApp.init();
     cachedServer = createServer(expressApp, undefined, binaryMimeTypes);
@@ -43,6 +62,5 @@ const insertAt = (str: string | any[], sub: string, pos: number) =>
 
 export const handler: Handler = async (event: any, context: Context) => {
   cachedServer = await bootstrapServer();
-  console.log('a');
   return proxy(cachedServer, event, context, 'PROMISE').promise;
 };
