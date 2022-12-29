@@ -7,7 +7,10 @@ import {
 } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
-@Entity({ name: 'file_tb' })
+@Entity({
+  name: 'file_tb',
+  // engine: 'InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci',
+})
 export class File {
   @PrimaryGeneratedColumn('increment', {
     type: 'bigint',

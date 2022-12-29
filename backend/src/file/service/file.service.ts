@@ -24,15 +24,19 @@ export class FileService {
   ) {}
 
   async upload(file: Express.Multer.File) {
+    const s3 = new AWS.S3();
     try {
+      const originalName = Buffer.from(file.originalname).toString('utf8');
+      console.log(originalName);
       const response = await s3
         .upload({
           Bucket: config.aws.bucket,
-          Key: `${Date.now() + encodeURIComponent(file.originalname)}`,
+          Key: `${Date.now() + '_' + originalName}`,
           Body: file.buffer,
         })
         .promise();
 
+      console.log(encodeURIComponent(originalName));
       const a = {
         fileName: file.originalname,
         fileUrl: response.Location,
@@ -56,16 +60,14 @@ export class FileService {
   }
 
   async delete(id: string) {
+    const s3 = new AWS.S3();
     try {
       const findOne = this.findOne(id);
 
-      s3.deleteObject(
-        {
-          Bucket: 'kkodac',
-          Key: `${(await findOne).deployName}`,
-        },
-        function (err, data) {},
-      );
+      s3.deleteObject({
+        Bucket: 'kkodac',
+        Key: `${(await findOne).deployName}`,
+      }).promise();
 
       console.log((await findOne).deployName);
 
