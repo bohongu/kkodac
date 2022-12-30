@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { FaImages } from 'react-icons/fa';
 import { MdDeleteOutline } from 'react-icons/md';
@@ -7,36 +7,43 @@ const MAX_SIZE = 3 * 1024 * 1024; /* 3MB */
 
 const Editor = () => {
   const [title, setTitle] = useState('');
-
+  const imageRef = useRef(null);
   const [postImage, setPostImage] = useState<string[]>([]);
+
   const titleChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.currentTarget.value);
   };
 
   const addImageHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = event.currentTarget;
-    console.log(files);
     let imageUrlLists = [...postImage];
-    if (files) {
-      for (let i = 0; i < files.length; i++) {
-        if (files[i].size > MAX_SIZE) {
-          alert('업로드 가능한 최대 용량은 파일 당 3MB입니다.');
-        } else {
-          const currentImageUrl = URL.createObjectURL(files[i]);
-          imageUrlLists.push(currentImageUrl);
-        }
-      }
-      setPostImage(imageUrlLists);
+    if (!files) {
+      return;
     }
+    const formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      formData.append('image', files[i]);
+      /* axios */
+    }
+    for (let i = 0; i < files.length; i++) {
+      if (files[i].size > MAX_SIZE) {
+        alert('업로드 가능한 최대 용량은 파일 당 3MB입니다.');
+      } else {
+        const currentImageUrl = URL.createObjectURL(files[i]);
+        imageUrlLists.push(currentImageUrl);
+      }
+    }
+    setPostImage(imageUrlLists);
   };
 
   const deleteImageHandler = (url: string) => {
     setPostImage(postImage.filter((image) => image !== url));
+    /* 사진 삭제 API */
   };
 
   const formSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(postImage, title);
+    console.log(postImage);
   };
 
   return (
@@ -66,6 +73,7 @@ const Editor = () => {
               <div>사진을 등록하세요</div>
             </label>
             <input
+              ref={imageRef}
               type="file"
               multiple
               id="post_image"

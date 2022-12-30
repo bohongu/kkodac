@@ -5,7 +5,11 @@ import { useSetRecoilState } from 'recoil';
 import { postModalState } from '../../recoil/atoms';
 import { IoIosSend } from 'react-icons/io';
 
-const PostModal = () => {
+interface IModal {
+  id: string;
+}
+
+const PostModal = ({ id }: IModal) => {
   const setModal = useSetRecoilState(postModalState);
   const hideModal = () => {
     setModal(false);
@@ -13,7 +17,7 @@ const PostModal = () => {
   return (
     <>
       <Overlay onClick={hideModal} />
-      <Modal layoutId={'1'}>
+      <Modal layoutId={id}>
         <Post>
           <TitleAndLike>
             <h1>아쿠아리움을 다녀왔어요</h1>

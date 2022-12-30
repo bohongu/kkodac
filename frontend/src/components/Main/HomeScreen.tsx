@@ -2,25 +2,23 @@ import React, { useState } from 'react';
 import Map from './Map';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai';
 import PostModal from '../ui/PostModal';
 import { useRecoilState } from 'recoil';
 import { postModalState } from '../../recoil/atoms';
-import { useQuery } from 'react-query';
-import { test } from '../../api/api';
+import { BsFillArrowRightCircleFill } from 'react-icons/bs';
 
-const DUMMY = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+const dummy = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 const sliderVariants = {
-  right: (backward: boolean) => ({
-    x: backward ? -window.outerWidth : window.outerWidth,
-  }),
-  center: {
+  hidden: {
+    x: window.outerWidth + 5,
+  },
+  visible: {
     x: 0,
   },
-  left: (backward: boolean) => ({
-    x: backward ? window.outerWidth : -window.outerWidth,
-  }),
+  exit: {
+    x: -window.outerWidth - 5,
+  },
 };
 
 const ThumbNailVariants = {
@@ -37,7 +35,7 @@ const ThumbNailVariants = {
   },
 };
 
-const InformationVariants = {
+const ContentVariants = {
   hover: {
     opacity: 1,
     transition: {
@@ -46,92 +44,66 @@ const InformationVariants = {
   },
 };
 
-interface ITest {
-  postId: string;
-  createdAt: string;
-  updatedAt: string;
-  title: string;
-  description: string;
-  fileMappers: IFileMappers[];
-  tagMappers: [];
-}
-
-interface IFileMappers {
-  file: {
-    bucket: string;
-    createdAt: string;
-    fileId: string;
-    originalName: string;
-    pathName: string;
-  };
-}
+const offset = 5;
 
 const Jeju = () => {
-  const { data } = useQuery<ITest[]>('hi', test);
   const [index, setIndex] = useState(0);
-  const [backward, setBackward] = useState(false);
   const [modal, setModal] = useRecoilState(postModalState);
+  const [leaving, setLeaving] = useState(false);
+  const nextSlide = () => {
+    if (leaving) return;
+    toggleLeaving();
+    const totalData = dummy.length;
+    const maxSlide = Math.floor(totalData / offset) - 1;
+    setIndex((prev) => (prev === maxSlide ? 0 : prev + 1));
+  };
+  const toggleLeaving = () => setLeaving((prev) => !prev);
+
   const showPostModal = () => {
     setModal(true);
   };
-  const offset = 5;
-  let maxIndex: number;
-  if (data) {
-    const totalData = data.length;
-    maxIndex = Math.ceil(totalData / offset) - 1;
-  }
-  const increase = () => {
-    setBackward(false);
-    setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
-  };
-  const decrease = () => {
-    setBackward(true);
-    setIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
-  };
+
   return (
     <MainWrapper>
       <Map />
-      <SliderSection>
-        <AnimatePresence initial={false} custom={backward}>
-          <Title>맛집</Title>
-          <Row
+      <Slider>
+        <SliderHeader>
+          <h1>맛집</h1>
+          <NextArrow onClick={nextSlide}>
+            <BsFillArrowRightCircleFill />
+          </NextArrow>
+        </SliderHeader>
+        <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
+          <Line
             variants={sliderVariants}
-            custom={backward}
-            initial="right"
-            animate="center"
-            exit="left"
-            key={index}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
             transition={{ type: 'tween', duration: 1 }}
+            key={index}
           >
-            <SlideL onClick={decrease}>
-              <AiOutlineArrowLeft />
-            </SlideL>
-            {data
-              ?.slice(offset * index, offset * index + offset)
-              .map((test) => (
-                <ThumbNail
-                  onClick={showPostModal}
-                  variants={ThumbNailVariants}
-                  initial="initial"
-                  whileHover="hover"
-                  key={test.postId}
-                  layoutId={test + ''}
-                  bg={test.fileMappers[0].file.pathName}
-                >
-                  <Information variants={InformationVariants}>
-                    <h1>{test.title}</h1>
-                    {/* <h2>작성자닉네임</h2>
-                    <h3>❤ 300</h3> */}
-                  </Information>
-                </ThumbNail>
-              ))}
-            <SlideR onClick={increase}>
-              <AiOutlineArrowRight />
-            </SlideR>
-          </Row>
+            {dummy.slice(offset * index, offset * index + offset).map((i) => (
+              <ThumbNail
+                variants={ThumbNailVariants}
+                whileHover="hover"
+                key={i}
+                onClick={showPostModal}
+              >
+                <Content variants={ContentVariants}>
+                  <h1>제목</h1>
+                  <h2>작성자</h2>
+                  <Tags>
+                    <div>애월읍</div>
+                    <div>카페</div>
+                    <div>바닷가</div>
+                  </Tags>
+                </Content>
+              </ThumbNail>
+            ))}
+          </Line>
         </AnimatePresence>
-      </SliderSection>
-      <AnimatePresence>{modal ? <PostModal /> : null}</AnimatePresence>
+      </Slider>
+      <AnimatePresence>{modal ? <PostModal id="1" /> : null}</AnimatePresence>
     </MainWrapper>
   );
 };
@@ -145,73 +117,72 @@ const MainWrapper = styled.div`
   margin-top: 80px;
 `;
 
-const SliderSection = styled.div`
+const Slider = styled.div`
   position: relative;
-  margin: 30px;
-  width: 95%;
-  height: 400px;
+  width: 90%;
+  margin-top: 30px;
+  margin-bottom: 300px;
 `;
 
-const Title = styled.h1`
-  font-size: 30px;
-  margin-bottom: 20px;
+const SliderHeader = styled.header`
+  display: flex;
+  margin-bottom: 10px;
+  justify-content: space-between;
+  h1 {
+    font-size: 28px;
+  }
 `;
 
-const Row = styled(motion.div)`
-  display: grid;
-  gap: 10px;
-  grid-template-columns: repeat(5, 1fr);
+const NextArrow = styled.button`
+  font-size: 28px;
+  ${(props) => props.theme.flex.flexCenter}
+  border:none;
+  background: none;
+`;
+
+const Line = styled(motion.div)`
   position: absolute;
   width: 100%;
+  display: grid;
+  gap: 5px;
+  grid-template-columns: repeat(5, 1fr);
 `;
 
-const ThumbNail = styled(motion.div)<{ bg: string }>`
+const ThumbNail = styled(motion.div)`
   border: 1px solid black;
-  height: 350px;
-  background-image: url(${(props) => props.bg});
-  background-size: cover;
-  background-position: center center;
-  color: black;
+  height: 300px;
   border-radius: 10px;
-  font-size: 60px;
-  cursor: pointer;
+  background: white;
 `;
 
-const Information = styled(motion.div)`
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-  height: 100px;
-  background: red;
+const Content = styled(motion.div)`
   position: relative;
-  top: 254px;
-  padding: 10px;
+  top: 180px;
+  height: 120px;
   border-top: 1px solid black;
   opacity: 0;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   h1 {
     font-size: 20px;
     margin-bottom: 10px;
   }
-  h2,
-  h3 {
+  h2 {
     font-size: 12px;
     margin-bottom: 10px;
   }
 `;
 
-const Slide = styled.div`
-  position: absolute;
-  border: 1px solid black;
-  border-radius: 50%;
-  font-size: 30px;
-  top: 45%;
-  background: red;
-  color: white;
-`;
-
-const SlideL = styled(Slide)`
-  left: -15px;
-`;
-
-const SlideR = styled(Slide)`
-  right: -15px;
+const Tags = styled.div`
+  display: flex;
+  div {
+    ${(props) => props.theme.flex.flexCenter}
+    border: 1px solid black;
+    width: 50px;
+    height: 20px;
+    font-size: 12px;
+    margin-right: 10px;
+  }
 `;

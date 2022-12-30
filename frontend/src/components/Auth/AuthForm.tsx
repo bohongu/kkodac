@@ -78,69 +78,48 @@ const Auth = () => {
   return (
     <AuthWrapper>
       <Form onSubmit={handleSubmit(authSubmitHandler)}>
-        <Inputs>
-          <label htmlFor="userId">
-            <span>*</span>아이디
-          </label>
-          <input
-            id="userId"
-            {...register('userId', {
-              required: '아이디를 입력해주세요',
-              pattern: {
-                value: /^[^{}[\]/?.,;:|)*~`!^\-_+<>@#$%&\\=('"]{5,20}$/,
-                message: '5-20자로 입력해주세요 (특수문자 불가)',
-              },
-            })}
-          />
-        </Inputs>
+        <Input
+          {...register('userId', {
+            required: '아이디를 입력해주세요',
+            pattern: {
+              value: /^[^{}[\]/?.,;:|)*~`!^\-_+<>@#$%&\\=('"]{5,20}$/,
+              message: '5-20자로 입력해주세요 (특수문자 불가)',
+            },
+          })}
+          placeholder="아이디"
+        />
         <ErrorMsg>{errors?.userId?.message}</ErrorMsg>
-        <Inputs>
-          <label htmlFor="password">
-            <span>*</span>비밀번호
-          </label>
-          <input
-            id="password"
-            {...register('password', {
-              required: '비밀번호를 입력해주세요',
-              pattern: {
-                value:
-                  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/,
-                message: '8-20자로 입력해주세요 (영문자 + 숫자 + 특수문자)',
-              },
-            })}
-            type="password"
-          />
-        </Inputs>
+        <Input
+          {...register('password', {
+            required: '비밀번호를 입력해주세요',
+            pattern: {
+              value:
+                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/,
+              message: '8-20자로 입력해주세요 (영문자 + 숫자 + 특수문자)',
+            },
+          })}
+          type="password"
+          placeholder="비밀번호"
+        />
         <ErrorMsg>{errors?.password?.message}</ErrorMsg>
         {newAccount && (
           <>
-            <Inputs>
-              <label htmlFor="confirm">
-                <span>*</span>비밀번호 확인
-              </label>
-              <input
-                id="confirm"
-                {...register('confirm', {
-                  required: '비밀번호를 입력해주세요',
-                })}
-                type="password"
-              />
-            </Inputs>
+            <Input
+              {...register('confirm', {
+                required: '비밀번호를 입력해주세요',
+              })}
+              type="password"
+              placeholder="비밀번호 확인"
+            />
             <ErrorMsg>{errors?.confirm?.message}</ErrorMsg>
-            <Inputs>
-              <label htmlFor="nickname">
-                <span>*</span>닉네임
-              </label>
-              <input
-                id="nickname"
-                {...register('nickname', {
-                  required: '닉네임을 입력해주세요',
-                  minLength: { value: 3, message: '3-8자로 입력해주세요' },
-                  maxLength: { value: 8, message: '3-8자로 입력해주세요' },
-                })}
-              />
-            </Inputs>
-
+            <Input
+              {...register('nickname', {
+                required: '닉네임을 입력해주세요',
+                minLength: { value: 3, message: '3-8자로 입력해주세요' },
+                maxLength: { value: 8, message: '3-8자로 입력해주세요' },
+              })}
+              placeholder="닉네임"
+            />
             <ErrorMsg>{errors?.nickname?.message}</ErrorMsg>
           </>
         )}
@@ -172,40 +151,18 @@ const AuthWrapper = styled.div`
   width: 20%;
   height: 45%;
   padding: 1rem;
+  border: 1px solid black;
 `;
 
 const Form = styled.form`
   width: 100%;
 `;
 
-const Inputs = styled.div`
-  margin: 20px auto;
-  position: relative;
-  label {
-    display: inline-block;
-    position: absolute;
-    top: -5px;
-    left: 14px;
-    padding: 10px;
-    background: white;
-    font-size: 14px;
-    color: #888;
-    font-weight: bold;
-    span {
-      color: #da4841;
-      vertical-align: -1px;
-    }
-  }
-  input {
-    width: 100%;
-    border: 1px solid #dddddd !important;
-    font-size: 1rem;
-    line-height: 1.45;
-    letter-spacing: -0.04rem;
-    border-radius: 8px;
-    padding: 16px;
-    margin-top: 12px;
-  }
+const Input = styled.input`
+  width: 100%;
+  height: 2.5rem;
+  padding-left: 10px;
+  font-size: 16px;
 `;
 
 const ErrorMsg = styled.span`
