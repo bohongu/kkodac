@@ -2,12 +2,17 @@ import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { FaImages } from 'react-icons/fa';
 import { MdDeleteOutline } from 'react-icons/md';
+import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
+import RegionDrop from './RegionDrop';
+import TagDrop from './TagDrop';
 
 const MAX_SIZE = 3 * 1024 * 1024; /* 3MB */
 
 const Editor = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [regionDrop, setRegionDrop] = useState(false);
+  const [tagDrop, setTagDrop] = useState(false);
   const titleChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.currentTarget.value);
   };
@@ -59,14 +64,26 @@ const Editor = () => {
     <EditorWrapper>
       <EditorForm onSubmit={formSubmitHandler}>
         <Header>
-          <Categories>
-            <select>
-              <option>지역</option>
-              <option>한경면</option>
-              <option>한립읍</option>
-              <option>애월읍</option>
-            </select>
-          </Categories>
+          <Tags>
+            <Tag
+              onClick={() => {
+                setTagDrop(false);
+                setRegionDrop((prev) => !prev);
+              }}
+            >
+              지역{regionDrop ? <IoMdArrowDropup /> : <IoMdArrowDropdown />}
+              {regionDrop && <RegionDrop />}
+            </Tag>
+            <Tag
+              onClick={() => {
+                setTagDrop((prev) => !prev);
+                setRegionDrop(false);
+              }}
+            >
+              태그{tagDrop ? <IoMdArrowDropup /> : <IoMdArrowDropdown />}
+              {tagDrop && <TagDrop />}
+            </Tag>
+          </Tags>
           <button>글쓰기</button>
         </Header>
         <Title
@@ -130,7 +147,22 @@ const Header = styled.header`
   justify-content: space-between;
 `;
 
-const Categories = styled.div``;
+const Tags = styled.div`
+  display: flex;
+  margin: 10px 0;
+`;
+
+const Tag = styled.div`
+  position: relative;
+  border: 1px solid black;
+  margin-right: 10px;
+  width: 70px;
+  height: 30px;
+  ${(props) => props.theme.flex.flexCenter}
+  padding: 0 5px;
+  justify-content: space-between;
+  cursor: pointer;
+`;
 
 const Title = styled.input`
   padding-left: 10px;
@@ -138,13 +170,12 @@ const Title = styled.input`
   border: none;
   border-bottom: 1px solid black;
   font-size: 25px;
-  margin: 10px 0;
 `;
 
 const Description = styled.textarea`
   height: 400px;
   font-size: 16px;
-  margin-bottom: 10px;
+  margin: 10px 0;
   resize: none;
   padding: 10px;
 `;

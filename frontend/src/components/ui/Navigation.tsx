@@ -4,16 +4,7 @@ import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
 import { motion, useAnimation, useScroll } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Dropdown from './Dropdown';
-
-const navVariants = {
-  top: { backgroundColor: 'rgba(0,0,0,0)' },
-  down: { backgroundColor: 'rgba(0,0,0,1)' },
-};
-
-const logVariants = {
-  top: { color: 'black' },
-  down: { color: 'white' },
-};
+import { logVariants, navVariants } from '../../utils/variants';
 
 const Navigation = () => {
   const [drop, setDrop] = useState(false);

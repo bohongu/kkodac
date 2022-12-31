@@ -5,16 +5,7 @@ import styled from 'styled-components';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { SlUserUnfollow } from 'react-icons/sl';
 import { subscriberModalState } from './../../recoil/atoms';
-
-const modalVarints = {
-  hidden: (exit: boolean) => ({
-    x: exit ? window.outerWidth : -window.outerWidth,
-  }),
-  visible: { x: 0 },
-  exit: {
-    x: -window.outerWidth,
-  },
-};
+import { modalVarints } from '../../utils/variants';
 
 const Subscriber = () => {
   const [modal, setModal] = useRecoilState(subscriberModalState);

@@ -6,34 +6,16 @@ import PostModal from '../ui/PostModal';
 import { useRecoilState } from 'recoil';
 import { postModalState } from '../../recoil/atoms';
 import { BsFillArrowRightCircleFill } from 'react-icons/bs';
-import { HoverVariants } from '../../utils/variants';
+import {
+  ContentVariants,
+  HoverVariants,
+  sliderVariants,
+} from '../../utils/variants';
 
 const dummy = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-const sliderVariants = {
-  hidden: {
-    x: window.outerWidth + 5,
-  },
-  visible: {
-    x: 0,
-  },
-  exit: {
-    x: -window.outerWidth - 5,
-  },
-};
-
-const ContentVariants = {
-  hover: {
-    opacity: 1,
-    transition: {
-      delay: 0.3,
-    },
-  },
-};
-
-const offset = 5;
-
 const Jeju = () => {
+  const offset = 5;
   const [index, setIndex] = useState(0);
   const [modal, setModal] = useRecoilState(postModalState);
   const [leaving, setLeaving] = useState(false);
