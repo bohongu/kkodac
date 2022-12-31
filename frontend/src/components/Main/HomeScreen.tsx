@@ -6,6 +6,7 @@ import PostModal from '../ui/PostModal';
 import { useRecoilState } from 'recoil';
 import { postModalState } from '../../recoil/atoms';
 import { BsFillArrowRightCircleFill } from 'react-icons/bs';
+import { HoverVariants } from '../../utils/variants';
 
 const dummy = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -21,25 +22,11 @@ const sliderVariants = {
   },
 };
 
-const ThumbNailVariants = {
-  initial: {
-    scale: 1,
-  },
-  hover: {
-    zInedx: 100,
-    scale: 1.2,
-    y: -100,
-    transition: {
-      delay: 0.3,
-    },
-  },
-};
-
 const ContentVariants = {
   hover: {
     opacity: 1,
     transition: {
-      delay: 0.5,
+      delay: 0.3,
     },
   },
 };
@@ -84,7 +71,7 @@ const Jeju = () => {
           >
             {dummy.slice(offset * index, offset * index + offset).map((i) => (
               <ThumbNail
-                variants={ThumbNailVariants}
+                variants={HoverVariants}
                 whileHover="hover"
                 key={i}
                 onClick={showPostModal}

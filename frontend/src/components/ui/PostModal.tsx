@@ -217,7 +217,6 @@ const Image = styled.div<{ photo: string }>`
   background-image: url(${(props) => props.photo});
   background-size: cover;
   background-position: center center;
-  border: 1px solid black;
   width: 550px;
   height: 550px;
 `;
@@ -226,7 +225,6 @@ const ImageGrid = styled.div`
   display: grid;
   overflow: scroll;
   height: 550px;
-  display: grid;
   gap: 10px;
   ::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera*/
@@ -237,7 +235,6 @@ const Images = styled.div<{ bgPhoto: string }>`
   background-image: url(${(props) => props.bgPhoto});
   background-size: cover;
   background-position: center center;
-  border: 1px solid black;
   height: 240px;
 `;
 

@@ -7,12 +7,18 @@ const MAX_SIZE = 3 * 1024 * 1024; /* 3MB */
 
 const Editor = () => {
   const [title, setTitle] = useState('');
-  const imageRef = useRef(null);
-  const [postImage, setPostImage] = useState<string[]>([]);
-
+  const [description, setDescription] = useState('');
   const titleChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.currentTarget.value);
   };
+  const descriptionChangeHandler = (
+    event: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    setDescription(event.currentTarget.value);
+  };
+
+  const imageRef = useRef(null);
+  const [postImage, setPostImage] = useState<string[]>([]);
 
   const addImageHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = event.currentTarget;
@@ -20,6 +26,7 @@ const Editor = () => {
     if (!files) {
       return;
     }
+
     const formData = new FormData();
     for (let i = 0; i < files.length; i++) {
       formData.append('image', files[i]);
@@ -43,7 +50,9 @@ const Editor = () => {
 
   const formSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(postImage);
+    console.log(title, description);
+    setTitle('');
+    setDescription('');
   };
 
   return (
@@ -65,7 +74,13 @@ const Editor = () => {
           onChange={titleChangeHandler}
           placeholder="제목을 입력하세요"
         />
-        <Description placeholder="본문"></Description>
+        <Description
+          value={description}
+          onChange={descriptionChangeHandler}
+          cols={50}
+          rows={10}
+          placeholder="본문"
+        ></Description>
         <ImageSection>
           <ImageInput>
             <label htmlFor="post_image">
@@ -118,19 +133,20 @@ const Header = styled.header`
 const Categories = styled.div``;
 
 const Title = styled.input`
+  padding-left: 10px;
   height: 60px;
   border: none;
   border-bottom: 1px solid black;
-  font-size: 30px;
+  font-size: 25px;
   margin: 10px 0;
 `;
 
 const Description = styled.textarea`
   height: 400px;
-  padding: 10px 0;
-  font-size: 20px;
+  font-size: 16px;
   margin-bottom: 10px;
   resize: none;
+  padding: 10px;
 `;
 
 const ImageSection = styled.div`
@@ -161,9 +177,8 @@ const ImageInput = styled.div`
 `;
 
 const Images = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  display: flex;
+  gap: 10px;
   padding-left: 10px;
 `;
 
@@ -175,6 +190,7 @@ const Choosen = styled.div<{ photo: string }>`
   background-position: center center;
   position: relative;
   background-color: black;
+  width: 250px;
 `;
 
 const Delete = styled.div`

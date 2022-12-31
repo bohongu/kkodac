@@ -1,11 +1,15 @@
+import { motion } from 'framer-motion';
 import React from 'react';
 import styled from 'styled-components';
+import { HoverVariants } from './../../utils/variants';
 
 const PostSection = () => {
   return (
     <PostWrapper>
       <Posts>
-        <Post>1</Post>
+        <Post variants={HoverVariants} whileHover="hover">
+          1
+        </Post>
         <Post>1</Post>
         <Post>1</Post>
         <Post>1</Post>
@@ -38,8 +42,9 @@ const Posts = styled.div`
   }
 `;
 
-const Post = styled.div`
+const Post = styled(motion.div)`
   border: 1px solid black;
   height: 300px;
   border-radius: 10px;
+  background: white;
 `;

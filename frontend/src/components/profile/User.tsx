@@ -2,21 +2,60 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useSetRecoilState } from 'recoil';
 import { subscriberModalState } from './../../recoil/atoms';
+import { MdFace } from 'react-icons/md';
 
 const UserSection = () => {
   const setModal = useSetRecoilState(subscriberModalState);
+  const [drop, setDrop] = useState(false);
   const [editProfile, setEditProfile] = useState(false);
+  const [preview, setPreview] = useState('');
   const setEditProfileHandler = () => {
     setEditProfile(true);
   };
   const closeEditProfileHandler = () => {
     setEditProfile(false);
   };
+  const removeImageHandler = () => {
+    setPreview('');
+  };
+
+  const profileImageChangeHandler = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const { files } = event.currentTarget;
+    if (!files) {
+      return;
+    }
+    setPreview(URL.createObjectURL(files[0]));
+  };
   return (
     <UserWrapper>
       <UserImageSection>
-        <UserImage />
-        <UserImageBtn>O</UserImageBtn>
+        <UserImage photo={preview} />
+        {editProfile && (
+          <>
+            <UserImageBtn>
+              <MdFace
+                onClick={() => {
+                  setDrop((prev) => !prev);
+                }}
+              />
+            </UserImageBtn>
+            {drop && (
+              <Drop>
+                <div onClick={removeImageHandler}>Remove photo</div>
+                <label htmlFor="profile-image">
+                  <div>Upload a photo</div>
+                </label>
+                <input
+                  id="profile-image"
+                  type="file"
+                  onChange={profileImageChangeHandler}
+                />
+              </Drop>
+            )}
+          </>
+        )}
       </UserImageSection>
       {!editProfile ? (
         <>
@@ -30,7 +69,7 @@ const UserSection = () => {
           </Introduce>
         </>
       ) : (
-        <>
+        <Edit>
           <label htmlFor="nickname">Nickname</label>
           <input id="nickname" />
           <label htmlFor="introduce">Bio</label>
@@ -39,7 +78,7 @@ const UserSection = () => {
             <button>Save</button>
             <button onClick={closeEditProfileHandler}>Cancel</button>
           </div>
-        </>
+        </Edit>
       )}
       {!editProfile && (
         <UserInfoBtn onClick={setEditProfileHandler}>프로필 변경</UserInfoBtn>
@@ -74,38 +113,109 @@ const UserImageSection = styled.div`
   position: relative;
 `;
 
-const UserImage = styled.img`
-  border: 0.5px solid red;
+const UserImage = styled.img<{ photo: string }>`
+  background-image: url(${(props) => props.photo});
+  background-size: cover;
+  background-position: center center;
+  border: 0.3px solid rgba(0, 0, 0, 0.3);
   width: 300px;
   height: 300px;
   border-radius: 50%;
 `;
 
-const UserImageBtn = styled.button`
-  position: absolute;
-  bottom: 50px;
-  right: 50px;
-  height: 35px;
-  width: 35px;
+const UserImageBtn = styled.div`
+  border: 1px solid black;
+  ${(props) => props.theme.flex.flexCenter}
+  height: 30px;
+  width: 30px;
   border-radius: 50%;
-  border: 0.5px solid black;
+  bottom: 55px;
+  right: 45px;
+  font-size: 30px;
+  background: white;
+  position: absolute;
+  cursor: pointer;
+`;
+
+const Drop = styled.div`
+  ${(props) => props.theme.flex.flexCenterColumn}
+  bottom: 5px;
+  right: -30px;
+  position: absolute;
+  border: 1px solid black;
+  border-radius: 5px;
+  div {
+    width: 100px;
+    padding: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    &:hover {
+      background: tomato;
+    }
+  }
+
+  input {
+    display: none;
+  }
 `;
 
 const UserId = styled.div`
-  font-size: 30px;
+  font-size: 25px;
+  margin-bottom: 5px;
+  font-weight: bold;
 `;
 
 const Nickname = styled.div`
-  font-size: 20px;
+  font-size: 18px;
+  color: rgba(0, 0, 0, 0.6);
 `;
 
-const Introduce = styled.div``;
+const Introduce = styled.div`
+  font-size: 12px;
+  margin: 10px 0;
+  line-height: 22px;
+`;
 
 const UserInfoBtn = styled.button``;
 
 const Followers = styled.span`
+  padding: 10px 0;
+  ${(props) => props.theme.flex.flexCenter}
   span {
     margin-left: 5px;
+    font-size: bold;
     cursor: pointer;
+  }
+`;
+
+const Edit = styled.div`
+  display: flex;
+  flex-direction: column;
+  label {
+    font-weight: 600;
+    font-size: 14px;
+    margin: 5px 0;
+  }
+  input {
+    height: 30px;
+    padding-left: 5px;
+  }
+  textarea {
+    height: 100px;
+    resize: none;
+  }
+  div {
+    display: flex;
+    justify-content: flex-end;
+    margin: 10px 0;
+    button {
+      margin-left: 5px;
+      height: 30px;
+      border-radius: 5px;
+      border: none;
+      background: tomato;
+      font-size: bold;
+      color: white;
+    }
   }
 `;
