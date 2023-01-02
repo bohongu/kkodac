@@ -55,6 +55,9 @@ const Editor = () => {
 
   const formSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!regionValue) {
+      alert('지역을 선택해주세요 (필수)');
+    }
     console.log(title, description, regionValue, selectTags);
     setTitle('');
     setDescription('');
@@ -63,12 +66,14 @@ const Editor = () => {
   return (
     <EditorWrapper>
       <EditorForm onSubmit={formSubmitHandler}>
-        <Title
-          value={title}
-          onChange={titleChangeHandler}
-          placeholder="제목을 입력하세요"
-        />
-        <button>하잉</button>
+        <Top>
+          <Title
+            value={title}
+            onChange={titleChangeHandler}
+            placeholder="제목을 입력하세요"
+          />
+          <button>글쓰기</button>
+        </Top>
         <Description
           value={description}
           onChange={descriptionChangeHandler}
@@ -140,12 +145,25 @@ const Tags = styled.div`
   padding: 10px;
 `;
 
+const Top = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  button {
+    font-size: 12px;
+    height: 30px;
+    width: 55px;
+  }
+`;
+
 const Title = styled.input`
   padding-left: 10px;
   height: 60px;
   border: none;
   border-bottom: 1px solid black;
   font-size: 25px;
+  width: 700px;
 `;
 
 const Description = styled.textarea`

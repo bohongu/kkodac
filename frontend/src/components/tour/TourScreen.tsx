@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import React from 'react';
 import { Link, useMatch } from 'react-router-dom';
 import styled from 'styled-components';
+import { REGION_LIST } from '../../utils/jeju';
 import { HoverDownVariants, ContentVariants } from '../../utils/variants';
 
 const TourScreen = () => {
@@ -10,48 +11,11 @@ const TourScreen = () => {
   return (
     <TourWrapper>
       <RegionNav>
-        <RegionBtn region={region === '한경면'}>
-          <Link to="/tour/한경면"> 한경면</Link>
-        </RegionBtn>
-        <RegionBtn region={region === '한립읍'}>
-          <Link to="/tour/한립읍"> 한립읍</Link>
-        </RegionBtn>
-        <RegionBtn region={region === '애월읍'}>
-          <Link to="/tour/애월읍"> 애월읍</Link>
-        </RegionBtn>
-        <RegionBtn region={region === '제주시'}>
-          <Link to="/tour/제주시"> 제주시</Link>
-        </RegionBtn>
-        <RegionBtn region={region === '조천읍'}>
-          <Link to="/tour/조천읍"> 조천읍</Link>
-        </RegionBtn>
-        <RegionBtn region={region === '구좌읍'}>
-          <Link to="/tour/구좌읍"> 구좌읍</Link>
-        </RegionBtn>
-        <RegionBtn region={region === '성산읍'}>
-          <Link to="/tour/성산읍"> 성산읍</Link>
-        </RegionBtn>
-        <RegionBtn region={region === '포선면'}>
-          <Link to="/tour/포선면"> 포선면</Link>
-        </RegionBtn>
-        <RegionBtn region={region === '남원읍'}>
-          <Link to="/tour/남원읍"> 남원읍</Link>
-        </RegionBtn>
-        <RegionBtn region={region === '서귀포'}>
-          <Link to="/tour/서귀포"> 서귀포</Link>
-        </RegionBtn>
-        <RegionBtn region={region === '중문'}>
-          <Link to="/tour/중문"> 중문</Link>
-        </RegionBtn>
-        <RegionBtn region={region === '안덕면'}>
-          <Link to="/tour/안덕면"> 안덕면</Link>
-        </RegionBtn>
-        <RegionBtn region={region === '대정면'}>
-          <Link to="/tour/대정면"> 대정면</Link>
-        </RegionBtn>
-        <RegionBtn region={region === '우도면'}>
-          <Link to="/tour/우도면"> 우도면</Link>
-        </RegionBtn>
+        {REGION_LIST.map((item) => (
+          <RegionBtn region={region === item.data}>
+            <Link to={`/tour/${item.data}`}>{item.data}</Link>
+          </RegionBtn>
+        ))}
       </RegionNav>
       <TagNav>
         <button>계절</button>

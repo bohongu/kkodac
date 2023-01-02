@@ -1,24 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { selectedRegionState } from '../../recoil/atoms';
-
-const REGION_LIST = [
-  { id: 0, data: '한경면' },
-  { id: 1, data: '한립읍' },
-  { id: 2, data: '애월읍' },
-  { id: 3, data: '제주시' },
-  { id: 4, data: '조천읍' },
-  { id: 5, data: '구좌읍' },
-  { id: 6, data: '성산읍' },
-  { id: 7, data: '표선면' },
-  { id: 8, data: '남원읍' },
-  { id: 9, data: '서귀포' },
-  { id: 10, data: '중문' },
-  { id: 11, data: '안덕면' },
-  { id: 12, data: '대정면' },
-  { id: 13, data: '우도면' },
-];
+import { REGION_LIST } from '../../utils/jeju';
 
 const RegionDrop = () => {
   const [region, setRegion] = useRecoilState(selectedRegionState);
@@ -28,7 +12,7 @@ const RegionDrop = () => {
   return (
     <DropWrapper>
       <h1>
-        지역 <span>하나만 선택해 주세요</span>
+        지역 <span>하나만 선택해 주세요 (필수)</span>
       </h1>
       <Tags>
         {REGION_LIST.map((item) => (

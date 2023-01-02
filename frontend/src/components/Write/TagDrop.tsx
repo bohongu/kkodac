@@ -36,10 +36,6 @@ const TagDrop = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(selectTags);
-  }, [selectTags]);
-
   return (
     <DropWrapper>
       <h1>

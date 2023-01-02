@@ -241,6 +241,7 @@ const Images = styled.div<{ bgPhoto: string }>`
 const Description = styled.p`
   margin-top: 10px;
   height: 30px;
+  line-height: 22px;
 `;
 
 const Me = styled.div`
