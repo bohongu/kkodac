@@ -39,6 +39,13 @@ const PostModal = ({ id }: IModal) => {
             <h1>아쿠아리움을 다녀왔어요</h1>
             <div>❤</div>
           </TitleAndLike>
+          <Tags>
+            <h1>우도</h1>
+            <Tag>
+              <h2>싱글</h2>
+              <h2>어드벤처</h2>
+            </Tag>
+          </Tags>
           <AuthorAndDate>
             <h2>엄지혜</h2>
             <h3>2022-12-23</h3>
@@ -184,6 +191,29 @@ const TitleAndLike = styled.div`
   }
 `;
 
+const Tags = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 40px;
+  h1 {
+    font-size: 12px;
+    background: teal;
+    padding: 5px;
+    color: white;
+  }
+`;
+
+const Tag = styled.div`
+  ${(props) => props.theme.flex.flexCenter}
+  h2 {
+    font-size: 12px;
+    margin-left: 5px;
+    background: tomato;
+    padding: 5px;
+  }
+`;
+
 const AuthorAndDate = styled.div`
   height: 5%;
   display: flex;
@@ -198,7 +228,7 @@ const AuthorAndDate = styled.div`
 `;
 
 const MainContent = styled.div`
-  height: 85%;
+  height: 80%;
   display: flex;
   flex-direction: column;
   overflow: scroll;
