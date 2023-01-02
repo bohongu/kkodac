@@ -20,3 +20,13 @@ export const postModalState = atom({
   key: `postModal/${v1()}`,
   default: false,
 });
+
+export const selectedTagsState = atom<string[]>({
+  key: `selectedTags/${v1()}`,
+  default: [],
+});
+
+export const selectedRegionState = atom({
+  key: `selectedRegion/${v1()}`,
+  default: '',
+});

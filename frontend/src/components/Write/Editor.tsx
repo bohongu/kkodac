@@ -1,18 +1,21 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaImages } from 'react-icons/fa';
 import { MdDeleteOutline } from 'react-icons/md';
-import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
-import RegionDrop from './RegionDrop';
 import TagDrop from './TagDrop';
+import RegionDrop from './RegionDrop';
+import { useRecoilValue } from 'recoil';
+import { selectedRegionState } from '../../recoil/atoms';
+import { selectedTagsState } from './../../recoil/atoms';
 
 const MAX_SIZE = 3 * 1024 * 1024; /* 3MB */
 
 const Editor = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [regionDrop, setRegionDrop] = useState(false);
-  const [tagDrop, setTagDrop] = useState(false);
+  const regionValue = useRecoilValue(selectedRegionState);
+  const [postImage, setPostImage] = useState<string[]>([]);
+  const selectTags = useRecoilValue<string[]>(selectedTagsState);
   const titleChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.currentTarget.value);
   };
@@ -21,9 +24,6 @@ const Editor = () => {
   ) => {
     setDescription(event.currentTarget.value);
   };
-
-  const imageRef = useRef(null);
-  const [postImage, setPostImage] = useState<string[]>([]);
 
   const addImageHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = event.currentTarget;
@@ -55,7 +55,7 @@ const Editor = () => {
 
   const formSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(title, description);
+    console.log(title, description, regionValue, selectTags);
     setTitle('');
     setDescription('');
   };
@@ -63,34 +63,12 @@ const Editor = () => {
   return (
     <EditorWrapper>
       <EditorForm onSubmit={formSubmitHandler}>
-        <Header>
-          <Tags>
-            <Tag
-              onClick={() => {
-                setTagDrop(false);
-                setRegionDrop((prev) => !prev);
-              }}
-            >
-              지역{regionDrop ? <IoMdArrowDropup /> : <IoMdArrowDropdown />}
-              {regionDrop && <RegionDrop />}
-            </Tag>
-            <Tag
-              onClick={() => {
-                setTagDrop((prev) => !prev);
-                setRegionDrop(false);
-              }}
-            >
-              태그{tagDrop ? <IoMdArrowDropup /> : <IoMdArrowDropdown />}
-              {tagDrop && <TagDrop />}
-            </Tag>
-          </Tags>
-          <button>글쓰기</button>
-        </Header>
         <Title
           value={title}
           onChange={titleChangeHandler}
           placeholder="제목을 입력하세요"
         />
+        <button>하잉</button>
         <Description
           value={description}
           onChange={descriptionChangeHandler}
@@ -105,7 +83,6 @@ const Editor = () => {
               <div>사진을 등록하세요</div>
             </label>
             <input
-              ref={imageRef}
               type="file"
               multiple
               id="post_image"
@@ -124,6 +101,14 @@ const Editor = () => {
           </Images>
         </ImageSection>
       </EditorForm>
+      <TagSection>
+        <Tags>
+          <RegionDrop />
+        </Tags>
+        <Tags>
+          <TagDrop />
+        </Tags>
+      </TagSection>
     </EditorWrapper>
   );
 };
@@ -131,9 +116,12 @@ const Editor = () => {
 export default Editor;
 
 const EditorWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 75% 25%;
+  gap: 15px;
   border: 1px solid blue;
-  width: 60%;
-  padding: 10px;
+  width: 80%;
+  padding: 15px;
 `;
 
 const EditorForm = styled.form`
@@ -141,27 +129,15 @@ const EditorForm = styled.form`
   flex-direction: column;
 `;
 
-const Header = styled.header`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+const TagSection = styled.header`
+  margin-right: 15px;
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
 `;
 
 const Tags = styled.div`
-  display: flex;
-  margin: 10px 0;
-`;
-
-const Tag = styled.div`
-  position: relative;
   border: 1px solid black;
-  margin-right: 10px;
-  width: 70px;
-  height: 30px;
-  ${(props) => props.theme.flex.flexCenter}
-  padding: 0 5px;
-  justify-content: space-between;
-  cursor: pointer;
+  padding: 10px;
 `;
 
 const Title = styled.input`
@@ -173,7 +149,7 @@ const Title = styled.input`
 `;
 
 const Description = styled.textarea`
-  height: 400px;
+  height: 500px;
   font-size: 16px;
   margin: 10px 0;
   resize: none;
@@ -183,8 +159,7 @@ const Description = styled.textarea`
 const ImageSection = styled.div`
   display: grid;
   grid-template-columns: 10% 90%;
-  height: 200px;
-  margin-bottom: 10px;
+  height: 180px;
 `;
 
 const ImageInput = styled.div`
