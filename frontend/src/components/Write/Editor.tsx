@@ -7,6 +7,8 @@ import RegionDrop from './RegionDrop';
 import { useRecoilValue } from 'recoil';
 import { selectedRegionState } from '../../recoil/atoms';
 import { selectedTagsState } from './../../recoil/atoms';
+import { useMutation } from 'react-query';
+import { postFile } from '../../api/api';
 
 const MAX_SIZE = 3 * 1024 * 1024; /* 3MB */
 
@@ -16,6 +18,7 @@ const Editor = () => {
   const regionValue = useRecoilValue(selectedRegionState);
   const [postImage, setPostImage] = useState<string[]>([]);
   const selectTags = useRecoilValue<string[]>(selectedTagsState);
+  const sendFile = useMutation(postFile, {});
   const titleChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.currentTarget.value);
   };
@@ -34,8 +37,8 @@ const Editor = () => {
 
     const formData = new FormData();
     for (let i = 0; i < files.length; i++) {
-      formData.append('image', files[i]);
-      /* axios */
+      formData.append('file', files[i]);
+      sendFile.mutate(formData);
     }
     for (let i = 0; i < files.length; i++) {
       if (files[i].size > MAX_SIZE) {

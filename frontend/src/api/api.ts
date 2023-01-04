@@ -9,6 +9,10 @@ interface ISignUp {
   nickname: string;
 }
 
+interface IPostFile {
+  file: FormData;
+}
+
 export const signUpAtom = async (data: ISignUp) => {
   await axios.post(`${BASE_URL}/kkodac`, data);
 };
@@ -16,6 +20,12 @@ export const signUpAtom = async (data: ISignUp) => {
 export const test = async () => {
   const { data } = await axios.get(`${BASE_URL}/kkodac/posts?count=1&index=1`);
   return data.result;
+};
+
+export const postFile = async (data: FormData) => {
+  await axios.post(`${BASE_URL}/kkodac/file`, data).then((res) => {
+    console.log(res);
+  });
 };
 
 export const getWeather = async (lat: number, lon: number) => {

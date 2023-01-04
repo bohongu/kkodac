@@ -18,6 +18,15 @@ const imgs = [img1, img2, img3, img4];
 
 const PostModal = ({ id }: IModal) => {
   const [current, setCurrent] = useState<string | undefined>(imgs[0]);
+  const [comment, setComment] = useState('');
+  const commentSubmitHandler = () => {
+    console.log(comment);
+    /* axios 댓글 */
+    setComment('');
+  };
+  const commentChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setComment(event.currentTarget.value);
+  };
   const setModal = useSetRecoilState(postModalState);
   const hideModal = () => {
     setModal(false);
@@ -126,8 +135,13 @@ const PostModal = ({ id }: IModal) => {
           </CommentList>
           <InputSection>
             <label>
-              <input />
-              <button>
+              <input
+                type="text"
+                onChange={commentChangeHandler}
+                value={comment}
+                placeholder="댓글"
+              />
+              <button onClick={commentSubmitHandler}>
                 <IoIosSend />
               </button>
             </label>
