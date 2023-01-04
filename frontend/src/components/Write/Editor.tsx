@@ -12,13 +12,18 @@ import { postFile } from '../../api/api';
 
 const MAX_SIZE = 3 * 1024 * 1024; /* 3MB */
 
+interface IPostImage {
+  id: string;
+  url: string;
+}
+
 const Editor = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const regionValue = useRecoilValue(selectedRegionState);
-  const [postImage, setPostImage] = useState<string[]>([]);
+  const [postImage, setPostImage] = useState<IPostImage[]>([]);
   const selectTags = useRecoilValue<string[]>(selectedTagsState);
-  const sendFile = useMutation(postFile, {});
+  const sendFile = useMutation(postFile);
   const titleChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.currentTarget.value);
   };
@@ -30,29 +35,32 @@ const Editor = () => {
 
   const addImageHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = event.currentTarget;
-    let imageUrlLists = [...postImage];
+    const formData = new FormData();
+
     if (!files) {
       return;
     }
 
-    const formData = new FormData();
-    for (let i = 0; i < files.length; i++) {
-      formData.append('file', files[i]);
-      sendFile.mutate(formData);
-    }
     for (let i = 0; i < files.length; i++) {
       if (files[i].size > MAX_SIZE) {
         alert('업로드 가능한 최대 용량은 파일 당 3MB입니다.');
       } else {
         const currentImageUrl = URL.createObjectURL(files[i]);
-        imageUrlLists.push(currentImageUrl);
+        formData.append('file', files[i]);
+        sendFile.mutate(formData, {
+          onSuccess: (data) => {
+            const ImageInfo = {
+              id: data.data.id,
+              url: currentImageUrl,
+            };
+            setPostImage([...postImage, ImageInfo]);
+          },
+        });
       }
     }
-    setPostImage(imageUrlLists);
   };
 
   const deleteImageHandler = (url: string) => {
-    setPostImage(postImage.filter((image) => image !== url));
     /* 사진 삭제 API */
   };
 
@@ -99,9 +107,9 @@ const Editor = () => {
             />
           </ImageInput>
           <Images>
-            {postImage.map((url, id) => (
-              <Choosen photo={url} key={id}>
-                <Delete onClick={() => deleteImageHandler(url)}>
+            {postImage.map((data, id) => (
+              <Choosen photo={data.url} key={id}>
+                <Delete onClick={() => deleteImageHandler(data.url)}>
                   <MdDeleteOutline />
                 </Delete>
               </Choosen>
