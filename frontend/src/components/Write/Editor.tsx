@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { FaImages } from 'react-icons/fa';
 import { MdDeleteOutline } from 'react-icons/md';
@@ -8,7 +8,7 @@ import { useRecoilValue } from 'recoil';
 import { selectedRegionState } from '../../recoil/atoms';
 import { selectedTagsState } from './../../recoil/atoms';
 import { useMutation } from 'react-query';
-import { postFile } from '../../api/api';
+import { deleteFile, postFile } from '../../api/api';
 
 const MAX_SIZE = 3 * 1024 * 1024; /* 3MB */
 
@@ -24,6 +24,7 @@ const Editor = () => {
   const [postImage, setPostImage] = useState<IPostImage[]>([]);
   const selectTags = useRecoilValue<string[]>(selectedTagsState);
   const sendFile = useMutation(postFile);
+  const removeFile = useMutation(deleteFile);
   const titleChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.currentTarget.value);
   };
@@ -60,8 +61,9 @@ const Editor = () => {
     }
   };
 
-  const deleteImageHandler = (url: string) => {
-    /* 사진 삭제 API */
+  const deleteImageHandler = (id: string) => {
+    removeFile.mutate(id);
+    setPostImage(postImage.filter((data) => data.id !== id));
   };
 
   const formSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
@@ -73,6 +75,10 @@ const Editor = () => {
     setTitle('');
     setDescription('');
   };
+
+  useEffect(() => {
+    console.log(postImage);
+  }, [postImage]);
 
   return (
     <EditorWrapper>
@@ -109,7 +115,7 @@ const Editor = () => {
           <Images>
             {postImage.map((data, id) => (
               <Choosen photo={data.url} key={id}>
-                <Delete onClick={() => deleteImageHandler(data.url)}>
+                <Delete onClick={() => deleteImageHandler(data.id)}>
                   <MdDeleteOutline />
                 </Delete>
               </Choosen>

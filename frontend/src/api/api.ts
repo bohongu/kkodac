@@ -9,6 +9,8 @@ interface ISignUp {
   nickname: string;
 }
 
+/* 인증 API */
+
 export const signUpAtom = async (data: ISignUp) => {
   await axios.post(`${BASE_URL}/kkodac`, data);
 };
@@ -18,8 +20,14 @@ export const test = async () => {
   return data.result;
 };
 
+/* 파일 API */
+
 export const postFile = async (data: FormData) => {
   return await axios.post(`${BASE_URL}/kkodac/file`, data);
+};
+
+export const deleteFile = async (id: string) => {
+  return await axios.delete(`${BASE_URL}/kkodac/file/${id}`);
 };
 
 export const getWeather = async (lat: number, lon: number) => {
