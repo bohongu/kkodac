@@ -1,12 +1,86 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { svgVariants } from '../../utils/variants';
+import { useQuery } from 'react-query';
+import { getWeather } from '../../api/api';
+import {
+  TiWeatherSunny,
+  TiWeatherPartlySunny,
+  TiWeatherCloudy,
+  TiWeatherDownpour,
+  TiWeatherShower,
+  TiWeatherStormy,
+  TiWeatherSnow,
+} from 'react-icons/ti';
+import { TbMist } from 'react-icons/tb';
+
+interface IWeatherArray {
+  id: number;
+  main: string;
+  description: string;
+  icon: string;
+}
+
+interface IWeather {
+  coord: {
+    lon: number;
+    lat: number;
+  };
+  weather: IWeatherArray[];
+  main: {
+    temp: number;
+  };
+}
 
 const Map = () => {
+  const lat = 33.511;
+  const lon = 126.964;
+  const { data: weatherData } = useQuery<IWeather | undefined>('weather', () =>
+    getWeather(lat, lon),
+  );
+  let celsius;
+  let weather;
+  if (weatherData) {
+    celsius = Math.round(weatherData.main?.temp - 273.15);
+    weather = weatherData.weather[0].description;
+  }
+
+  const selectIcon = () => {
+    let id;
+    if (weatherData) {
+      id = weatherData.weather[0].icon.substring(0, 2);
+    }
+    switch (id) {
+      case '01':
+        return <TiWeatherSunny />;
+      case '02':
+        return <TiWeatherPartlySunny />;
+      case '03':
+        return <TiWeatherCloudy />;
+      case '04':
+        return <TiWeatherCloudy />;
+      case '09':
+        return <TiWeatherDownpour />;
+      case '10':
+        return <TiWeatherShower />;
+      case '11':
+        return <TiWeatherStormy />;
+      case '13':
+        return <TiWeatherSnow />;
+      case '50':
+        return <TbMist />;
+    }
+  };
+
   return (
     <>
+      <Weather>
+        <Icon>{selectIcon()}</Icon>
+        <Temp>{celsius}&#8451;</Temp>
+        <Info>{weather}</Info>
+      </Weather>
       <Svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600">
         <Link to="/tour/대정면">
           <Path
@@ -201,6 +275,41 @@ const Svg = styled(motion.svg)`
   width: 1700px;
   height: 700px;
   margin: 5px;
+  border: 1px solid black;
+`;
+
+const Weather = styled.div`
+  border: 1px solid black;
+  width: 200px;
+  height: 150px;
+  position: absolute;
+  top: 100px;
+  right: 115px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 2fr);
+  grid-template-areas:
+    'icon temp'
+    'info info';
+`;
+
+const Icon = styled.div`
+  ${(props) => props.theme.flex.flexCenter}
+  grid-area: icon;
+  width: 100px;
+  height: 100px;
+  font-size: 150px;
+`;
+
+const Temp = styled.div`
+  grid-area: temp;
+  ${(props) => props.theme.flex.flexCenter}
+  font-size: 40px;
+`;
+
+const Info = styled.div`
+  ${(props) => props.theme.flex.flexCenter}
+  grid-area: info;
 `;
 
 const Path = styled(motion.path)`
