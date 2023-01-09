@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaImages } from 'react-icons/fa';
 import { MdDeleteOutline } from 'react-icons/md';
@@ -37,22 +37,24 @@ const Editor = () => {
   const addImageHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = event.currentTarget;
     const formData = new FormData();
-
     if (!files) {
       return;
     }
 
     for (let i = 0; i < files.length; i++) {
+      if (postImage.length > 5) {
+        alert('사진은 최대 4장까지 등록 가능합니다.');
+        return;
+      }
       if (files[i].size > MAX_SIZE) {
         alert('업로드 가능한 최대 용량은 파일 당 3MB입니다.');
       } else {
-        const currentImageUrl = URL.createObjectURL(files[i]);
         formData.append('file', files[i]);
         sendFile.mutate(formData, {
           onSuccess: (data) => {
             const ImageInfo = {
               id: data.data.id,
-              url: currentImageUrl,
+              url: data.data.url,
             };
             setPostImage([...postImage, ImageInfo]);
           },
@@ -71,14 +73,10 @@ const Editor = () => {
     if (!regionValue) {
       alert('지역을 선택해주세요 (필수)');
     }
-    console.log(title, description, regionValue, selectTags);
+    console.log(title, description, regionValue, selectTags, postImage);
     setTitle('');
     setDescription('');
   };
-
-  useEffect(() => {
-    console.log(postImage);
-  }, [postImage]);
 
   return (
     <EditorWrapper>

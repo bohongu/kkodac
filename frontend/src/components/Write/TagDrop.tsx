@@ -29,7 +29,12 @@ const TagDrop = () => {
     useRecoilState<string[]>(selectedTagsState);
   const tagChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = event.currentTarget;
+
     if (checked) {
+      if (selectTags.length > 4) {
+        alert('태그는 최대 5개까지 가능합니다.');
+        return;
+      }
       setSelectTags([...selectTags, value]);
     } else if (!checked) {
       setSelectTags(selectTags.filter((item) => item !== value));
@@ -39,7 +44,7 @@ const TagDrop = () => {
   return (
     <DropWrapper>
       <h1>
-        태그 <span>중복 선택 가능합니다</span>
+        태그 <span>중복 선택 가능합니다 (5개)</span>
       </h1>
       <Tags>
         {TAG_LIST.map((item) => (

@@ -9,6 +9,23 @@ interface ISignUp {
   nickname: string;
 }
 
+interface IPost {
+  title: string;
+  description: string;
+  files: string[];
+  tags: string[];
+  authorId: string;
+}
+
+/* 날씨 API */
+
+export const getWeather = async (lat: number, lon: number) => {
+  const { data } = await axios.get(
+    `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}`,
+  );
+  return data;
+};
+
 /* 인증 API */
 
 export const signUpAtom = async (data: ISignUp) => {
@@ -30,9 +47,8 @@ export const deleteFile = async (id: string) => {
   return await axios.delete(`${BASE_URL}/kkodac/file/${id}`);
 };
 
-export const getWeather = async (lat: number, lon: number) => {
-  const { data } = await axios.get(
-    `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}`,
-  );
-  return data;
+/* 게시물 API */
+
+export const createPost = async (data: IPost) => {
+  return await axios.post(`${BASE_URL}/kkodac/post`, data);
 };
