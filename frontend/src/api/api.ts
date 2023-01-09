@@ -15,6 +15,7 @@ interface IPost {
   files: string[];
   tags: string[];
   authorId: string;
+  regionId: string;
 }
 
 /* 날씨 API */

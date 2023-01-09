@@ -8,7 +8,7 @@ import { useRecoilValue } from 'recoil';
 import { selectedRegionState } from '../../recoil/atoms';
 import { selectedTagsState } from './../../recoil/atoms';
 import { useMutation } from 'react-query';
-import { deleteFile, postFile } from '../../api/api';
+import { createPost, deleteFile, postFile } from '../../api/api';
 
 const MAX_SIZE = 3 * 1024 * 1024; /* 3MB */
 
@@ -24,6 +24,7 @@ const Editor = () => {
   const [postImage, setPostImage] = useState<IPostImage[]>([]);
   const selectTags = useRecoilValue<string[]>(selectedTagsState);
   const sendFile = useMutation(postFile);
+  const sendPost = useMutation(createPost);
   const removeFile = useMutation(deleteFile);
   const titleChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.currentTarget.value);
@@ -70,10 +71,29 @@ const Editor = () => {
 
   const formSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    let sendImages = [];
     if (!regionValue) {
       alert('지역을 선택해주세요 (필수)');
+      return;
     }
-    console.log(title, description, regionValue, selectTags, postImage);
+    for (let i = 0; i < postImage.length; i++) {
+      sendImages.push(postImage[i].id);
+    }
+    sendPost.mutate(
+      {
+        title,
+        description,
+        files: sendImages,
+        tags: selectTags,
+        authorId: 'test',
+        regionId: regionValue,
+      },
+      {
+        onSuccess: () => {
+          console.log('input 초기화, 홈으로 가기');
+        },
+      },
+    );
     setTitle('');
     setDescription('');
   };
