@@ -8,7 +8,6 @@ import {
   LoggerService,
   Param,
   Post,
-  Req,
   Res,
   UploadedFile,
   UseInterceptors,
@@ -31,6 +30,7 @@ export class FileController {
     @UploadedFile() file: Express.Multer.File,
     @Res() res: Response,
   ) {
+    console.log(file);
     const result = await this.fileService.upload(file);
     if (result) {
       this.logger.debug(
@@ -42,7 +42,9 @@ export class FileController {
         },
         'File',
       );
-      res.status(HttpStatus.OK).json({ message: 'OK', id: result.fileId });
+      res
+        .status(HttpStatus.OK)
+        .json({ message: 'OK', id: result.fileId, url: result.fileUrl });
     } else {
       throw new Error('서버 측 에러');
     }

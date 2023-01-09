@@ -27,7 +27,6 @@ export class FileService {
     const s3 = new AWS.S3();
     try {
       const originalName = Buffer.from(file.originalname).toString('utf8');
-      console.log(originalName);
       const response = await s3
         .upload({
           Bucket: config.aws.bucket,
@@ -36,7 +35,6 @@ export class FileService {
         })
         .promise();
 
-      console.log(encodeURIComponent(originalName));
       const a = {
         fileName: file.originalname,
         fileUrl: response.Location,
@@ -44,7 +42,6 @@ export class FileService {
       };
 
       const entity = this.fileRepository.create({ ...a });
-
       const result = await this.fileRepository.save(entity);
 
       return result;

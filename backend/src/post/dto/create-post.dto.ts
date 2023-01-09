@@ -14,6 +14,9 @@ export class CreatePostDto {
 
   tags: string[];
 
+  @IsString()
+  region: string;
+
   @IsEmpty()
   updatedAt: string;
 

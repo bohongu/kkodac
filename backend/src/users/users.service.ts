@@ -4,22 +4,22 @@ import { User } from './user.entity';
 
 @Injectable()
 export class UsersService {
-  async findUserByEmail(user_email: string): Promise<User | undefined> {
+  async findUserByName(user_name: string): Promise<User | undefined> {
     const user = await getConnection()
       .createQueryBuilder()
       .select('user')
       .from(User, 'user')
-      .where('user.user_email = :user_email', { user_email })
+      .where('user.user_name = :user_name', { user_name })
       .getOne();
     return user;
   }
 
-  async findUserById(user_no: number): Promise<User | undefined> {
+  async findUserById(user_id: number): Promise<User | undefined> {
     const user = await getConnection()
       .createQueryBuilder()
       .select('user')
       .from(User, 'user')
-      .where('user.user_no = :user_no', { user_no })
+      .where('user.user_id = :user_id', { user_id })
       .getOne();
     return user;
   }

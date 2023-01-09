@@ -2,23 +2,19 @@ import { Injectable } from '@nestjs/common';
 import { Post } from '../entities/post.entity';
 import { Request } from 'express';
 import { CreatePostDto } from '../dto/create-post.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { PostFileMapper } from '../entities/post.file.mapping.entity';
-import { User } from 'src/user/entities/user.entity';
 import { PostTagMapper } from '../entities/post.tag.mapping.entity';
 import { Tag } from '../entities/tag.entity';
 import { File } from 'src/file/entities/file.entity';
+import { User } from 'src/users/user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class PostRepository {
   constructor(
     @InjectRepository(Post)
     private readonly postRepository: Repository<Post>,
-    // @InjectRepository(PostFileMapper)
-    // private readonly mapperFileRepository: Repository<PostFileMapper>,
-    // @InjectRepository(PostTagMapper)
-    // private readonly mapperTagRepository: Repository<PostTagMapper>,
     @InjectRepository(File)
     private readonly fileRepository: Repository<File>,
     @InjectRepository(User)
@@ -89,30 +85,63 @@ export class PostRepository {
     return post;
   }
 
-  async findAll(searchWord?: string) {
+  async findOne(id: string) {
+    const post = await this.postRepository
+      .createQueryBuilder('post')
+      .leftJoinAndSelect('post.fileMappers', 'filemapper')
+      .leftJoinAndSelect('filemapper.file', 'file')
+      .leftJoinAndSelect('post.tagMappers', 'tagmapper')
+      .leftJoinAndSelect('tagmapper.tag', 'tag')
+      .where({ inquiryId: id })
+      .getOne();
+
+    return post;
+  }
+
+  async findAll(tag?: string[], region?: string) {
     const posts = await this.postRepository
       .createQueryBuilder('post')
       .leftJoinAndSelect('post.fileMappers', 'filemapper')
       .leftJoinAndSelect('filemapper.file', 'file')
       .leftJoinAndSelect('post.tagMappers', 'tagmapper')
       .leftJoinAndSelect('tagmapper.tag', 'tag')
-      // .where('post.mapper.tag.name like :searchWord', {
-      //   searchWord: `%${searchWord ? searchWord : ''}%`,
+      // .where('tagmapper.tag IN (:tags)', {
+      //   tags: tag,
       // })
+      // .andWhere('tagmapper.tag IN (:tag)', {
+      //   tag: '커플',
+      // })
+      // .andWhere('tagmapper.tag IN (:tag)', {
+      //   tag: tag[2],
+      // })
+      // .andWhere('tagmapper.tag IN (:tag)', {
+      //   tag: tag[3],
+      // })
+      .where('post.regionId = :region', {
+        region: region,
+      })
       .orderBy('post.updatedAt', 'DESC')
       .getMany();
 
-    for (const post of posts) {
-      delete post._id;
-      for (const num in post.fileMappers) {
-        delete post.fileMappers[num]._id;
-        delete post.fileMappers[num].file._id;
-      }
-      for (const num in post.tagMappers) {
-        delete post.tagMappers[num]._id;
-        delete post.tagMappers[num].tag._id;
-      }
-    }
+    // const file = [];
+    // const tag = [];
+    // for (const post of posts) {
+    //   delete post._id;
+    //   delete post.description;
+
+    //   delete post.fileMappers;
+    //   file.push(post.fileMappers[0].file.fileId);
+    //   file.push(post.fileMappers[0].file.fileUrl);
+
+    //   for (const num in post.tagMappers) {
+    //     delete post.tagMappers;
+    //     tag.push(post.tagMappers[num].tag.tagId);
+    //   }
+    // }
+
+    // console.log(file);
+    // console.log(tag);
+    // const result = { ...posts, files: file, tag: tag };
 
     return posts;
   }

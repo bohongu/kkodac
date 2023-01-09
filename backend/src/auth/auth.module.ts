@@ -5,7 +5,7 @@ import { NaverStrategy } from './strategy/naver.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { KakaoStrategy } from 'src/auth/strategy/kakao.strategy';
-import { UsersModule } from './users/users.module';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [

@@ -22,9 +22,9 @@ import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { KakaoAuthGuard } from 'src/auth/guard/kakao-auth.guard';
 import { Post } from '@nestjs/common';
 import { getConnection } from 'typeorm';
-import { User } from 'src/entity/user.entity';
 import { JwtRefreshGuard } from 'src/auth/guard/jwt-refreshToken-auth.guard';
 import { RegistUserDTO } from './dto/registUser.dto';
+import { User } from './user.entity';
 
 @ApiTags('users')
 @Controller('users')
@@ -111,8 +111,7 @@ export class UsersController {
     @Res() res: Response,
   ) {
     try {
-      const { user_email, user_nick, user_provider, user_token } = req.user;
-      const { user_tel, user_privacy } = registUserDTO;
+      const { userName, userId, nickname, user_token, password } = req.user;
       // 1회용 토큰인경우
       if (user_token === 'onceToken') {
         await getConnection()
@@ -120,14 +119,13 @@ export class UsersController {
           .insert()
           .into(User)
           .values({
-            user_email,
-            user_tel,
-            user_nick,
-            user_provider,
-            user_privacy,
+            userName,
+            userId,
+            nickname,
+            password,
           })
           .execute();
-        const user = await this.authService.validateUser(user_email);
+        const user = await this.authService.validateUser(userName);
         const access_token = await this.authService.createLoginToken(user);
         const refresh_token = await this.authService.createRefreshToken(user);
 

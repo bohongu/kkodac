@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import CryptoJS from 'crypto-js';
-import { User } from 'src/user/entities/user.entity';
+import { User } from 'src/users/user.entity';
 import { getConnection } from 'typeorm';
-import { UsersService } from './users/users.service';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {
@@ -12,8 +12,8 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(user_email: string): Promise<any> {
-    const user = await this.usersService.findUserByEmail(user_email);
+  async validateUser(user_name: string): Promise<any> {
+    const user = await this.usersService.findUserByName(user_name);
     if (!user) {
       return null;
     }
@@ -22,7 +22,7 @@ export class AuthService {
 
   async createLoginToken(user: User) {
     const payload = {
-      user_no: user._id,
+      user_id: user._id,
       user_token: 'loginToken',
     };
 
@@ -34,7 +34,7 @@ export class AuthService {
 
   async createRefreshToken(user: User) {
     const payload = {
-      user_no: user._id,
+      user_id: user._id,
       user_token: 'refreshToken',
     };
 
@@ -59,9 +59,9 @@ export class AuthService {
 
   onceToken(user_profile: any) {
     const payload = {
-      user_email: user_profile.user_email,
-      user_nick: user_profile.user_nick,
-      user_provider: user_profile.user_provider,
+      nickname: user_profile.nickname,
+      password: user_profile.password,
+      user_name: user_profile.user_name,
       user_token: 'onceToken',
     };
 

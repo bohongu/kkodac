@@ -5,10 +5,9 @@ import {
   Index,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 
-@Entity({ name: 'tag_tb' })
-export class Tag {
+@Entity({ name: 'region_tb' })
+export class Region {
   @PrimaryGeneratedColumn('increment', {
     type: 'bigint',
     comment: 'rowId',
@@ -18,13 +17,13 @@ export class Tag {
 
   @Index({ unique: true })
   @Column({
-    name: 'tag_id',
-    comment: '태그 UUID',
+    name: 'region_id',
+    comment: '지역 UUID',
     type: 'varchar',
     length: 40,
     nullable: false,
   })
-  tagId: string;
+  regionId: string;
 
   @CreateDateColumn({
     name: 'created_at',
@@ -38,7 +37,7 @@ export class Tag {
     type: 'varchar',
     length: 50,
     nullable: false,
-    comment: '태그 이름',
+    comment: '지역 이름',
   })
   name: string;
 }

@@ -1,4 +1,4 @@
-import { User } from 'src/user/entities/user.entity';
+import { User } from 'src/users/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -13,6 +13,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { PostFileMapper } from './post.file.mapping.entity';
 import { PostTagMapper } from './post.tag.mapping.entity';
+import { Region } from './region.entity';
 
 @Entity({ name: 'post_tb' })
 export class Post {
@@ -80,4 +81,14 @@ export class Post {
     referencedColumnName: 'userId',
   })
   authorId: User;
+
+  @OneToOne(() => Region, (region) => region, {
+    createForeignKeyConstraints: false,
+    nullable: false,
+  })
+  @JoinColumn({
+    name: 'region_id',
+    referencedColumnName: 'regionId',
+  })
+  regionId: Region;
 }

@@ -10,6 +10,7 @@ import {
   LoggerService,
   HttpStatus,
   Get,
+  Param,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -54,14 +55,25 @@ export class PostController {
     }
   }
 
-  @Get('/a')
-  async find(
-    @Req()
-    req: Request,
-    @Res() res: Response,
-  ) {
-    const result = 'hello';
-
-    return result;
+  @Get(':id')
+  async findOne(@Param('id') id: string, @Res() res: Response) {
+    const result = await this.postService.findOne(id);
+    if (result) {
+      this.logger.debug(
+        {
+          message: 'findOne',
+          query: {
+            id: id,
+          },
+          result: result,
+        },
+        'Get',
+      );
+      res.status(200).json({
+        result,
+      });
+    } else {
+      throw new Error('서버 측 에러');
+    }
   }
 }

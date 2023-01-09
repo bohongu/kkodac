@@ -18,14 +18,19 @@ export class PostsController {
   ) {}
 
   @Get()
-  async findAll(@Query('searchWord') searchWord: string, @Res() res: Response) {
-    const result = await this.postService.findAll(searchWord);
+  async findAll(
+    @Query('tag') tag: string[],
+    @Query('region') region: string,
+    @Res() res: Response,
+  ) {
+    const result = await this.postService.findAll(tag, region);
     if (result) {
       this.logger.debug(
         {
           message: 'findAll',
           query: {
-            searchWord: searchWord,
+            searchWord: tag,
+            region,
           },
           result: result,
         },
