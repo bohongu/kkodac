@@ -251,7 +251,7 @@ const Map = () => {
             </Region>
           </text>
         </Link>
-        <Link to="/tour/한립읍">
+        <Link to="/tour/한림읍">
           <Path
             variants={svgVariants}
             initial="start"

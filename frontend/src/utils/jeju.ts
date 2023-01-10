@@ -1,6 +1,6 @@
 export const REGION_LIST = [
   { id: 0, data: '한경면' },
-  { id: 1, data: '한립읍' },
+  { id: 1, data: '한림읍' },
   { id: 2, data: '애월읍' },
   { id: 3, data: '제주시' },
   { id: 4, data: '조천읍' },

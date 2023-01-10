@@ -53,3 +53,8 @@ export const deleteFile = async (id: string) => {
 export const createPost = async (data: IPost) => {
   return await axios.post(`${BASE_URL}/kkodac/post`, data);
 };
+
+export const getPostRegion = async (region: string) => {
+  const { data } = await axios.get(`${BASE_URL}/kkodac/posts?region=${region}`);
+  return data.result;
+};

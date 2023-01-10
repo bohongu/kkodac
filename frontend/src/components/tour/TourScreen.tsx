@@ -1,18 +1,66 @@
 import { motion } from 'framer-motion';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useMatch } from 'react-router-dom';
 import styled from 'styled-components';
 import { REGION_LIST } from '../../utils/jeju';
 import { HoverDownVariants, ContentVariants } from '../../utils/variants';
+import { useQuery } from 'react-query';
+import { getPostRegion } from './../../api/api';
+
+interface IPostFileMapper {
+  file: {
+    fileId: string;
+    _id: string;
+    createdAt: string;
+    fileName: string;
+    fileUrl: string;
+    deployName: string;
+  };
+}
+
+interface IPostTagMapper {
+  tag: {
+    name: string;
+  };
+}
+
+interface IPost {
+  postId: string;
+  createdAt: string;
+  updatedAt: string;
+  title: string;
+  fileMappers: IPostFileMapper[];
+  tagMappers: IPostTagMapper[];
+  authorId: {
+    userId: string;
+    userName: string;
+    nickname: string;
+    user_refresh_token: null;
+  };
+  regionId: {
+    name: string;
+  };
+}
 
 const TourScreen = () => {
   const match = useMatch('/tour/:region');
   const region = match?.params.region;
+  const { data: regionPosts } = useQuery<IPost[]>('getPostRegion', () =>
+    getPostRegion(region + ''),
+  );
+
+  useEffect(() => {
+    if (regionPosts) {
+      console.log(regionPosts);
+      console.log(region);
+    }
+  }, [region, regionPosts]);
+
   return (
     <TourWrapper>
       <RegionNav>
         {REGION_LIST.map((item) => (
-          <RegionBtn region={region === item.data}>
+          <RegionBtn key={item.id} region={region === item.data}>
             <Link to={`/tour/${item.data}`}>{item.data}</Link>
           </RegionBtn>
         ))}
@@ -22,17 +70,25 @@ const TourScreen = () => {
         <button>스타일</button>
       </TagNav>
       <Posts>
-        <Post variants={HoverDownVariants} whileHover="hover">
-          <Content variants={ContentVariants}>
-            <h1>제목</h1>
-            <h2>작성자</h2>
-            <Tags>
-              <div>애월읍</div>
-              <div>카페</div>
-              <div>바닷가</div>
-            </Tags>
-          </Content>
-        </Post>
+        {regionPosts?.map((post) => (
+          <Post
+            key={post.postId}
+            variants={HoverDownVariants}
+            whileHover="hover"
+            bgphoto={post.fileMappers[0].file.fileUrl}
+          >
+            <Content variants={ContentVariants}>
+              <h1>{post.title}</h1>
+              <h2>{post.authorId.nickname}</h2>
+
+              <Tags>
+                {post.tagMappers.map((tag) => (
+                  <div key={tag.tag.name}>{tag.tag.name}</div>
+                ))}
+              </Tags>
+            </Content>
+          </Post>
+        ))}
       </Posts>
     </TourWrapper>
   );
@@ -77,23 +133,29 @@ const Posts = styled.div`
   gap: 10px;
 `;
 
-const Post = styled(motion.div)`
+const Post = styled(motion.div)<{ bgphoto: string }>`
+  background-image: url(${(props) => props.bgphoto});
+  background-size: cover;
+  background-position: center center;
   border: 1px solid black;
   height: 300px;
-  background: white;
   border-radius: 10px;
 `;
 
 const Content = styled(motion.div)`
   border-top: 1px solid black;
+  border-bottom: 1px solid black;
   position: relative;
-  top: 150px;
-  height: 150px;
+  top: 200px;
+  height: 100px;
   opacity: 0;
   padding: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  background: white;
   h1 {
     font-size: 20px;
     margin-bottom: 10px;
