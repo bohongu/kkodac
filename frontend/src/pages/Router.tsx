@@ -23,6 +23,7 @@ const Router = () => {
             <Route path="/write" element={<Write />} />
             <Route path="/profile/:userId" element={<Profile />} />
             <Route path="/tour/:region" element={<Tour />} />
+            <Route path="/tour/:region/:postId" element={<Tour />} />
             <Route path="/subscribe/:userId" element={<Subscription />} />
             <Route path="/*" element={<NotFound />} />
           </>

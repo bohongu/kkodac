@@ -58,3 +58,8 @@ export const getPostRegion = async (region: string) => {
   const { data } = await axios.get(`${BASE_URL}/kkodac/posts?region=${region}`);
   return data.result;
 };
+
+export const getPostDetail = async (id: string) => {
+  const { data } = await axios.get(`${BASE_URL}/kkodac/post/${id}`);
+  return data.result;
+};

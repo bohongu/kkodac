@@ -1,60 +1,25 @@
-import { motion } from 'framer-motion';
-import React, { useEffect } from 'react';
-import { Link, useMatch } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
+import React from 'react';
+import { Link, useMatch, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { REGION_LIST } from '../../utils/jeju';
 import { HoverDownVariants, ContentVariants } from '../../utils/variants';
 import { useQuery } from 'react-query';
 import { getPostRegion } from './../../api/api';
-
-interface IPostFileMapper {
-  file: {
-    fileId: string;
-    _id: string;
-    createdAt: string;
-    fileName: string;
-    fileUrl: string;
-    deployName: string;
-  };
-}
-
-interface IPostTagMapper {
-  tag: {
-    name: string;
-  };
-}
-
-interface IPost {
-  postId: string;
-  createdAt: string;
-  updatedAt: string;
-  title: string;
-  fileMappers: IPostFileMapper[];
-  tagMappers: IPostTagMapper[];
-  authorId: {
-    userId: string;
-    userName: string;
-    nickname: string;
-    user_refresh_token: null;
-  };
-  regionId: {
-    name: string;
-  };
-}
+import PostModal from '../ui/PostModal';
+import { IPost } from '../../utils/interface';
 
 const TourScreen = () => {
-  const match = useMatch('/tour/:region');
-  const region = match?.params.region;
+  const navigate = useNavigate();
+  const regionMatch = useMatch('/tour/:region/');
+  const postMatch = useMatch('/tour/:region/:postId');
+  const region = regionMatch?.params.region;
   const { data: regionPosts } = useQuery<IPost[]>('getPostRegion', () =>
     getPostRegion(region + ''),
   );
-
-  useEffect(() => {
-    if (regionPosts) {
-      console.log(regionPosts);
-      console.log(region);
-    }
-  }, [region, regionPosts]);
+  const postDetailHandler = (postId: string) => {
+    navigate(`/tour/${region}/${postId}`);
+  };
 
   return (
     <TourWrapper>
@@ -76,6 +41,8 @@ const TourScreen = () => {
             variants={HoverDownVariants}
             whileHover="hover"
             bgphoto={post.fileMappers[0].file.fileUrl}
+            onClick={() => postDetailHandler(post.postId)}
+            layoutId={post.postId}
           >
             <Content variants={ContentVariants}>
               <h1>{post.title}</h1>
@@ -90,6 +57,9 @@ const TourScreen = () => {
           </Post>
         ))}
       </Posts>
+      <AnimatePresence>
+        {postMatch ? <PostModal id={postMatch.params.postId + ''} /> : null}
+      </AnimatePresence>
     </TourWrapper>
   );
 };

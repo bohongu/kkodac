@@ -1,24 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { useSetRecoilState } from 'recoil';
-import { postModalState } from '../../recoil/atoms';
 import { IoIosSend } from 'react-icons/io';
 import { RiDeleteBin6Line } from 'react-icons/ri';
-import img1 from '../../assets/images/정재홍.jpg';
-import img2 from '../../assets/images/테스트.jpg';
-import img3 from '../../assets/images/cat.jpg';
-import img4 from '../../assets/images/cat2.jpg';
+
+import { useQuery } from 'react-query';
+import { getPostDetail } from '../../api/api';
+import { useNavigate } from 'react-router-dom';
+import { IPostDetail } from '../../utils/interface';
 
 interface IModal {
   id: string;
 }
 
-const imgs = [img1, img2, img3, img4];
-
 const PostModal = ({ id }: IModal) => {
-  const [current, setCurrent] = useState<string | undefined>(imgs[0]);
+  const navigate = useNavigate();
   const [comment, setComment] = useState('');
+  const { data } = useQuery<IPostDetail>('getPostDetail', () =>
+    getPostDetail(id),
+  );
+
+  const [mainImg, setMainImg] = useState<string>('');
+  const createdAt = data?.createdAt.substring(0, 10);
   const commentSubmitHandler = () => {
     console.log(comment);
     /* axios 댓글 */
@@ -27,127 +30,94 @@ const PostModal = ({ id }: IModal) => {
   const commentChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setComment(event.currentTarget.value);
   };
-  const setModal = useSetRecoilState(postModalState);
   const hideModal = () => {
-    setModal(false);
+    setMainImg('');
+    navigate(-1);
   };
   const deleteCommentHandler = () => {
     /* 댓글 삭제  */
   };
-  const viewHandler = (img: string) => {
-    if (current) {
-      setCurrent(imgs.find((i) => i === img));
-    }
+  const viewHandler = (url: string) => {
+    setMainImg(url);
   };
+
   return (
     <>
-      <Overlay onClick={hideModal} />
-      <Modal layoutId={id}>
-        <Post>
-          <TitleAndLike>
-            <h1>아쿠아리움을 다녀왔어요</h1>
-            <div>❤</div>
-          </TitleAndLike>
-          <Tags>
-            <h1>우도</h1>
-            <Tag>
-              <h2>싱글</h2>
-              <h2>어드벤처</h2>
-            </Tag>
-          </Tags>
-          <AuthorAndDate>
-            <h2>엄지혜</h2>
-            <h3>2022-12-23</h3>
-          </AuthorAndDate>
-          <MainContent>
-            <ImageSection>
-              {current && <Image photo={current} />}
-              <ImageGrid>
-                {imgs.map((img) => (
-                  <Images
-                    onClick={() => viewHandler(img)}
-                    key={img}
-                    bgPhoto={img}
+      {data && (
+        <>
+          <Overlay onClick={hideModal} />
+          <Modal layoutId={id}>
+            <Post>
+              <TitleAndLike>
+                <h1>{data.title}</h1>
+                <div>❤</div>
+              </TitleAndLike>
+              <Tags>
+                <h1>{data.regionId.name}</h1>
+                <Tag>
+                  {data.tagMappers.map((tag) => (
+                    <h2 key={tag.tag.name}>{tag.tag.name}</h2>
+                  ))}
+                </Tag>
+              </Tags>
+              <AuthorAndDate>
+                <h2>{data.authorId.nickname}</h2>
+                <h3>{createdAt}</h3>
+              </AuthorAndDate>
+              <MainContent>
+                <ImageSection>
+                  <Image bgPhoto={mainImg} />
+                  <ImageGrid>
+                    {data.fileMappers.map((img) => (
+                      <Images
+                        key={img.file.fileId}
+                        bgPhoto={img.file.fileUrl}
+                        onClick={() => viewHandler(img.file.fileUrl)}
+                      />
+                    ))}
+                  </ImageGrid>
+                </ImageSection>
+                <Description>{data.description}</Description>
+              </MainContent>
+            </Post>
+            <Comment>
+              <Me>
+                <div></div>
+                <h1>엄지혜</h1>
+              </Me>
+              <CommentList>
+                <CommentItem>
+                  <div></div>
+                  <h1>엄지혜</h1>
+                  <CommentText>
+                    consectetur quae hic officiis est, culpa nihil modi placeat
+                    id, iconsectetur quae hic officiis est, culpa nihil modi
+                    placeat id, iconsectetur quae hic officiis est, culpa nihil
+                    modi placeat id, iconsectetur quae hic officiis est, culpa
+                    nihil modi placeat id, i
+                  </CommentText>
+                  <CommentNav>
+                    <RiDeleteBin6Line onClick={deleteCommentHandler} />
+                  </CommentNav>
+                </CommentItem>
+              </CommentList>
+              <InputSection>
+                <label>
+                  <input
+                    type="text"
+                    onChange={commentChangeHandler}
+                    value={comment}
+                    placeholder="댓글"
                   />
-                ))}
-              </ImageGrid>
-            </ImageSection>
-            <Description>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint,
-              neque soluta deserunt nobis pariatur ex consectetur quae hic
-              officiis est, culpa nihil modi placeat id, illo quidem doloribus
-              ullam aspernatur! Lorem ipsum dolor sit amet consectetur
-              adipisicing elit. Sint, neque soluta deserunt nobis pariatur ex
-              consectetur quae hic officiis est, culpa nihil modi placeat id,
-              illo quidem doloribus ullam aspernatur! Lorem ipsum dolor sit amet
-              consectetur adipisicing elit. Sint, neque soluta deserunt nobis
-              pariatur ex consectetur quae hic officiis est, culpa nihil
-              modiLorem ipsum dolor sit amet consectetur adipisicing elit. Sint,
-              neque soluta deserunt nobis pariatur ex consectetur quae hic
-              officiis est, culpa nihil modi placeat id, illo quidem doloribus
-              ullam aspernatur! Lorem ipsum dolor sit amet consectetur
-              adipisicing elit. Sint, neque soluta deserunt nobis pariatur ex
-              consectetur quae hic officiis est, culpa nihil modi placeat id,
-              illo quidem doloribus ullam aspernatur! Lorem ipsum dolor sit amet
-              consectetur adipisicing elit. Sint, neque soluta deserunt nobis
-              pariatur ex consectetur quae hic officiis est, culpa nihil modi
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint,
-              neque soluta deserunt nobis pariatur ex consectetur quae hic
-              officiis est, culpa nihil modi placeat id, illo quidem doloribus
-              ullam aspernatur! Lorem ipsum dolor sit amet consectetur
-              adipisicing elit. Sint, neque soluta deserunt nobis pariatur ex
-              consectetur quae hic officiis est, culpa nihil modi placeat id,
-              illo quidem doloribus ullam aspernatur! Lorem ipsum dolor sit amet
-              consectetur adipisicing elit. Sint, neque soluta deserunt nobis
-              pariatur ex consectetur quae hic officiis est, culpa nihil
-              modiLorem ipsum dolor sit amet consectetur adipisicing elit. Sint,
-              neque soluta deserunt nobis pariatur ex consectetur quae hic
-              officiis est, culpa nihil modi placeat id, illo quidem doloribus
-              ullam aspernatur! Lorem ipsum dolor sit amet consectetur
-              adipisicing elit. Sint, neque soluta deserunt nobis pariatur ex
-              consectetur quae hic officiis est, culpa nihil modi placeat id,
-              illo quidem doloribus ullam aspernatur! Lorem ipsum dolor sit amet
-              consectetur adipisicing elit. Sint, neque soluta deserunt nobis
-              pariatur ex consectetur quae hic officiis est, culpa nihil modi
-            </Description>
-          </MainContent>
-        </Post>
-        <Comment>
-          <Me>
-            <div></div>
-            <h1>엄지혜</h1>
-          </Me>
-          <CommentList>
-            <CommentItem>
-              <div></div>
-              <h1>엄지혜</h1>
-              <CommentText>
-                consectetur quae hic officiis est, culpa nihil modi placeat id,
-                iconsectetur quae hic officiis est, culpa nihil modi placeat id,
-                iconsectetur quae hic officiis est, culpa nihil modi placeat id,
-                iconsectetur quae hic officiis est, culpa nihil modi placeat id,
-                i
-              </CommentText>
-              <CommentNav>
-                <RiDeleteBin6Line onClick={deleteCommentHandler} />
-              </CommentNav>
-            </CommentItem>
-          </CommentList>
-          <InputSection>
-            <label>
-              <input
-                type="text"
-                onChange={commentChangeHandler}
-                value={comment}
-                placeholder="댓글"
-              />
-              <button onClick={commentSubmitHandler}>
-                <IoIosSend />
-              </button>
-            </label>
-          </InputSection>
-        </Comment>
-      </Modal>
+                  <button onClick={commentSubmitHandler}>
+                    <IoIosSend />
+                  </button>
+                </label>
+              </InputSection>
+            </Comment>
+          </Modal>
+        </>
+      )}
     </>
   );
 };
@@ -257,8 +227,8 @@ const ImageSection = styled.div`
   gap: 10px;
 `;
 
-const Image = styled.div<{ photo: string }>`
-  background-image: url(${(props) => props.photo});
+const Image = styled.div<{ bgPhoto: string }>`
+  background-image: url(${(props) => props.bgPhoto});
   background-size: cover;
   background-position: center center;
   width: 550px;

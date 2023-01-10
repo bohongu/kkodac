@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import PostModal from '../ui/PostModal';
 import { useRecoilState } from 'recoil';
-import { postModalState } from '../../recoil/atoms';
 import { BsFillArrowRightCircleFill } from 'react-icons/bs';
 import {
   ContentVariants,
@@ -17,7 +16,6 @@ const dummy = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const Jeju = () => {
   const offset = 5;
   const [index, setIndex] = useState(0);
-  const [modal, setModal] = useRecoilState(postModalState);
   const [leaving, setLeaving] = useState(false);
   const nextSlide = () => {
     if (leaving) return;
@@ -27,10 +25,6 @@ const Jeju = () => {
     setIndex((prev) => (prev === maxSlide ? 0 : prev + 1));
   };
   const toggleLeaving = () => setLeaving((prev) => !prev);
-
-  const showPostModal = () => {
-    setModal(true);
-  };
 
   return (
     <MainWrapper>
@@ -52,12 +46,7 @@ const Jeju = () => {
             key={index}
           >
             {dummy.slice(offset * index, offset * index + offset).map((i) => (
-              <ThumbNail
-                variants={HoverVariants}
-                whileHover="hover"
-                key={i}
-                onClick={showPostModal}
-              >
+              <ThumbNail variants={HoverVariants} whileHover="hover" key={i}>
                 <Content variants={ContentVariants}>
                   <h1>제목</h1>
                   <h2>작성자</h2>
@@ -72,7 +61,7 @@ const Jeju = () => {
           </Line>
         </AnimatePresence>
       </Slider>
-      <AnimatePresence>{modal ? <PostModal id="1" /> : null}</AnimatePresence>
+      <AnimatePresence></AnimatePresence>
     </MainWrapper>
   );
 };
