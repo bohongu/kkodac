@@ -105,18 +105,8 @@ export class PostRepository {
       .leftJoinAndSelect('filemapper.file', 'file')
       .leftJoinAndSelect('post.tagMappers', 'tagmapper')
       .leftJoinAndSelect('tagmapper.tag', 'tag')
-      // .where('tagmapper.tag IN (:tags)', {
-      //   tags: tag,
-      // })
-      // .andWhere('tagmapper.tag IN (:tag)', {
-      //   tag: '커플',
-      // })
-      // .andWhere('tagmapper.tag IN (:tag)', {
-      //   tag: tag[2],
-      // })
-      // .andWhere('tagmapper.tag IN (:tag)', {
-      //   tag: tag[3],
-      // })
+      .leftJoinAndSelect('post.authorId', 'authorId')
+      .leftJoinAndSelect('post.regionId', 'regionId')
       .where('post.regionId = :region', {
         region: region,
       })
@@ -124,24 +114,24 @@ export class PostRepository {
       .getMany();
 
     // const file = [];
-    // const tag = [];
     // for (const post of posts) {
     //   delete post._id;
     //   delete post.description;
-
     //   delete post.fileMappers;
+    //   for (const file of post.fileMappers)
     //   file.push(post.fileMappers[0].file.fileId);
-    //   file.push(post.fileMappers[0].file.fileUrl);
+    // file.push(post.fileMappers[0].file.fileUrl);
 
-    //   for (const num in post.tagMappers) {
-    //     delete post.tagMappers;
-    //     tag.push(post.tagMappers[num].tag.tagId);
-    //   }
+    // console.log(file);
+    // for (const num in post.tagMappers) {
+    //   delete post.tagMappers;
+    //   tag.push(post.tagMappers[num].tag.tagId);
+    // }
     // }
 
     // console.log(file);
     // console.log(tag);
-    // const result = { ...posts, files: file, tag: tag };
+    // const result = { ...posts };
 
     return posts;
   }
