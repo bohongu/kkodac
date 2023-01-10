@@ -13,15 +13,21 @@ interface IModal {
 }
 
 const PostModal = ({ id }: IModal) => {
+  /* React-Router-Dom */
   const navigate = useNavigate();
+
+  /* State */
   const [comment, setComment] = useState('');
+  const [mainImg, setMainImg] = useState<string>('');
+  const [z, setZ] = useState(0);
+
+  /* React-Query */
   const { data } = useQuery<IPostDetail>('getPostDetail', () =>
     getPostDetail(id),
   );
-
-  const [mainImg, setMainImg] = useState<string>('');
-  const [z, setZ] = useState(0);
   const createdAt = data?.createdAt.substring(0, 10);
+
+  /* Handlers */
   const commentSubmitHandler = () => {
     console.log(comment);
     /* axios 댓글 */
@@ -30,7 +36,7 @@ const PostModal = ({ id }: IModal) => {
   const commentChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setComment(event.currentTarget.value);
   };
-  const hideModal = () => {
+  const hideModalHanlder = () => {
     setMainImg('');
     navigate(-1);
   };
@@ -45,7 +51,7 @@ const PostModal = ({ id }: IModal) => {
     <>
       {data && (
         <>
-          <Overlay onClick={hideModal} />
+          <Overlay onClick={hideModalHanlder} />
           <Modal layoutId={id}>
             <Post>
               <TitleAndLike>

@@ -10,15 +10,20 @@ import PostModal from '../ui/PostModal';
 import { IPost } from '../../utils/interface';
 
 const TourScreen = () => {
+  /* React-Router-Dom */
   const navigate = useNavigate();
   const regionMatch = useMatch('/tour/:region/');
   const postMatch = useMatch('/tour/:region/:postId');
   const region = regionMatch?.params.region;
+
+  /* React-Query */
   const {
     data: regionPosts,
     isLoading,
     refetch,
   } = useQuery<IPost[]>('getPostRegion', () => getPostRegion(region + ''));
+
+  /* Handlers */
   const postDetailHandler = (postId: string) => {
     navigate(`/tour/${region}/${postId}`);
   };

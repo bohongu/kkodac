@@ -7,12 +7,18 @@ import Dropdown from './Dropdown';
 import { logVariants, navVariants } from '../../utils/variants';
 
 const Navigation = () => {
+  /* State */
   const [drop, setDrop] = useState(false);
+
+  /* React-Router-Dom */
   const navigate = useNavigate();
+
+  /*Framer-Motion */
   const navAnimation = useAnimation();
   const logAnimation = useAnimation();
   const { scrollY } = useScroll();
 
+  /* Handlers */
   const toggleDropHandler = () => {
     setDrop((prev) => !prev);
   };

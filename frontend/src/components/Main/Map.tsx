@@ -37,6 +37,8 @@ interface IWeather {
 const Map = () => {
   const lat = 33.511;
   const lon = 126.964;
+
+  /* React-Query */
   const { data: weatherData } = useQuery<IWeather | undefined>('weather', () =>
     getWeather(lat, lon),
   );

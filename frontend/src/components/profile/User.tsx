@@ -5,10 +5,15 @@ import { subscriberModalState } from './../../recoil/atoms';
 import { MdFace } from 'react-icons/md';
 
 const UserSection = () => {
-  const setModal = useSetRecoilState(subscriberModalState);
+  /* State */
   const [drop, setDrop] = useState(false);
   const [editProfile, setEditProfile] = useState(false);
   const [preview, setPreview] = useState('');
+
+  /* Recoil */
+  const setModal = useSetRecoilState(subscriberModalState);
+
+  /* Handlers */
   const setEditProfileHandler = () => {
     setEditProfile(true);
   };
@@ -18,7 +23,6 @@ const UserSection = () => {
   const removeImageHandler = () => {
     setPreview('');
   };
-
   const profileImageChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
@@ -28,6 +32,7 @@ const UserSection = () => {
     }
     setPreview(URL.createObjectURL(files[0]));
   };
+
   return (
     <UserWrapper>
       <UserImageSection>

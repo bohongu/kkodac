@@ -17,8 +17,11 @@ interface IAuthForm {
 }
 
 const Auth = () => {
+  /* Recoil */
   const loginState = useSetRecoilState(loggedInState);
   const [newAccount, setNewAccount] = useRecoilState(newAcountState);
+
+  /*React-Hook-Form */
   const {
     register,
     handleSubmit,
@@ -27,11 +30,7 @@ const Auth = () => {
     reset,
   } = useForm<IAuthForm>();
 
-  const toggleAuthHandler = () => {
-    setNewAccount((prev) => !prev);
-    reset();
-  };
-
+  /* React-Query */
   const signUp = useMutation(signUpAtom, {
     onMutate: (variable) => {
       console.log('onMutate', variable);
@@ -43,6 +42,12 @@ const Auth = () => {
       console.log('end');
     },
   });
+
+  /* Handlers */
+  const toggleAuthHandler = () => {
+    setNewAccount((prev) => !prev);
+    reset();
+  };
 
   const authSubmitHandler = ({
     userId,

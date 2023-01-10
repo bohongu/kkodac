@@ -4,7 +4,7 @@ import { FaImages } from 'react-icons/fa';
 import { MdDeleteOutline } from 'react-icons/md';
 import TagDrop from './TagDrop';
 import RegionDrop from './RegionDrop';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { selectedRegionState } from '../../recoil/atoms';
 import { selectedTagsState } from './../../recoil/atoms';
 import { useMutation, useQueryClient } from 'react-query';
@@ -19,16 +19,26 @@ interface IPostImage {
 }
 
 const Editor = () => {
+  /* React-Router-Dom */
   const navigate = useNavigate();
+
+  /* State */
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const regionValue = useRecoilValue(selectedRegionState);
   const [postImage, setPostImage] = useState<IPostImage[]>([]);
-  const selectTags = useRecoilValue<string[]>(selectedTagsState);
+
+  /* Recoil */
+  const [regionValue, setRegionValue] = useRecoilState(selectedRegionState);
+  const [selectTags, setSelectTags] =
+    useRecoilState<string[]>(selectedTagsState);
+
+  /* React-Query */
   const queryClient = useQueryClient();
   const sendFile = useMutation(postFile);
   const sendPost = useMutation(createPost);
   const removeFile = useMutation(deleteFile);
+
+  /* Handlers */
   const titleChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.currentTarget.value);
   };
@@ -95,7 +105,9 @@ const Editor = () => {
         onSuccess: () => {
           setTitle('');
           setDescription('');
+          setRegionValue('');
           setPostImage([]);
+          setSelectTags([]);
           navigate(`/tour/${regionValue}`);
           queryClient.invalidateQueries('getPostRegion');
         },

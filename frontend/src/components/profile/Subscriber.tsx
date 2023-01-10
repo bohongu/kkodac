@@ -8,7 +8,9 @@ import { subscriberModalState } from './../../recoil/atoms';
 import { modalVarints } from '../../utils/variants';
 
 const Subscriber = () => {
+  /* Recoil */
   const [modal, setModal] = useRecoilState(subscriberModalState);
+
   return (
     <AnimatePresence initial={false}>
       {modal.showModal && (

@@ -25,8 +25,11 @@ const TAG_LIST = [
 ];
 
 const TagDrop = () => {
+  /* Recoil */
   const [selectTags, setSelectTags] =
     useRecoilState<string[]>(selectedTagsState);
+
+  /* Handlers */
   const tagChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = event.currentTarget;
 

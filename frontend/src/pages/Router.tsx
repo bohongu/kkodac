@@ -12,7 +12,9 @@ import NotFound from './NotFound';
 import Write from './Write';
 
 const Router = () => {
+  /* Recoil */
   const isLoggedIn = useRecoilValue(loggedInState);
+
   return (
     <BrowserRouter>
       {isLoggedIn && <Navigation />}

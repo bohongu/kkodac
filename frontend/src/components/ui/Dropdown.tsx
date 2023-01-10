@@ -9,8 +9,13 @@ import { useSetRecoilState } from 'recoil';
 import { loggedInState } from '../../recoil/atoms';
 
 const Dropdown = () => {
-  const logout = useSetRecoilState(loggedInState);
+  /* React-Router-Dom */
   const navigate = useNavigate();
+
+  /* Recoil */
+  const logout = useSetRecoilState(loggedInState);
+
+  /* Handlers */
   const logoutHandler = () => {
     logout(false);
     navigate('/');

@@ -5,10 +5,14 @@ import { selectedRegionState } from '../../recoil/atoms';
 import { REGION_LIST } from '../../utils/jeju';
 
 const RegionDrop = () => {
+  /* Recoil */
   const [region, setRegion] = useRecoilState(selectedRegionState);
+
+  /* Handlers */
   const regionChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRegion(event.currentTarget.value);
   };
+
   return (
     <DropWrapper>
       <h1>
