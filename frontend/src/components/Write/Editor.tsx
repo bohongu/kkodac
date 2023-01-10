@@ -7,8 +7,9 @@ import RegionDrop from './RegionDrop';
 import { useRecoilValue } from 'recoil';
 import { selectedRegionState } from '../../recoil/atoms';
 import { selectedTagsState } from './../../recoil/atoms';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { createPost, deleteFile, postFile } from '../../api/api';
+import { useNavigate } from 'react-router-dom';
 
 const MAX_SIZE = 3 * 1024 * 1024; /* 3MB */
 
@@ -18,11 +19,13 @@ interface IPostImage {
 }
 
 const Editor = () => {
+  const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const regionValue = useRecoilValue(selectedRegionState);
   const [postImage, setPostImage] = useState<IPostImage[]>([]);
   const selectTags = useRecoilValue<string[]>(selectedTagsState);
+  const queryClient = useQueryClient();
   const sendFile = useMutation(postFile);
   const sendPost = useMutation(createPost);
   const removeFile = useMutation(deleteFile);
@@ -90,12 +93,14 @@ const Editor = () => {
       },
       {
         onSuccess: () => {
-          console.log('input 초기화, 홈으로 가기');
+          setTitle('');
+          setDescription('');
+          setPostImage([]);
+          navigate(`/tour/${regionValue}`);
+          queryClient.invalidateQueries('getPostRegion');
         },
       },
     );
-    setTitle('');
-    setDescription('');
   };
 
   return (

@@ -125,6 +125,7 @@ const Post = styled(motion.div)<{ bgphoto: string }>`
   border: 1px solid black;
   height: 300px;
   border-radius: 10px;
+  cursor: pointer;
 `;
 
 const Content = styled(motion.div)`
