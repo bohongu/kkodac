@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { IoIosSend } from 'react-icons/io';
 import { RiDeleteBin6Line } from 'react-icons/ri';
-
 import { useQuery } from 'react-query';
 import { getPostDetail } from '../../api/api';
 import { useNavigate } from 'react-router-dom';
@@ -21,6 +20,7 @@ const PostModal = ({ id }: IModal) => {
   );
 
   const [mainImg, setMainImg] = useState<string>('');
+  const [z, setZ] = useState(0);
   const createdAt = data?.createdAt.substring(0, 10);
   const commentSubmitHandler = () => {
     console.log(comment);
@@ -66,13 +66,17 @@ const PostModal = ({ id }: IModal) => {
               </AuthorAndDate>
               <MainContent>
                 <ImageSection>
-                  <Image bgPhoto={mainImg} />
+                  <Thumb bgPhoto={data.fileMappers[0].file.fileUrl} />
+                  <Image z={z} bgPhoto={mainImg} />
                   <ImageGrid>
                     {data.fileMappers.map((img) => (
                       <Images
                         key={img.file.fileId}
                         bgPhoto={img.file.fileUrl}
-                        onClick={() => viewHandler(img.file.fileUrl)}
+                        onClick={() => {
+                          viewHandler(img.file.fileUrl);
+                          setZ(5);
+                        }}
                       />
                     ))}
                   </ImageGrid>
@@ -227,12 +231,22 @@ const ImageSection = styled.div`
   gap: 10px;
 `;
 
-const Image = styled.div<{ bgPhoto: string }>`
+const Image = styled.div<{ bgPhoto: string; z: number }>`
   background-image: url(${(props) => props.bgPhoto});
   background-size: cover;
   background-position: center center;
   width: 550px;
   height: 550px;
+  z-index: ${(props) => props.z};
+`;
+
+const Thumb = styled.div<{ bgPhoto: string }>`
+  background-image: url(${(props) => props.bgPhoto});
+  background-size: cover;
+  background-position: center center;
+  width: 550px;
+  height: 550px;
+  position: absolute;
 `;
 
 const ImageGrid = styled.div`
@@ -249,7 +263,7 @@ const Images = styled.div<{ bgPhoto: string }>`
   background-image: url(${(props) => props.bgPhoto});
   background-size: cover;
   background-position: center center;
-  height: 240px;
+  height: 270px;
 `;
 
 const Description = styled.p`

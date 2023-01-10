@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import React from 'react';
-import { Link, useMatch, useNavigate } from 'react-router-dom';
+import { useMatch, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { REGION_LIST } from '../../utils/jeju';
 import { HoverDownVariants, ContentVariants } from '../../utils/variants';
@@ -14,9 +14,11 @@ const TourScreen = () => {
   const regionMatch = useMatch('/tour/:region/');
   const postMatch = useMatch('/tour/:region/:postId');
   const region = regionMatch?.params.region;
-  const { data: regionPosts } = useQuery<IPost[]>('getPostRegion', () =>
-    getPostRegion(region + ''),
-  );
+  const {
+    data: regionPosts,
+    isLoading,
+    refetch,
+  } = useQuery<IPost[]>('getPostRegion', () => getPostRegion(region + ''));
   const postDetailHandler = (postId: string) => {
     navigate(`/tour/${region}/${postId}`);
   };
@@ -26,7 +28,16 @@ const TourScreen = () => {
       <RegionNav>
         {REGION_LIST.map((item) => (
           <RegionBtn key={item.id} region={region === item.data}>
-            <Link to={`/tour/${item.data}`}>{item.data}</Link>
+            <div
+              onClick={() => {
+                navigate(`/tour/${item.data}`);
+                setTimeout(() => {
+                  refetch();
+                }, 100);
+              }}
+            >
+              {item.data}
+            </div>
           </RegionBtn>
         ))}
       </RegionNav>
@@ -35,27 +46,31 @@ const TourScreen = () => {
         <button>스타일</button>
       </TagNav>
       <Posts>
-        {regionPosts?.map((post) => (
-          <Post
-            key={post.postId}
-            variants={HoverDownVariants}
-            whileHover="hover"
-            bgphoto={post.fileMappers[0].file.fileUrl}
-            onClick={() => postDetailHandler(post.postId)}
-            layoutId={post.postId}
-          >
-            <Content variants={ContentVariants}>
-              <h1>{post.title}</h1>
-              <h2>{post.authorId.nickname}</h2>
+        {isLoading ? (
+          <div>로딩중...</div>
+        ) : (
+          regionPosts?.map((post) => (
+            <Post
+              key={post.postId}
+              variants={HoverDownVariants}
+              whileHover="hover"
+              bgphoto={post.fileMappers[0].file.fileUrl}
+              onClick={() => postDetailHandler(post.postId)}
+              layoutId={post.postId}
+            >
+              <Content variants={ContentVariants}>
+                <h1>{post.title}</h1>
+                <h2>{post.authorId.nickname}</h2>
 
-              <Tags>
-                {post.tagMappers.map((tag) => (
-                  <div key={tag.tag.name}>{tag.tag.name}</div>
-                ))}
-              </Tags>
-            </Content>
-          </Post>
-        ))}
+                <Tags>
+                  {post.tagMappers.map((tag) => (
+                    <div key={tag.tag.name}>{tag.tag.name}</div>
+                  ))}
+                </Tags>
+              </Content>
+            </Post>
+          ))
+        )}
       </Posts>
       <AnimatePresence>
         {postMatch ? <PostModal id={postMatch.params.postId + ''} /> : null}
