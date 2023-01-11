@@ -18,7 +18,7 @@ export const HoverDownVariants = {
   },
   hover: {
     zInedx: 100,
-    scale: 1.1,
+    scale: 1.2,
     transition: {
       delay: 0.3,
     },

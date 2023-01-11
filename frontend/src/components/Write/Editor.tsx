@@ -56,7 +56,7 @@ const Editor = () => {
     }
 
     for (let i = 0; i < files.length; i++) {
-      if (postImage.length > 5) {
+      if (postImage.length > 3) {
         alert('사진은 최대 4장까지 등록 가능합니다.');
         return;
       }

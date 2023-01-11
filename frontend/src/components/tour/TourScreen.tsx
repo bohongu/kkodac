@@ -1,8 +1,8 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import React from 'react';
+import React, { useState } from 'react';
 import { useMatch, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { REGION_LIST } from '../../utils/jeju';
+import { REGION_LIST, TAG_LIST } from '../../utils/jeju';
 import { HoverDownVariants, ContentVariants } from '../../utils/variants';
 import { useQuery } from 'react-query';
 import { getPostRegion } from './../../api/api';
@@ -10,6 +10,9 @@ import PostModal from '../ui/PostModal';
 import { IPost } from '../../utils/interface';
 
 const TourScreen = () => {
+  /* State */
+  const [tags, setTags] = useState<string[]>([]);
+
   /* React-Router-Dom */
   const navigate = useNavigate();
   const regionMatch = useMatch('/tour/:region/');
@@ -26,6 +29,18 @@ const TourScreen = () => {
   /* Handlers */
   const postDetailHandler = (postId: string) => {
     navigate(`/tour/${region}/${postId}`);
+  };
+
+  const tagChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, checked } = event.currentTarget;
+    console.log(value, checked);
+
+    if (checked) {
+      setTags([...tags, value]);
+    } else {
+      setTags(tags.filter((tag) => tag !== value));
+    }
+    /* 태그 검색 API */
   };
 
   return (
@@ -47,8 +62,18 @@ const TourScreen = () => {
         ))}
       </RegionNav>
       <TagNav>
-        <button>계절</button>
-        <button>스타일</button>
+        {TAG_LIST.map((list) => (
+          <TagWrapper key={list.id}>
+            <Label check={tags.includes(list.data) ? true : false}>
+              {list.data}
+              <input
+                type="checkbox"
+                value={list.data}
+                onChange={tagChangeHandler}
+              />
+            </Label>
+          </TagWrapper>
+        ))}
       </TagNav>
       <Posts>
         {isLoading ? (
@@ -98,7 +123,6 @@ const RegionNav = styled.nav`
   display: grid;
   grid-template-columns: repeat(14, 1fr);
   gap: 10px;
-  margin-bottom: 10px;
 `;
 
 const RegionBtn = styled.button<{ region: boolean }>`
@@ -109,33 +133,48 @@ const RegionBtn = styled.button<{ region: boolean }>`
 
 const TagNav = styled.nav`
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
+  margin: 20px 0;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 5px;
   width: 100%;
-  height: 50px;
-  margin-bottom: 10px;
+  height: 100px;
+`;
+
+const TagWrapper = styled.div`
+  input {
+    display: none;
+  }
+`;
+
+const Label = styled.label<{ check: boolean }>`
+  display: flex;
+  align-items: center;
+  border: 1px solid black;
+  width: 100%;
+  height: 100%;
+  padding-left: 10px;
+  background: ${(props) => (props.check ? 'tomato' : 'white')};
+  cursor: pointer;
 `;
 
 const Posts = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   width: 100%;
-  gap: 10px;
+  gap: 15px;
 `;
 
 const Post = styled(motion.div)<{ bgphoto: string }>`
   background-image: url(${(props) => props.bgphoto});
   background-size: cover;
   background-position: center center;
-  border: 1px solid black;
   height: 300px;
   border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   cursor: pointer;
 `;
 
 const Content = styled(motion.div)`
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
   position: relative;
   top: 200px;
   height: 100px;
