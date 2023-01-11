@@ -138,6 +138,7 @@ const Editor = () => {
             <label htmlFor="post_image">
               <FaImages />
               <div>사진을 등록하세요</div>
+              <div>( 최대 4장 )</div>
             </label>
             <input
               type="file"

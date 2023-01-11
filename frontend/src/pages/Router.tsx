@@ -27,14 +27,11 @@ const Router = () => {
             <Route path="/tour/:region" element={<Tour />} />
             <Route path="/tour/:region/:postId" element={<Tour />} />
             <Route path="/subscribe/:userId" element={<Subscription />} />
-            <Route path="/*" element={<NotFound />} />
           </>
         ) : (
-          <>
-            <Route path="/" element={<Auth />} />
-            <Route path="/*" element={<NotFound />} />
-          </>
+          <Route path="/" element={<Auth />} />
         )}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

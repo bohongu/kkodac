@@ -15,6 +15,7 @@ import {
   TiWeatherSnow,
 } from 'react-icons/ti';
 import { TbMist } from 'react-icons/tb';
+import LoadingSpinner from './../ui/LoadingSpinner';
 
 interface IWeatherArray {
   id: number;
@@ -39,8 +40,9 @@ const Map = () => {
   const lon = 126.964;
 
   /* React-Query */
-  const { data: weatherData } = useQuery<IWeather | undefined>('weather', () =>
-    getWeather(lat, lon),
+  const { data: weatherData, isLoading } = useQuery<IWeather | undefined>(
+    'weather',
+    () => getWeather(lat, lon),
   );
   let celsius;
   let weather;
@@ -79,9 +81,17 @@ const Map = () => {
   return (
     <>
       <Weather>
-        <Icon>{selectIcon()}</Icon>
-        <Temp>{celsius}&#8451;</Temp>
-        <Info>{weather}</Info>
+        {isLoading ? (
+          <div>
+            <LoadingSpinner />
+          </div>
+        ) : (
+          <>
+            <Icon>{selectIcon()}</Icon>
+            <Temp>{celsius}&#8451;</Temp>
+            <Info>{weather}</Info>
+          </>
+        )}
       </Weather>
       <Svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600">
         <Link to="/tour/대정면">

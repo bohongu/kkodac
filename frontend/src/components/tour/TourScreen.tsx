@@ -8,6 +8,7 @@ import { useQuery } from 'react-query';
 import { getPostRegion } from './../../api/api';
 import PostModal from '../ui/PostModal';
 import { IPost } from '../../utils/interface';
+import LoadingSpinner from '../ui/LoadingSpinner';
 
 const TourScreen = () => {
   /* State */
@@ -77,8 +78,10 @@ const TourScreen = () => {
       </TagNav>
       <Posts>
         {isLoading ? (
-          <div>로딩중...</div>
-        ) : (
+          <div>
+            <LoadingSpinner />
+          </div>
+        ) : regionPosts?.length !== 0 ? (
           regionPosts?.map((post) => (
             <Post
               key={post.postId}
@@ -100,6 +103,8 @@ const TourScreen = () => {
               </Content>
             </Post>
           ))
+        ) : (
+          <div>게시물이 없습니다.</div>
         )}
       </Posts>
       <AnimatePresence>
