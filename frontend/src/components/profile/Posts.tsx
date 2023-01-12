@@ -32,7 +32,7 @@ const Posts = styled.div`
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
   padding: 20px;
-  padding-left: 50px;
+  padding: 50px;
   overflow: scroll;
   ::-webkit-scrollbar {
     display: none;

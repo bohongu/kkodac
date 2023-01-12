@@ -120,6 +120,7 @@ const TourWrapper = styled.div`
   ${(props) => props.theme.flex.flexCenterColumn}
   margin: 0 15%;
   margin-top: 80px;
+  padding-bottom: 40px;
 `;
 
 const RegionNav = styled.nav`

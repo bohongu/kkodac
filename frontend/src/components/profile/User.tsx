@@ -3,12 +3,15 @@ import styled from 'styled-components';
 import { useSetRecoilState } from 'recoil';
 import { subscriberModalState } from './../../recoil/atoms';
 import { MdFace } from 'react-icons/md';
+import { FILE_MAX_SIZE } from '../../utils/jeju';
 
 const UserSection = () => {
   /* State */
   const [drop, setDrop] = useState(false);
   const [editProfile, setEditProfile] = useState(false);
   const [preview, setPreview] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [bio, setBio] = useState('');
 
   /* Recoil */
   const setModal = useSetRecoilState(subscriberModalState);
@@ -23,14 +26,38 @@ const UserSection = () => {
   const removeImageHandler = () => {
     setPreview('');
   };
+
   const profileImageChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const { files } = event.currentTarget;
+    const formData = new FormData();
     if (!files) {
       return;
     }
+    if (files[0].size > FILE_MAX_SIZE) {
+      alert('업로드 가능한 최대 용량은 3MB입니다.');
+    } else {
+      formData.append('profile', files[0]);
+    }
+
     setPreview(URL.createObjectURL(files[0]));
+  };
+
+  const nicknameChangeHandler = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setNickname(event.currentTarget.value);
+  };
+
+  const bioChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setBio(event.currentTarget.value);
+  };
+
+  const submitProfileHandler = () => {
+    console.log(nickname, bio);
+    setNickname('');
+    setBio('');
   };
 
   return (
@@ -76,11 +103,15 @@ const UserSection = () => {
       ) : (
         <Edit>
           <label htmlFor="nickname">Nickname</label>
-          <input id="nickname" />
+          <input
+            id="nickname"
+            value={nickname}
+            onChange={nicknameChangeHandler}
+          />
           <label htmlFor="introduce">Bio</label>
-          <textarea id="introduce" />
+          <textarea id="introduce" value={bio} onChange={bioChangeHandler} />
           <div>
-            <button>Save</button>
+            <button onClick={submitProfileHandler}>Save</button>
             <button onClick={closeEditProfileHandler}>Cancel</button>
           </div>
         </Edit>

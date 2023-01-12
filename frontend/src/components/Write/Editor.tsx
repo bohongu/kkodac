@@ -10,8 +10,7 @@ import { selectedTagsState } from './../../recoil/atoms';
 import { useMutation, useQueryClient } from 'react-query';
 import { createPost, deleteFile, postFile } from '../../api/api';
 import { useNavigate } from 'react-router-dom';
-
-const MAX_SIZE = 3 * 1024 * 1024; /* 3MB */
+import { FILE_MAX_SIZE } from '../../utils/jeju';
 
 interface IPostImage {
   id: string;
@@ -60,7 +59,7 @@ const Editor = () => {
         alert('사진은 최대 4장까지 등록 가능합니다.');
         return;
       }
-      if (files[i].size > MAX_SIZE) {
+      if (files[i].size > FILE_MAX_SIZE) {
         alert('업로드 가능한 최대 용량은 파일 당 3MB입니다.');
       } else {
         formData.append('file', files[i]);
@@ -92,6 +91,7 @@ const Editor = () => {
     for (let i = 0; i < postImage.length; i++) {
       sendImages.push(postImage[i].id);
     }
+    const stringTag = selectTags.join();
     sendPost.mutate(
       {
         title,

@@ -35,3 +35,5 @@ export const TAG_LIST = [
   { id: 16, data: '가을' },
   { id: 17, data: '겨울' },
 ];
+
+export const FILE_MAX_SIZE = 3 * 1024 * 1024; /* 3MB */
