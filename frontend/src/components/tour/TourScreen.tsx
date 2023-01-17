@@ -34,7 +34,6 @@ const TourScreen = () => {
 
   const tagChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = event.currentTarget;
-    console.log(value, checked);
 
     if (checked) {
       setTags([...tags, value]);
@@ -207,9 +206,10 @@ const Tags = styled.div`
   div {
     ${(props) => props.theme.flex.flexCenter}
     border: 1px solid black;
-    width: 50px;
+    width: 60px;
     height: 20px;
     font-size: 12px;
     margin-right: 10px;
+    padding: 5px;
   }
 `;

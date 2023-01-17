@@ -19,6 +19,7 @@ export interface IPost {
   postId: string;
   createdAt: string;
   updatedAt: string;
+  tagString: string;
   title: string;
   fileMappers: IPostFileMapper[];
   tagMappers: IPostTagMapper[];

@@ -91,11 +91,12 @@ const Editor = () => {
     for (let i = 0; i < postImage.length; i++) {
       sendImages.push(postImage[i].id);
     }
-    const stringTag = selectTags.join();
+    const tagString = selectTags.join();
     sendPost.mutate(
       {
         title,
         description,
+        tagString,
         files: sendImages,
         tags: selectTags,
         authorId: 'test',

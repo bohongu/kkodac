@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import Map from './Map';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import PostModal from '../ui/PostModal';
-import { useRecoilState } from 'recoil';
 import { BsFillArrowRightCircleFill } from 'react-icons/bs';
 import {
   ContentVariants,
