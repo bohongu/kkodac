@@ -4,6 +4,8 @@ import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { currentUser, subscriberModalState } from './../../recoil/atoms';
 import { MdFace } from 'react-icons/md';
 import { FILE_MAX_SIZE } from '../../utils/jeju';
+import { useMutation } from 'react-query';
+import { postFile } from '../../api/api';
 
 const UserSection = () => {
   /* State */
@@ -16,6 +18,9 @@ const UserSection = () => {
   /* Recoil */
   const setModal = useSetRecoilState(subscriberModalState);
   const user = useRecoilValue(currentUser);
+
+  /* React-Query */
+  const sendFile = useMutation(postFile);
 
   /* Handlers */
   const setEditProfileHandler = () => {
@@ -40,6 +45,14 @@ const UserSection = () => {
       alert('업로드 가능한 최대 용량은 3MB입니다.');
     } else {
       formData.append('profile', files[0]);
+      sendFile.mutate(formData, {
+        onError(error, variables, context) {
+          console.log(error, variables, context);
+        },
+        onSuccess(data, variables, context) {
+          console.log(data, variables, context);
+        },
+      });
     }
 
     setPreview(URL.createObjectURL(files[0]));

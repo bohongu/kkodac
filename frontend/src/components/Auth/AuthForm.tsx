@@ -8,7 +8,7 @@ import { RiKakaoTalkFill } from 'react-icons/ri';
 import { AiOutlineGoogle } from 'react-icons/ai';
 import { useMutation } from 'react-query';
 import { loginAtom, signUpAtom } from '../../api/api';
-import { currentUser } from './../../recoil/atoms';
+import { currentUser, accessTokenState } from './../../recoil/atoms';
 import axios from 'axios';
 
 interface IAuthForm {
@@ -23,6 +23,7 @@ const Auth = () => {
   const loginState = useSetRecoilState(loggedInState);
   const [newAccount, setNewAccount] = useRecoilState(newAcountState);
   const setCurrentUser = useSetRecoilState(currentUser);
+  const setAccessToken = useSetRecoilState(accessTokenState);
 
   /*React-Hook-Form */
   const {
@@ -83,7 +84,10 @@ const Auth = () => {
               },
             );
             setCurrentUser(profile.data.result);
-            loginState(true);
+            setAccessToken(accessToken);
+            if (accessToken) {
+              loginState(true);
+            }
           },
           onError: (error, variables, context) => {
             console.log(error, variables, context);

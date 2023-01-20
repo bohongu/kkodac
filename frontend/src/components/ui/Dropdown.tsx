@@ -5,8 +5,8 @@ import { BsFillPencilFill } from 'react-icons/bs';
 import { GiThreeFriends } from 'react-icons/gi';
 import { AiOutlineLogout } from 'react-icons/ai';
 import { Link, useNavigate } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
-import { loggedInState } from '../../recoil/atoms';
+import { useSetRecoilState, useRecoilValue } from 'recoil';
+import { currentUser, loggedInState } from '../../recoil/atoms';
 
 const Dropdown = () => {
   /* React-Router-Dom */
@@ -14,6 +14,7 @@ const Dropdown = () => {
 
   /* Recoil */
   const logout = useSetRecoilState(loggedInState);
+  const user = useRecoilValue(currentUser);
 
   /* Handlers */
   const logoutHandler = () => {
@@ -22,7 +23,7 @@ const Dropdown = () => {
   };
   return (
     <DropdownWrapper>
-      <Menus to="/profile/재홍">
+      <Menus to={`/profile/${user.userId}`}>
         <CgProfile /> &nbsp; 프로필
       </Menus>
       <Menus to="/write">

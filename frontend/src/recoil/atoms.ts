@@ -26,6 +26,11 @@ export const loggedInState = atom<boolean>({
   default: false,
 });
 
+export const accessTokenState = atom({
+  key: `accessToken${v1()}`,
+  default: '',
+});
+
 export const currentUser = atom<IUser>({
   key: `currentUser/${v1()}`,
   default: {
