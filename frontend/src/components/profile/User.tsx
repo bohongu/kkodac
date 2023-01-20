@@ -14,6 +14,10 @@ const UserSection = () => {
   const [preview, setPreview] = useState('');
   const [nickname, setNickname] = useState('');
   const [bio, setBio] = useState('');
+  const [profileImage, setProfileImage] = useState<{
+    id: string;
+    url: string;
+  }>({ id: '', url: '' });
 
   /* Recoil */
   const setModal = useSetRecoilState(subscriberModalState);
@@ -44,18 +48,17 @@ const UserSection = () => {
     if (files[0].size > FILE_MAX_SIZE) {
       alert('업로드 가능한 최대 용량은 3MB입니다.');
     } else {
-      formData.append('profile', files[0]);
+      formData.append('file', files[0]);
       sendFile.mutate(formData, {
-        onError(error, variables, context) {
-          console.log(error, variables, context);
-        },
-        onSuccess(data, variables, context) {
-          console.log(data, variables, context);
+        onSuccess: (data) => {
+          const profileImageInfo = {
+            id: data.data.id,
+            url: data.data.url,
+          };
+          setProfileImage(profileImageInfo);
         },
       });
     }
-
-    setPreview(URL.createObjectURL(files[0]));
   };
 
   const nicknameChangeHandler = (
