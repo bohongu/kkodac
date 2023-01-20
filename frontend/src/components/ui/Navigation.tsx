@@ -5,6 +5,8 @@ import { motion, useAnimation, useScroll } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Dropdown from './Dropdown';
 import { logVariants, navVariants } from '../../utils/variants';
+import { useRecoilValue } from 'recoil';
+import { currentUser } from './../../recoil/atoms';
 
 const Navigation = () => {
   /* State */
@@ -13,7 +15,7 @@ const Navigation = () => {
   /* React-Router-Dom */
   const navigate = useNavigate();
 
-  /*Framer-Motion */
+  /* Framer-Motion */
   const navAnimation = useAnimation();
   const logAnimation = useAnimation();
   const { scrollY } = useScroll();
@@ -22,6 +24,9 @@ const Navigation = () => {
   const toggleDropHandler = () => {
     setDrop((prev) => !prev);
   };
+
+  /* Recoil */
+  const user = useRecoilValue(currentUser);
 
   useEffect(() => {
     scrollY.onChange(() => {
@@ -58,7 +63,8 @@ const Navigation = () => {
         initial="top"
         onClick={toggleDropHandler}
       >
-        반가워요, 엄지혜님{drop ? <IoMdArrowDropup /> : <IoMdArrowDropdown />}
+        반가워요, {user.nickname}
+        {drop ? <IoMdArrowDropup /> : <IoMdArrowDropdown />}
         {drop && <Dropdown />}
       </Nav>
     </NavigationWrapper>

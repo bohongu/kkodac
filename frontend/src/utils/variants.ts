@@ -71,13 +71,14 @@ export const svgVariants = {
   end: {
     pathLength: 1,
     transition: {
-      duration: 3,
+      duration: 2,
     },
   },
   hover: {
     fill: 'yellow',
+    pathLength: 0,
     transition: {
-      duration: 3,
+      duration: 1,
     },
   },
 };

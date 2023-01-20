@@ -23,7 +23,6 @@ const Jeju = () => {
     setIndex((prev) => (prev === maxSlide ? 0 : prev + 1));
   };
   const toggleLeaving = () => setLeaving((prev) => !prev);
-
   return (
     <MainWrapper>
       <Map />

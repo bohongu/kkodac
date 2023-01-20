@@ -342,7 +342,7 @@ const Path = styled(motion.path)`
   stroke: black;
 `;
 
-const Region = styled.tspan`
+const Region = styled(motion.tspan)`
   font: bold 13px sans-serif;
   fill: tomato;
 `;

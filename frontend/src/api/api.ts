@@ -4,9 +4,14 @@ const BASE_URL = process.env.REACT_APP_API_URL;
 const WEATHER_API_KEY = process.env.REACT_APP_API_KEY;
 
 interface ISignUp {
-  userName: string;
+  username: string;
   password: string;
   nickname: string;
+}
+
+interface ILogin {
+  username: string;
+  password: string;
 }
 
 interface IPost {
@@ -31,12 +36,11 @@ export const getWeather = async (lat: number, lon: number) => {
 /* 인증 API */
 
 export const signUpAtom = async (data: ISignUp) => {
-  await axios.post(`${BASE_URL}/kkodac`, data);
+  return await axios.post(`${BASE_URL}/kkodac/user/join`, data);
 };
 
-export const test = async () => {
-  const { data } = await axios.get(`${BASE_URL}/kkodac/posts?count=1&index=1`);
-  return data.result;
+export const loginAtom = async (data: ILogin) => {
+  return await axios.post(`${BASE_URL}/kkodac/user/auth/login`, data);
 };
 
 /* 파일 API */

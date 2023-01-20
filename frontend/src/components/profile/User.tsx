@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useSetRecoilState } from 'recoil';
-import { subscriberModalState } from './../../recoil/atoms';
+import { useSetRecoilState, useRecoilValue } from 'recoil';
+import { currentUser, subscriberModalState } from './../../recoil/atoms';
 import { MdFace } from 'react-icons/md';
 import { FILE_MAX_SIZE } from '../../utils/jeju';
 
@@ -15,6 +15,7 @@ const UserSection = () => {
 
   /* Recoil */
   const setModal = useSetRecoilState(subscriberModalState);
+  const user = useRecoilValue(currentUser);
 
   /* Handlers */
   const setEditProfileHandler = () => {
@@ -91,13 +92,10 @@ const UserSection = () => {
       </UserImageSection>
       {!editProfile ? (
         <>
-          <UserId>엄지혜</UserId>
-          <Nickname>테스트닉네임</Nickname>
+          <UserId>{user.nickname}</UserId>
+          <Nickname>{user.username}</Nickname>
           <Introduce>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem
-            autem aperiam quis fuga omnis quas cumque officia eveniet ratione
-            minima necessitatibus illo fugiat sint ad eum esse debitis, ab
-            illum?
+            {user.introduce ? user.introduce : '자기소개가 없습니다.'}
           </Introduce>
         </>
       ) : (

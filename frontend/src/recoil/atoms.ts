@@ -1,6 +1,20 @@
 import { atom } from 'recoil';
 import { v1 } from 'uuid';
 
+interface IUser {
+  createdAt: string;
+  googleAccount: string;
+  introduce: string;
+  kakaoAccount: string;
+  nickname: string;
+  password: string;
+  refreshToken: string;
+  updatedAt: string;
+  userId: string;
+  username: string;
+  _id: string;
+}
+
 /* Auth */
 export const newAcountState = atom<boolean>({
   key: `newAccount/${v1()}`,
@@ -9,12 +23,24 @@ export const newAcountState = atom<boolean>({
 
 export const loggedInState = atom<boolean>({
   key: `loggedIn/${v1()}`,
-  default: true,
+  default: false,
 });
 
-export const currentUser = atom({
+export const currentUser = atom<IUser>({
   key: `currentUser/${v1()}`,
-  default: {},
+  default: {
+    createdAt: '',
+    googleAccount: '',
+    introduce: '',
+    kakaoAccount: '',
+    nickname: '',
+    password: '',
+    refreshToken: '',
+    updatedAt: '',
+    userId: '',
+    username: '',
+    _id: '',
+  },
 });
 
 export const subscriberModalState = atom<{ showModal: boolean; exit: boolean }>(
