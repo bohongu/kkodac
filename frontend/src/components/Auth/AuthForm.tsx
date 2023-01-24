@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
@@ -6,9 +6,9 @@ import { loggedInState, newAcountState } from '../../recoil/atoms';
 import { theme } from '../../styles/theme';
 import { RiKakaoTalkFill } from 'react-icons/ri';
 import { AiOutlineGoogle } from 'react-icons/ai';
-import { useMutation } from 'react-query';
-import { loginAtom, signUpAtom } from '../../api/api';
-import { currentUser, accessTokenState } from './../../recoil/atoms';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { currentUser, accessToken } from './../../recoil/atoms';
+import { signUp, login, profile, BASE_URL } from '../../api/api';
 import axios from 'axios';
 
 interface IAuthForm {
@@ -22,8 +22,8 @@ const Auth = () => {
   /* Recoil */
   const loginState = useSetRecoilState(loggedInState);
   const [newAccount, setNewAccount] = useRecoilState(newAcountState);
-  const setCurrentUser = useSetRecoilState(currentUser);
-  const setAccessToken = useSetRecoilState(accessTokenState);
+  const [user, setUser] = useRecoilState(currentUser);
+  const [currentAccessToken, setAccessToken] = useRecoilState(accessToken);
 
   /*React-Hook-Form */
   const {
@@ -35,9 +35,8 @@ const Auth = () => {
   } = useForm<IAuthForm>();
 
   /* React-Query */
-  const signUp = useMutation(signUpAtom);
-
-  const login = useMutation(loginAtom);
+  const signUpAxios = useMutation(signUp);
+  const loginAxios = useMutation(login);
 
   /* Handlers */
   const toggleAuthHandler = () => {
@@ -56,7 +55,7 @@ const Auth = () => {
         setError('confirm', { message: '비밀번호가 일치하지 않습니다' });
       } else {
         /* 회원가입 */
-        signUp.mutate(
+        signUpAxios.mutate(
           { username: userId, password, nickname },
           {
             onSuccess(data) {
@@ -72,22 +71,22 @@ const Auth = () => {
       }
     } else {
       /* 로그인 */
-      login.mutate(
+      loginAxios.mutate(
         { username: userId, password },
         {
           onSuccess: async (data) => {
             const { accessToken } = data.data;
-            const profile = await axios.get(
-              `${process.env.REACT_APP_API_URL}/kkodac/user/profile`,
-              {
-                headers: { Authorization: `${accessToken}` },
-              },
-            );
-            setCurrentUser(profile.data.result);
+            const { refreshToken } = data.data.refreshToken;
+
             setAccessToken(accessToken);
-            if (accessToken) {
-              loginState(true);
-            }
+            localStorage.setItem('token', refreshToken);
+
+            const profile = await axios.get(`${BASE_URL}/kkodac/user/profile`, {
+              headers: { Authorization: `${accessToken}` },
+            });
+
+            setUser(profile.data.result);
+            loginState(true);
           },
           onError: (error, variables, context) => {
             console.log(error, variables, context);

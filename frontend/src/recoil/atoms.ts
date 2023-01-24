@@ -1,4 +1,5 @@
 import { atom } from 'recoil';
+import { recoilPersist } from 'recoil-persist';
 import { v1 } from 'uuid';
 
 interface IUser {
@@ -15,37 +16,39 @@ interface IUser {
   _id: string;
 }
 
+export const initialUser = {
+  createdAt: '',
+  googleAccount: '',
+  introduce: '',
+  kakaoAccount: '',
+  nickname: '',
+  password: '',
+  refreshToken: '',
+  updatedAt: '',
+  userId: '',
+  username: '',
+  _id: '',
+};
+
 /* Auth */
 export const newAcountState = atom<boolean>({
   key: `newAccount/${v1()}`,
   default: false,
 });
 
-export const loggedInState = atom<boolean>({
+export const loggedInState = atom({
   key: `loggedIn/${v1()}`,
   default: false,
 });
 
-export const accessTokenState = atom({
-  key: `accessToken${v1()}`,
-  default: '',
-});
-
 export const currentUser = atom<IUser>({
   key: `currentUser/${v1()}`,
-  default: {
-    createdAt: '',
-    googleAccount: '',
-    introduce: '',
-    kakaoAccount: '',
-    nickname: '',
-    password: '',
-    refreshToken: '',
-    updatedAt: '',
-    userId: '',
-    username: '',
-    _id: '',
-  },
+  default: initialUser,
+});
+
+export const accessToken = atom({
+  key: `accessToken${v1()}`,
+  default: '',
 });
 
 export const subscriberModalState = atom<{ showModal: boolean; exit: boolean }>(

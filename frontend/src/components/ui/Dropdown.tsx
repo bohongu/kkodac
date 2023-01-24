@@ -7,6 +7,7 @@ import { AiOutlineLogout } from 'react-icons/ai';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { currentUser, loggedInState } from '../../recoil/atoms';
+import { accessToken } from './../../recoil/atoms';
 
 const Dropdown = () => {
   /* React-Router-Dom */
@@ -14,12 +15,29 @@ const Dropdown = () => {
 
   /* Recoil */
   const logout = useSetRecoilState(loggedInState);
+  const setCurrentUser = useSetRecoilState(currentUser);
   const user = useRecoilValue(currentUser);
+  const setAccessToken = useSetRecoilState(accessToken);
 
   /* Handlers */
   const logoutHandler = () => {
+    localStorage.removeItem('token');
+    setAccessToken('');
+    setCurrentUser({
+      createdAt: '',
+      googleAccount: '',
+      introduce: '',
+      kakaoAccount: '',
+      nickname: '',
+      password: '',
+      refreshToken: '',
+      updatedAt: '',
+      userId: '',
+      username: '',
+      _id: '',
+    });
     logout(false);
-    navigate('/');
+    console.log('로그아웃');
   };
   return (
     <DropdownWrapper>
