@@ -1,79 +1,160 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
+import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
-import CryptoJS from 'crypto-js';
-import { User } from 'src/users/user.entity';
-import { getConnection } from 'typeorm';
-import { UsersService } from '../users/users.service';
+import { User } from './../user/entities/user.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import * as CryptoJS from 'crypto-js';
+import { Err } from 'src/error';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
+    @InjectRepository(User) private userRepository: Repository<User>,
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(user_name: string): Promise<any> {
-    const user = await this.usersService.findUserByName(user_name);
+  async validateUser(username: string, pass: string): Promise<any> {
+    const existingUser = await this.userRepository.findOne({
+      where: {
+        username,
+      },
+    });
+    if (!existingUser) {
+      throw new BadRequestException(Err.USER.NOT_FOUND);
+    }
+    const password = await bcrypt.compare(pass, existingUser.password);
+    if (password) {
+      const { password, ...userWithoutPassword } = existingUser;
+      return userWithoutPassword;
+    }
+    return null;
+  }
+
+  async validateKakao(kakaoId: string): Promise<any> {
+    const user = await this.userRepository.findOne({
+      where: {
+        kakaoAccount: kakaoId,
+      },
+    });
     if (!user) {
       return null;
     }
     return user;
   }
 
-  async createLoginToken(user: User) {
+  async validateGoogle(googleId: string): Promise<any> {
+    const user = await this.userRepository.findOne({
+      where: {
+        googleAccount: googleId,
+      },
+    });
+    if (!user) {
+      return null;
+    }
+    return user;
+  }
+
+  async createOnceToken(socialType: string, socialId: string) {
     const payload = {
-      user_id: user._id,
-      user_token: 'loginToken',
+      type: socialType,
+      id: socialId,
     };
 
-    return this.jwtService.sign(payload, {
+    return await this.jwtService.sign(payload, {
       secret: process.env.JWT_SECRET,
-      expiresIn: '6m',
+      expiresIn: '15m',
     });
+  }
+
+  async createAccessToken(user: any) {
+    const payload = {
+      type: 'accessToken',
+      id: user.userId,
+      nickname: user.nickname,
+    };
+    const accessToken = this.jwtService.sign(payload, {
+      secret: process.env.JWT_SECRET,
+      expiresIn: '15m',
+    });
+    return accessToken;
   }
 
   async createRefreshToken(user: User) {
     const payload = {
-      user_id: user._id,
-      user_token: 'refreshToken',
+      type: 'refreshToken',
+      id: user.userId,
+      nickname: user.nickname,
     };
-
     const token = this.jwtService.sign(payload, {
       secret: process.env.JWT_SECRET,
-      expiresIn: '50m',
+      expiresIn: '20700m',
     });
+    const tokenVerify = await this.tokenValidate(token);
+    const tokenExp = new Date(tokenVerify['exp'] * 1000);
 
-    const refresh_token = CryptoJS.AES.encrypt(
+    const refreshToken = CryptoJS.AES.encrypt(
       JSON.stringify(token),
       process.env.AES_KEY,
     ).toString();
 
-    await getConnection()
-      .createQueryBuilder()
-      .update(User)
-      .set({ user_refresh_token: token })
-      .where(`_id = ${user._id}`)
+    await await this.userRepository
+      .createQueryBuilder('user')
+      .update()
+      .set({ refreshToken: refreshToken })
+      .where('userId = :id', { id: user.userId })
       .execute();
-    return refresh_token;
-  }
-
-  onceToken(user_profile: any) {
-    const payload = {
-      nickname: user_profile.nickname,
-      password: user_profile.password,
-      user_name: user_profile.user_name,
-      user_token: 'onceToken',
-    };
-
-    return this.jwtService.sign(payload, {
-      secret: process.env.JWT_SECRET,
-      expiresIn: '10m',
-    });
+    return { refreshToken, tokenExp };
   }
 
   async tokenValidate(token: string) {
     return await this.jwtService.verify(token, {
       secret: process.env.JWT_SECRET,
     });
+  }
+
+  async reissueRefreshToken(user: User) {
+    const existingUser = await this.userRepository.findOne({
+      where: {
+        userId: user.userId,
+      },
+    });
+    if (!existingUser) {
+      throw new BadRequestException(Err.USER.NOT_FOUND);
+    }
+    const payload = {
+      id: user.userId,
+      nickname: user.nickname,
+      type: 'refreshToken',
+    };
+    const token = this.jwtService.sign(payload, {
+      secret: process.env.JWT_SECRET,
+      expiresIn: '20700m',
+    });
+    const tokenVerify = await this.tokenValidate(token);
+    const tokenExp = new Date(tokenVerify['exp'] * 1000);
+    const current_time = new Date();
+    const time_remaining = Math.floor(
+      (tokenExp.getTime() - current_time.getTime()) / 1000 / 60 / 60,
+    );
+
+    if (time_remaining > 10) {
+      throw new BadRequestException(Err.TOKEN.JWT_NOT_REISSUED);
+    }
+
+    const refresh_token = CryptoJS.AES.encrypt(
+      JSON.stringify(token),
+      process.env.AES_KEY,
+    ).toString();
+
+    await await this.userRepository
+      .createQueryBuilder('user')
+      .update()
+      .set({ refreshToken: refresh_token })
+      .where('userId = :id', { id: user.userId })
+      .execute();
+    const access_token = await this.createAccessToken(user);
+    return { access_token, refresh_token: { refresh_token, tokenExp } };
   }
 }

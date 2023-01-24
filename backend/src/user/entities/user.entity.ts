@@ -1,3 +1,5 @@
+import { Exclude } from 'class-transformer';
+import { File } from 'src/file/entities/file.entity';
 import {
   Column,
   CreateDateColumn,
@@ -9,24 +11,34 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { File } from 'src/file/entities/file.entity';
-import { Exclude } from 'class-transformer';
 
 @Entity({ name: 'user_tb' })
 export class User {
-  @Exclude()
-  @PrimaryGeneratedColumn('increment', { comment: 'rowId' })
+  @PrimaryGeneratedColumn('increment', {
+    type: 'bigint',
+    comment: 'rowId',
+    unsigned: true,
+  })
   _id: number;
 
   @Index({ unique: true })
   @Column({
     name: 'user_id',
+    comment: '유저 UUID',
     type: 'varchar',
     length: 50,
-    comment: '유저 UUID',
     nullable: false,
   })
   userId: string = uuidv4();
+
+  @Column({ nullable: true })
+  kakaoAccount: string;
+
+  @Column({ nullable: true })
+  googleAccount: string;
+
+  @Column({ type: 'text', nullable: true })
+  refreshToken: string;
 
   @OneToOne(() => File, (file) => file, {
     createForeignKeyConstraints: false,
@@ -39,11 +51,20 @@ export class User {
   fileId: File;
 
   @Column({
+    name: 'social_file_id',
+    type: 'varchar',
+    length: 100,
+    comment: '유저 비밀번호',
+    nullable: true,
+  })
+  socialFileId: string;
+
+  @Column({
     name: 'password',
     type: 'varchar',
-    length: 40,
+    length: 100,
     comment: '유저 비밀번호',
-    nullable: false,
+    nullable: true,
   })
   password: string;
 
@@ -55,7 +76,7 @@ export class User {
     comment: '유저 아이디',
     nullable: false,
   })
-  userName: string;
+  username: string;
 
   @Column({
     name: 'nickname',
@@ -77,7 +98,7 @@ export class User {
 
   @CreateDateColumn({
     name: 'created_at',
-    comment: '등록일',
+    comment: '생성일',
     type: 'datetime',
   })
   createdAt: Date;
@@ -88,7 +109,4 @@ export class User {
     type: 'datetime',
   })
   updatedAt: Date;
-
-  @Column({ type: 'varchar', nullable: true })
-  user_refresh_token: string;
 }

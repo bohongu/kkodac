@@ -22,4 +22,7 @@ export class CreatePostDto {
 
   @IsEmpty()
   createdAt: string;
+
+  @IsString()
+  tagString: string;
 }

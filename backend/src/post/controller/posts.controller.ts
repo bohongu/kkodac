@@ -17,20 +17,15 @@ export class PostsController {
     @Inject(Logger) private readonly logger: LoggerService,
   ) {}
 
-  @Get()
-  async findAll(
-    @Query('tag') tag: string[],
-    @Query('region') region: string,
-    @Res() res: Response,
-  ) {
-    const result = await this.postService.findAll(tag, region);
+  @Get('')
+  async findAll(@Query('region') region: string, @Res() res: Response) {
+    const result = await this.postService.findAll(region);
     if (result) {
       this.logger.debug(
         {
           message: 'findAll',
           query: {
-            searchWord: tag,
-            region,
+            searchWord: region,
           },
           result: result,
         },

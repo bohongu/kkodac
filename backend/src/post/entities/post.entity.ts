@@ -1,8 +1,7 @@
-import { User } from 'src/users/user.entity';
+import { User } from 'src/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
-  Entity,
   Index,
   JoinColumn,
   OneToMany,
@@ -10,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Entity } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { PostFileMapper } from './post.file.mapping.entity';
 import { PostTagMapper } from './post.tag.mapping.entity';
@@ -91,4 +91,13 @@ export class Post {
     referencedColumnName: 'regionId',
   })
   regionId: Region;
+
+  @Column({
+    name: 'tagString',
+    type: 'varchar',
+    length: 256,
+    nullable: false,
+    comment: '태그 문자열',
+  })
+  tagString: string;
 }

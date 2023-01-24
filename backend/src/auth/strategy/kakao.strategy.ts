@@ -8,7 +8,7 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
   constructor(private readonly authService: AuthService) {
     super({
       clientID: process.env.KAKAO_KEY,
-      callbackURL: process.env.KAKAO_CALLBACK_URL,
+      callbackURL: 'http://localhost:3000/kkodac/user/auth/kakao/callback',
     });
   }
   async validate(
@@ -17,26 +17,18 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
     profile: any,
     done: any,
   ): Promise<any> {
-    const user_email = profile._json.kakao_account.email;
-    const user_nick = profile._json.properties.nickname;
-    const user_provider = profile.provider;
-    const user_profile = {
-      user_email,
-      user_nick,
-      user_provider,
-    };
-    const user = await this.authService.validateUser(user_email);
+    const kakaoId = String(profile.id);
+    const username = String(profile._json.kakao_account.email);
+    const nickname = String(profile._json.properties.nickname);
+    const socialfileid = String(profile._json.properties.profile_image);
+
+    const user = await this.authService.validateKakao(kakaoId);
     if (user === null) {
       // 유저가 없을때
-      console.log('일회용 토큰 발급');
-      const once_token = this.authService.onceToken(user_profile);
-      return { once_token, type: 'once' };
+      done(null, { kakaoId, username, nickname, socialfileid, type: 'kakao' });
+      return { kakaoId, username, nickname, socialfileid, type: 'kakao' };
     }
-
     // 유저가 있을때
-    console.log('로그인 토큰 발급');
-    const access_token = await this.authService.createLoginToken(user);
-    const refresh_token = await this.authService.createRefreshToken(user);
-    return { access_token, refresh_token, type: 'login' };
+    done(null, { user, type: 'login' });
   }
 }

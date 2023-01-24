@@ -7,7 +7,6 @@ import { eventContext } from 'aws-serverless-express/middleware';
 import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
 
 import * as express from 'express';
 import { winstonLogger } from './utils/winston.util';
@@ -44,9 +43,11 @@ async function bootstrapServer(): Promise<Server> {
       },
     );
     nestApp.enableCors();
-    // nestApp.use(eventContext());
-    // nestApp.use(bodyParser.json({ limit: '50mb' }));
-    // nestApp.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+    nestApp.use(eventContext());
+    nestApp.use(bodyParser.json({ limit: '50mb' }));
+    nestApp.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+    // nestApp.use(passport.initialize());
+    // nestApp.use(passport.session());
 
     //class validator config
     // nestApp.useGlobalPipes(new ValidationPipe({ transform: true }));

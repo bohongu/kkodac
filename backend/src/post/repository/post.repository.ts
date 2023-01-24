@@ -2,13 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { Post } from '../entities/post.entity';
 import { Request } from 'express';
 import { CreatePostDto } from '../dto/create-post.dto';
-import { DataSource, Repository } from 'typeorm';
 import { PostFileMapper } from '../entities/post.file.mapping.entity';
 import { PostTagMapper } from '../entities/post.tag.mapping.entity';
 import { Tag } from '../entities/tag.entity';
 import { File } from 'src/file/entities/file.entity';
-import { User } from 'src/users/user.entity';
+// import { User } from 'src/users/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/user/entities/user.entity';
+import { getConnection, Repository } from 'typeorm';
 
 @Injectable()
 export class PostRepository {
@@ -21,7 +22,6 @@ export class PostRepository {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Tag)
     private readonly tagRepository: Repository<Tag>,
-    private readonly dataSource: DataSource,
   ) {}
 
   async create(createPostDto: CreatePostDto, req: Request): Promise<Post> {
@@ -33,7 +33,7 @@ export class PostRepository {
 
     for (const fileId of fileIds) {
       files.push(
-        await this.fileRepository.findOneBy({
+        await this.fileRepository.findOne({
           fileId: fileId,
         }),
       );
@@ -41,16 +41,16 @@ export class PostRepository {
 
     for (const tagId of tagIds) {
       tags.push(
-        await this.tagRepository.findOneBy({
+        await this.tagRepository.findOne({
           tagId: tagId,
         }),
       );
     }
 
-    const queryRunner = this.dataSource.createQueryRunner();
+    const queryRunner = await getConnection().createQueryRunner();
 
     try {
-      const authorId = await this.userRepository.findOneBy({
+      const authorId = await this.userRepository.findOne({
         userId: createPostDto.authorId,
       });
       const entity = queryRunner.manager
@@ -92,13 +92,37 @@ export class PostRepository {
       .leftJoinAndSelect('filemapper.file', 'file')
       .leftJoinAndSelect('post.tagMappers', 'tagmapper')
       .leftJoinAndSelect('tagmapper.tag', 'tag')
-      .where({ inquiryId: id })
+      .leftJoinAndSelect('post.authorId', 'authorId')
+      .leftJoinAndSelect('post.regionId', 'regionId')
+      .where({ postId: id })
       .getOne();
+
+    delete post._id;
+
+    for (const num in post.fileMappers) {
+      delete post.fileMappers[num]._id;
+    }
+    for (const num in post.tagMappers) {
+      delete post.tagMappers[num]._id;
+      delete post.tagMappers[num].tag._id;
+      delete post.tagMappers[num].tag.createdAt;
+      delete post.tagMappers[num].tag.tagId;
+    }
+
+    // delete post.authorId._id;
+    delete post.authorId.password;
+    // delete post.authorId.introduce;
+    // delete post.authorId.createdAt;
+    // delete post.authorId.updatedAt;
+
+    delete post.regionId._id;
+    delete post.regionId.createdAt;
+    delete post.regionId.regionId;
 
     return post;
   }
 
-  async findAll(tag?: string[], region?: string) {
+  async findAll(region: string) {
     const posts = await this.postRepository
       .createQueryBuilder('post')
       .leftJoinAndSelect('post.fileMappers', 'filemapper')
@@ -113,25 +137,28 @@ export class PostRepository {
       .orderBy('post.updatedAt', 'DESC')
       .getMany();
 
-    // const file = [];
-    // for (const post of posts) {
-    //   delete post._id;
-    //   delete post.description;
-    //   delete post.fileMappers;
-    //   for (const file of post.fileMappers)
-    //   file.push(post.fileMappers[0].file.fileId);
-    // file.push(post.fileMappers[0].file.fileUrl);
+    for (const post of posts) {
+      delete post._id;
+      delete post.description;
 
-    // console.log(file);
-    // for (const num in post.tagMappers) {
-    //   delete post.tagMappers;
-    //   tag.push(post.tagMappers[num].tag.tagId);
-    // }
-    // }
+      for (const num in post.fileMappers) {
+        delete post.fileMappers[num]._id;
+      }
 
-    // console.log(file);
-    // console.log(tag);
-    // const result = { ...posts };
+      for (const num in post.tagMappers) {
+        delete post.tagMappers[num]._id;
+      }
+
+      delete post.authorId._id;
+      delete post.authorId.password;
+      // delete post.authorId.introduce;
+      // delete post.authorId.createdAt;
+      // delete post.authorId.updatedAt;
+
+      delete post.regionId._id;
+      delete post.regionId.createdAt;
+      delete post.regionId.regionId;
+    }
 
     return posts;
   }

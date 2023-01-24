@@ -22,8 +22,8 @@ export class PostService {
     return result;
   }
 
-  async findAll(tag: string[], region: string) {
-    const result = await this.postRepository.findAll(tag, region);
+  async findAll(region: string) {
+    const result = await this.postRepository.findAll(region);
     return result;
   }
 }
