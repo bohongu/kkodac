@@ -18,7 +18,7 @@ import { LocalAuthGuard } from './../auth/guard/local-auth.guard';
 import { JwtAuthGuard } from './../auth/guard/jwt-auth.guard';
 import { User } from '../common/decorator/user.decorator';
 import { KakaoAuthGuard } from './../auth/guard/kakao-auth.guard';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { GoogleAuthGuard } from './../auth/guard/google-auth.guard';
 import { CreateSocialUserDto } from './dto/create-social-user.dto';
 import { JwtRefreshGuard } from './../auth/guard/jwt-refresh.guard';
@@ -167,15 +167,20 @@ export class UserController {
       const refreshToken = await this.authService.createRefreshToken(user.user);
       res.cookie('accessToken', accessToken);
       res.cookie('refreshToken', refreshToken);
-      res.redirect('http://localhost:3000');
+      res.redirect(
+        'https://lgluum6zo5.execute-api.ap-northeast-2.amazonaws.com/dev',
+      );
       res.end();
     } else {
       const onceToken = await this.authService.createOnceToken(
         user.type,
         user.kakaoId,
       );
+      const socialRegister = await this.userService.socialRegister(user);
       res.cookie('onceToken', onceToken);
-      res.redirect('http://localhost:3000');
+      res.redirect(
+        'https://lgluum6zo5.execute-api.ap-northeast-2.amazonaws.com/dev',
+      );
       res.end();
     }
   }
@@ -194,47 +199,21 @@ export class UserController {
       const refreshToken = await this.authService.createRefreshToken(user.user);
       res.cookie('accessToken', accessToken);
       res.cookie('refreshToken', refreshToken);
-      res.redirect('http://localhost:3000');
+      res.redirect(
+        'https://lgluum6zo5.execute-api.ap-northeast-2.amazonaws.com/dev',
+      );
       res.end();
     } else {
       const onceToken = await this.authService.createOnceToken(
         user.type,
         user.googleId,
       );
+      const socialRegister = await this.userService.socialRegister(user);
       res.cookie('onceToken', onceToken);
-      res.redirect('http://localhost:3000');
-      res.end();
-    }
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Post('join/social')
-  async socailRegister(
-    @User() user,
-    @Body() createSocialUserDto: CreateSocialUserDto,
-    @Res() res: Response,
-    @Req() req: Request,
-  ): Promise<any> {
-    const result = await this.userService.socialRegister(
-      user,
-      createSocialUserDto,
-      req,
-    );
-    if (result) {
-      this.logger.debug(
-        {
-          message: 'refresh-token',
-          result: {
-            result,
-          },
-        },
-        LABEL,
+      res.redirect(
+        'https://lgluum6zo5.execute-api.ap-northeast-2.amazonaws.com/dev',
       );
-      res.status(HttpStatus.OK).json({
-        result,
-      });
-    } else {
-      throw new Error('서버 측 에러');
+      res.end();
     }
   }
 }

@@ -9,7 +9,8 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     super({
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_SECRET,
-      callbackURL: 'http://localhost:3000/user/auth/google/callback',
+      callbackURL:
+        'https://lgluum6zo5.execute-api.ap-northeast-2.amazonaws.com/dev/kkodac/user/auth/kakao/callback',
       scope: ['email'],
     });
   }
@@ -21,9 +22,14 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     done: VerifyCallback,
   ): Promise<any> {
     const googleId = profile.id;
+    const username = profile._json.email;
+    const nickname = profile._json.email;
+    const socialfileid = profile._json.picture;
+
     const user = await this.authService.validateGoogle(googleId);
+
     if (user === null) {
-      return { googleId, type: 'google' };
+      return { googleId, username, nickname, socialfileid, type: 'google' };
     }
 
     // 유저가 있을때

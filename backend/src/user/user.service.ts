@@ -49,25 +49,28 @@ export class UserService {
     return result;
   }
 
-  async socialRegister(user, createSocialUserDto: CreateSocialUserDto) {
+  async socialRegister(user) {
     if (user.type === 'login') {
       throw new BadRequestException(Err.USER.EXISTING_USER);
     }
+
     // 1회용 토큰인경우
     if (user.type === 'kakao') {
       return await this.userRepository.save({
         userId: uuidv4(),
-        username: createSocialUserDto.username,
-        kakaoAccount: user.id,
-        nickname: createSocialUserDto.nickname,
-        socialfilefd: createSocialUserDto.socialfileid,
+        username: user.username,
+        kakaoAccount: user.kakaoId,
+        nickname: user.nickname,
+        socialFileId: user.socialfileid,
       });
     } else if (user.type === 'google') {
       return await this.userRepository.save({
         userId: uuidv4(),
-        username: createSocialUserDto.username,
-        googleAccount: user.id,
-        nickname: createSocialUserDto.nickname,
+        username: user.username,
+        kakaoAccount: user.kakaoId,
+        nickname: user.nickname,
+        socialFileId: user.socialfileid,
+        googleAccount: user.googleId,
       });
     }
   }

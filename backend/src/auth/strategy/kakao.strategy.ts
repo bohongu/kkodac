@@ -8,7 +8,8 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
   constructor(private readonly authService: AuthService) {
     super({
       clientID: process.env.KAKAO_KEY,
-      callbackURL: 'http://localhost:3000/kkodac/user/auth/kakao/callback',
+      callbackURL:
+        'https://lgluum6zo5.execute-api.ap-northeast-2.amazonaws.com/dev/kkodac/user/auth/kakao/callback',
     });
   }
   async validate(
@@ -22,13 +23,27 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
     const nickname = String(profile._json.properties.nickname);
     const socialfileid = String(profile._json.properties.profile_image);
 
-    const user = await this.authService.validateKakao(kakaoId);
-    if (user === null) {
+    const findUser = await this.authService.validateKakao(kakaoId);
+
+    console.log('find', findUser);
+    if (findUser === null) {
       // 유저가 없을때
+      const user = {
+        kakaoId,
+        username,
+        nickname,
+        socialfileid,
+        type: 'kakao',
+      };
+
       done(null, { kakaoId, username, nickname, socialfileid, type: 'kakao' });
-      return { kakaoId, username, nickname, socialfileid, type: 'kakao' };
+
+      return user;
     }
     // 유저가 있을때
-    done(null, { user, type: 'login' });
+    done(null, { findUser, type: 'login' });
+
+    const user = { findUser, type: 'login' };
+    return user;
   }
 }
