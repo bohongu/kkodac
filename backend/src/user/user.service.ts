@@ -4,7 +4,6 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { CreateLocalUserDto } from './dto/create-local-user.dto';
-import { CreateSocialUserDto } from './dto/create-social-user.dto';
 import { Err } from 'src/error';
 import { v4 as uuidv4 } from 'uuid';
 

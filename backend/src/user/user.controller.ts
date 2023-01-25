@@ -18,9 +18,8 @@ import { LocalAuthGuard } from './../auth/guard/local-auth.guard';
 import { JwtAuthGuard } from './../auth/guard/jwt-auth.guard';
 import { User } from '../common/decorator/user.decorator';
 import { KakaoAuthGuard } from './../auth/guard/kakao-auth.guard';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { GoogleAuthGuard } from './../auth/guard/google-auth.guard';
-import { CreateSocialUserDto } from './dto/create-social-user.dto';
 import { JwtRefreshGuard } from './../auth/guard/jwt-refresh.guard';
 
 const LABEL = 'User';
@@ -167,9 +166,7 @@ export class UserController {
       const refreshToken = await this.authService.createRefreshToken(user.user);
       res.cookie('accessToken', accessToken);
       res.cookie('refreshToken', refreshToken);
-      res.redirect(
-        'https://lgluum6zo5.execute-api.ap-northeast-2.amazonaws.com/dev',
-      );
+      res.redirect('http://localhost:3000');
       res.end();
     } else {
       const onceToken = await this.authService.createOnceToken(
@@ -178,9 +175,7 @@ export class UserController {
       );
       const socialRegister = await this.userService.socialRegister(user);
       res.cookie('onceToken', onceToken);
-      res.redirect(
-        'https://lgluum6zo5.execute-api.ap-northeast-2.amazonaws.com/dev',
-      );
+      res.redirect('http://localhost:3000');
       res.end();
     }
   }
@@ -199,9 +194,7 @@ export class UserController {
       const refreshToken = await this.authService.createRefreshToken(user.user);
       res.cookie('accessToken', accessToken);
       res.cookie('refreshToken', refreshToken);
-      res.redirect(
-        'https://lgluum6zo5.execute-api.ap-northeast-2.amazonaws.com/dev',
-      );
+      res.redirect('http://localhost:3000');
       res.end();
     } else {
       const onceToken = await this.authService.createOnceToken(
@@ -210,9 +203,7 @@ export class UserController {
       );
       const socialRegister = await this.userService.socialRegister(user);
       res.cookie('onceToken', onceToken);
-      res.redirect(
-        'https://lgluum6zo5.execute-api.ap-northeast-2.amazonaws.com/dev',
-      );
+      res.redirect('http://localhost:3000');
       res.end();
     }
   }
