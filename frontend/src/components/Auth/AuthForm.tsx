@@ -6,9 +6,9 @@ import { loggedInState, newAcountState } from '../../recoil/atoms';
 import { theme } from '../../styles/theme';
 import { RiKakaoTalkFill } from 'react-icons/ri';
 import { AiOutlineGoogle } from 'react-icons/ai';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation } from 'react-query';
 import { currentUser, accessToken } from './../../recoil/atoms';
-import { signUp, login, profile, BASE_URL } from '../../api/api';
+import { signUp, login, BASE_URL } from '../../api/api';
 import axios from 'axios';
 
 interface IAuthForm {
@@ -19,11 +19,13 @@ interface IAuthForm {
 }
 
 const Auth = () => {
+  /* State */
+
   /* Recoil */
   const loginState = useSetRecoilState(loggedInState);
   const [newAccount, setNewAccount] = useRecoilState(newAcountState);
-  const [user, setUser] = useRecoilState(currentUser);
-  const [currentAccessToken, setAccessToken] = useRecoilState(accessToken);
+  const setUser = useSetRecoilState(currentUser);
+  const setAccessToken = useSetRecoilState(accessToken);
 
   /*React-Hook-Form */
   const {
@@ -59,10 +61,10 @@ const Auth = () => {
           { username: userId, password, nickname },
           {
             onSuccess(data) {
-              console.log(data);
+              alert('회원가입이 완료되었습니다.');
             },
-            onError: (error, variables, context) => {
-              console.log(error, variables, context);
+            onError: (error) => {
+              alert(error);
             },
           },
         );
@@ -88,8 +90,8 @@ const Auth = () => {
             setUser(profile.data.result);
             loginState(true);
           },
-          onError: (error, variables, context) => {
-            console.log(error, variables, context);
+          onError: (error) => {
+            alert(error);
           },
         },
       );
@@ -98,7 +100,6 @@ const Auth = () => {
   };
 
   const kakaoHandler = () => {
-    /* 카카오 로그인 */
     console.log('카카오 로그인');
   };
   const googleHandler = () => {
@@ -182,7 +183,7 @@ const AuthWrapper = styled.div`
   width: 20%;
   height: 45%;
   padding: 1rem;
-  border: 1px solid black;
+  border: none;
 `;
 
 const Form = styled.form`
@@ -194,6 +195,8 @@ const Input = styled.input`
   height: 2.5rem;
   padding-left: 10px;
   font-size: 16px;
+  border: none;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
 `;
 
 const ErrorMsg = styled.span`
@@ -208,6 +211,7 @@ const AuthButton = styled.button`
   width: 100%;
   height: 2.5rem;
   margin-bottom: 1rem;
+  border: none;
 `;
 
 const SocialLoginWrapper = styled.div`

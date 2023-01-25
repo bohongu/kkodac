@@ -14,6 +14,34 @@ const PostSection = () => {
             <h3>❤ 300</h3>
           </Content>
         </Post>
+        <Post variants={HoverDownVariants} whileHover="hover">
+          <Content variants={ContentVariants}>
+            <h1>제목</h1>
+            <h2>2022-12-31</h2>
+            <h3>❤ 300</h3>
+          </Content>
+        </Post>
+        <Post variants={HoverDownVariants} whileHover="hover">
+          <Content variants={ContentVariants}>
+            <h1>제목</h1>
+            <h2>2022-12-31</h2>
+            <h3>❤ 300</h3>
+          </Content>
+        </Post>
+        <Post variants={HoverDownVariants} whileHover="hover">
+          <Content variants={ContentVariants}>
+            <h1>제목</h1>
+            <h2>2022-12-31</h2>
+            <h3>❤ 300</h3>
+          </Content>
+        </Post>
+        <Post variants={HoverDownVariants} whileHover="hover">
+          <Content variants={ContentVariants}>
+            <h1>제목</h1>
+            <h2>2022-12-31</h2>
+            <h3>❤ 300</h3>
+          </Content>
+        </Post>
       </Posts>
     </PostWrapper>
   );

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { IoIosSend } from 'react-icons/io';
@@ -270,6 +270,7 @@ const Images = styled.div<{ bgPhoto: string }>`
   background-size: cover;
   background-position: center center;
   height: 270px;
+  cursor: pointer;
 `;
 
 const Description = styled.p`

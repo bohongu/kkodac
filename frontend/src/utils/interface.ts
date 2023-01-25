@@ -15,6 +15,15 @@ interface IPostTagMapper {
   };
 }
 
+interface IRecommendTagMapper {
+  tag: {
+    _id: string;
+    tagId: string;
+    createdAt: string;
+    name: string;
+  };
+}
+
 export interface IPost {
   postId: string;
   createdAt: string;
@@ -36,4 +45,8 @@ export interface IPost {
 
 export interface IPostDetail extends IPost {
   description: string;
+}
+
+export interface IRecommendPost extends IPost {
+  tagMappers: IRecommendTagMapper[];
 }

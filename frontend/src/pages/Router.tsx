@@ -29,7 +29,9 @@ const Router = () => {
             <Route path="/subscribe/:userId" element={<Subscription />} />
           </>
         ) : (
-          <Route path="/" element={<Auth />} />
+          <>
+            <Route path="/" element={<Auth />} />
+          </>
         )}
         <Route path="*" element={<NotFound />} />
       </Routes>

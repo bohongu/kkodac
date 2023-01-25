@@ -11,7 +11,7 @@ const App = () => {
   const token = localStorage.getItem('token');
   const [currentAccessToken, setAccessToken] = useRecoilState(accessToken);
   const loginState = useSetRecoilState(loggedInState);
-  const [user, setUser] = useRecoilState(currentUser);
+  const setUser = useSetRecoilState(currentUser);
 
   const { data } = useQuery(['refresh', token], () => refresh(token + ''), {
     enabled: !!token,

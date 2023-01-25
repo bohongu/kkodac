@@ -82,3 +82,8 @@ export const getPostDetail = async (id: string) => {
   const { data } = await axios.get(`${BASE_URL}/kkodac/post/${id}`);
   return data.result;
 };
+
+export const getPostTag = async (tag: string) => {
+  const { data } = await axios.get(`${BASE_URL}/kkodac/posts/tag?tag=${tag}`);
+  return data.result;
+};

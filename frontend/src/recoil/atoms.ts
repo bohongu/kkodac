@@ -1,5 +1,4 @@
 import { atom } from 'recoil';
-import { recoilPersist } from 'recoil-persist';
 import { v1 } from 'uuid';
 
 interface IUser {

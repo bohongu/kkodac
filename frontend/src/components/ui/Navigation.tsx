@@ -63,7 +63,7 @@ const Navigation = () => {
         initial="top"
         onClick={toggleDropHandler}
       >
-        반가워요, {user.nickname}
+        반가워요, {user.nickname}님
         {drop ? <IoMdArrowDropup /> : <IoMdArrowDropdown />}
         {drop && <Dropdown />}
       </Nav>

@@ -8,27 +8,41 @@ import {
   HoverVariants,
   sliderVariants,
 } from '../../utils/variants';
-
-const dummy = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+import { useQuery } from 'react-query';
+import { getPostTag } from '../../api/api';
+import { IRecommendPost } from '../../utils/interface';
+import { useNavigate, useMatch } from 'react-router-dom';
 
 const Jeju = () => {
+  const { data: springPosts } = useQuery<IRecommendPost[]>('recommend', () =>
+    getPostTag('봄'),
+  );
+
+  const navigate = useNavigate();
+  const postMatch = useMatch('');
+
   const offset = 5;
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const nextSlide = () => {
     if (leaving) return;
     toggleLeaving();
-    const totalData = dummy.length;
+    const totalData = springPosts!.length;
     const maxSlide = Math.floor(totalData / offset) - 1;
     setIndex((prev) => (prev === maxSlide ? 0 : prev + 1));
   };
   const toggleLeaving = () => setLeaving((prev) => !prev);
+
+  const postDetailHandler = (region: string, postId: string) => {
+    navigate(`/tour/${region}/${postId}`);
+  };
+
   return (
     <MainWrapper>
       <Map />
       <Slider>
         <SliderHeader>
-          <h1>맛집</h1>
+          <h1>봄</h1>
           <NextArrow onClick={nextSlide}>
             <BsFillArrowRightCircleFill />
           </NextArrow>
@@ -42,19 +56,31 @@ const Jeju = () => {
             transition={{ type: 'tween', duration: 1 }}
             key={index}
           >
-            {dummy.slice(offset * index, offset * index + offset).map((i) => (
-              <ThumbNail variants={HoverVariants} whileHover="hover" key={i}>
-                <Content variants={ContentVariants}>
-                  <h1>제목</h1>
-                  <h2>작성자</h2>
-                  <Tags>
-                    <div>애월읍</div>
-                    <div>카페</div>
-                    <div>바닷가</div>
-                  </Tags>
-                </Content>
-              </ThumbNail>
-            ))}
+            {springPosts &&
+              springPosts
+                .slice(offset * index, offset * index + offset)
+                .map((post) => (
+                  <ThumbNail
+                    variants={HoverVariants}
+                    whileHover="hover"
+                    key={post.postId}
+                    bgphoto={post.fileMappers[0].file.fileUrl}
+                    onClick={() =>
+                      postDetailHandler(post.regionId.name, post.postId)
+                    }
+                    layoutId={post.postId}
+                  >
+                    <Content variants={ContentVariants}>
+                      <h1>{post.title}</h1>
+                      <h2>{post.authorId.nickname}</h2>
+                      <Tags>
+                        {post.tagMappers.map((tag) => (
+                          <div key={tag.tag._id}>{tag.tag.name}</div>
+                        ))}
+                      </Tags>
+                    </Content>
+                  </ThumbNail>
+                ))}
           </Line>
         </AnimatePresence>
       </Slider>
@@ -76,7 +102,7 @@ const Slider = styled.div`
   position: relative;
   width: 90%;
   margin-top: 30px;
-  margin-bottom: 300px;
+  margin-bottom: 350px;
 `;
 
 const SliderHeader = styled.header`
@@ -103,23 +129,28 @@ const Line = styled(motion.div)`
   grid-template-columns: repeat(5, 1fr);
 `;
 
-const ThumbNail = styled(motion.div)`
-  border: 1px solid black;
+const ThumbNail = styled(motion.div)<{ bgphoto: string }>`
   height: 300px;
   border-radius: 10px;
-  background: white;
+  background-image: url(${(props) => props.bgphoto});
+  background-size: cover;
+  background-position: center center;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  cursor: pointer;
 `;
 
 const Content = styled(motion.div)`
   position: relative;
   top: 180px;
   height: 120px;
-  border-top: 1px solid black;
   opacity: 0;
   padding: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background: white;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
   h1 {
     font-size: 20px;
     margin-bottom: 10px;

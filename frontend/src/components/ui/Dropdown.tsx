@@ -4,15 +4,12 @@ import { CgProfile } from 'react-icons/cg';
 import { BsFillPencilFill } from 'react-icons/bs';
 import { GiThreeFriends } from 'react-icons/gi';
 import { AiOutlineLogout } from 'react-icons/ai';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { currentUser, loggedInState } from '../../recoil/atoms';
 import { accessToken } from './../../recoil/atoms';
 
 const Dropdown = () => {
-  /* React-Router-Dom */
-  const navigate = useNavigate();
-
   /* Recoil */
   const logout = useSetRecoilState(loggedInState);
   const setCurrentUser = useSetRecoilState(currentUser);
@@ -37,7 +34,6 @@ const Dropdown = () => {
       _id: '',
     });
     logout(false);
-    console.log('로그아웃');
   };
   return (
     <DropdownWrapper>

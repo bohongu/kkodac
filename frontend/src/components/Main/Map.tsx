@@ -343,6 +343,6 @@ const Path = styled(motion.path)`
 `;
 
 const Region = styled(motion.tspan)`
-  font: bold 13px sans-serif;
-  fill: tomato;
+  font: bolder 13px sans-serif;
+  fill: black;
 `;
