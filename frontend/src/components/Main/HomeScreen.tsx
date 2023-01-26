@@ -11,7 +11,7 @@ import {
 import { useQuery } from 'react-query';
 import { getPostTag } from '../../api/api';
 import { IRecommendPost } from '../../utils/interface';
-import { useNavigate, useMatch } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Jeju = () => {
   const { data: springPosts } = useQuery<IRecommendPost[]>('recommend', () =>
@@ -149,6 +149,7 @@ const Content = styled(motion.div)`
   background: white;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
+  border-top: 0.5px solid rgba(0, 0, 0, 0.3);
   h1 {
     font-size: 20px;
     margin-bottom: 10px;

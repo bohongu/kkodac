@@ -86,3 +86,8 @@ export const seasonTagState = atom({
   key: `seasonTagState/${v1()}`,
   default: '',
 });
+
+export const searchTagState = atom({
+  key: `searchTagState/${v1()}`,
+  default: '',
+});

@@ -11,6 +11,8 @@ import { IPost } from '../../utils/interface';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import SearchTags from './SearchTags';
 import { MdOutlineArrowDropDown, MdOutlineArrowDropUp } from 'react-icons/md';
+import { searchTagState } from './../../recoil/atoms';
+import { useRecoilState } from 'recoil';
 
 const TourScreen = () => {
   /* State */
@@ -22,19 +24,36 @@ const TourScreen = () => {
   const postMatch = useMatch('/tour/:region/:postId');
   const region = regionMatch?.params.region;
 
+  /* Recoil */
+  const [tags, setTags] = useRecoilState(searchTagState);
+
   /* React-Query */
   const {
     data: regionPosts,
     isLoading,
     refetch,
-  } = useQuery<IPost[]>('getPostRegion', () => getPostRegion(region + ''));
+  } = useQuery<IPost[]>('getPostRegion', () =>
+    getPostRegion(region + '', tags),
+  );
 
   /* Handlers */
   const postDetailHandler = (postId: string) => {
     navigate(`/tour/${region}/${postId}`);
   };
-  const toggleShowSearch = () => {
-    setShowSearch((prev) => !prev);
+  const closeSearch = () => {
+    setShowSearch(false);
+    setTags('');
+    setTimeout(() => {
+      refetch();
+    }, 500);
+  };
+
+  const openSearch = () => {
+    setShowSearch(true);
+    setTags('');
+    setTimeout(() => {
+      refetch();
+    }, 500);
   };
 
   return (
@@ -57,22 +76,25 @@ const TourScreen = () => {
       </RegionNav>
       {showSearch && (
         <TagNav>
-          <SearchTags />
+          <SearchTags refetch={refetch()} />
         </TagNav>
       )}
       <div>
         {showSearch ? (
           <ToggleWrapper>
             <MdOutlineArrowDropUp
-              onClick={toggleShowSearch}
-              style={{ fontSize: '30px', cursor: 'pointer' }}
+              onClick={closeSearch}
+              style={{
+                fontSize: '30px',
+                cursor: 'pointer',
+              }}
             />
-            <span>닫기!</span>
+            <span>검색 초기화하기!</span>
           </ToggleWrapper>
         ) : (
           <ToggleWrapper>
             <MdOutlineArrowDropDown
-              onClick={toggleShowSearch}
+              onClick={openSearch}
               style={{ fontSize: '30px', cursor: 'pointer' }}
             />
             <span>태그로 검색하기!</span>
@@ -141,16 +163,18 @@ const RegionBtn = styled.button<{ region: boolean }>`
 `;
 
 const TagNav = styled.nav`
-  margin: 20px 0;
+  margin-top: 20px;
+  margin-bottom: 10px;
   width: 100%;
   height: 100px;
   display: grid;
-  grid-template-columns: repeat(4, 1fr) 0.3fr;
+  grid-template-columns: repeat(4, 1fr) 0.2fr;
   gap: 15px;
 `;
 
 const ToggleWrapper = styled.div`
   display: flex;
+  margin-bottom: 20px;
   ${(props) => props.theme.flex.flexCenterColumn}
   span {
     font-size: 12px;

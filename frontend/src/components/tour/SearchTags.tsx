@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
-
+import { searchTagState } from '../../recoil/atoms';
 import {
   PLACE_TAG_LIST,
   WHO_TAG_LIST,
@@ -8,17 +9,41 @@ import {
   SEASON_TAG_LIST,
 } from './../../utils/jeju';
 
-const SearchTags = () => {
-  const [tags, setTags] = useState<string[]>([]);
+const SearchTags = (props: any) => {
+  const [tags, setTags] = useRecoilState(searchTagState);
+  const [whoTag, setWhoTag] = useState('');
+  const [placeTag, setPlaceTag] = useState('');
+  const [typeTag, setTypeTag] = useState('');
+  const [seasonTag, setSeasonTag] = useState('');
 
   const tagChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, checked, name } = event.currentTarget;
+    const { value, name } = event.currentTarget;
 
-    console.log(value, checked, name);
+    switch (name) {
+      case 'who':
+        setWhoTag(value);
+        return;
+      case 'place':
+        setPlaceTag(value);
+        return;
+      case 'type':
+        setTypeTag(value);
+        return;
+      case 'season':
+        setSeasonTag(value);
+        return;
+      default:
+        return;
+    }
   };
 
-  const resetSearch = () => {
-    window.location.reload();
+  useEffect(() => {
+    console.log(tags);
+  }, [tags]);
+
+  const submit = () => {
+    setTags(`${whoTag}${placeTag}${typeTag}${seasonTag}`);
+    console.log(tags);
   };
 
   return (
@@ -28,7 +53,7 @@ const SearchTags = () => {
         <TagWrapper>
           {WHO_TAG_LIST.map((list) => (
             <div key={list.id}>
-              <Label>
+              <Label check={whoTag === list.data ? true : false}>
                 <input
                   type="radio"
                   value={list.data}
@@ -46,7 +71,7 @@ const SearchTags = () => {
         <TagWrapper>
           {PLACE_TAG_LIST.map((list) => (
             <div key={list.id}>
-              <Label>
+              <Label check={placeTag === list.data ? true : false}>
                 <input
                   type="radio"
                   value={list.data}
@@ -64,7 +89,7 @@ const SearchTags = () => {
         <TagWrapper>
           {TYPE_TAG_LIST.map((list) => (
             <div key={list.id}>
-              <Label>
+              <Label check={typeTag === list.data ? true : false}>
                 <input
                   type="radio"
                   value={list.data}
@@ -82,7 +107,7 @@ const SearchTags = () => {
         <TagWrapper>
           {SEASON_TAG_LIST.map((list) => (
             <div key={list.id}>
-              <Label>
+              <Label check={seasonTag === list.data ? true : false}>
                 <input
                   type="radio"
                   value={list.data}
@@ -96,8 +121,7 @@ const SearchTags = () => {
         </TagWrapper>
       </TagCategory>
       <TagBtns>
-        <div onClick={resetSearch}>검색 초기화</div>
-        <div>검색하기</div>
+        <div onClick={submit}>검색하기</div>
       </TagBtns>
     </>
   );
@@ -126,12 +150,18 @@ const TagWrapper = styled.div`
   gap: 5px;
 `;
 
-const Label = styled.label`
+const Label = styled.label<{ check: boolean }>`
+  background: ${(props) => (props.check ? 'tomato' : 'white')};
   cursor: pointer;
   display: flex;
   align-items: center;
   height: 100%;
   padding-left: 5px;
+  border: 1px solid black;
+
+  input {
+    display: none;
+  }
 `;
 
 const TagBtns = styled.div`
@@ -142,7 +172,7 @@ const TagBtns = styled.div`
   div {
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     width: 100%;
-    height: 45%;
+    height: 100%;
     display: flex;
     ${(props) => props.theme.flex.flexCenter}
     font-size: 12px;

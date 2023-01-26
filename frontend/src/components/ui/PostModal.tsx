@@ -253,6 +253,7 @@ const Thumb = styled.div<{ bgPhoto: string }>`
   width: 550px;
   height: 550px;
   position: absolute;
+  border: 0.5px solid rgba(0, 0, 0, 0.2);
 `;
 
 const ImageGrid = styled.div`
@@ -271,6 +272,7 @@ const Images = styled.div<{ bgPhoto: string }>`
   background-position: center center;
   height: 270px;
   cursor: pointer;
+  border: 0.5px solid rgba(0, 0, 0, 0.2);
 `;
 
 const Description = styled.p`
