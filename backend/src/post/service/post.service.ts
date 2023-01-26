@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { PostRepository } from '../repository/post.repository';
 import { Request } from 'express';
 import { CreatePostDto } from '../dto/create-post.dto';
+import { UpdatePostDto } from '../dto/update-post.dto';
 
 @Injectable()
 export class PostService {
@@ -18,6 +19,16 @@ export class PostService {
 
   async findOne(id: string) {
     const result = await this.postRepository.findOne(id);
+    return result;
+  }
+
+  async update(id: string, updatePostDto: UpdatePostDto) {
+    const result = await this.postRepository.update(id, updatePostDto);
+    return result;
+  }
+
+  async delete(id: string) {
+    const result = await this.postRepository.delete(id);
     return result;
   }
 

@@ -28,6 +28,14 @@ export class FileRepository {
           fileId: id,
         })
         .execute();
+
+      const result1 = await this.fileRepository
+        .createQueryBuilder('fileMapper')
+        .delete()
+        .where({
+          fileId: id,
+        })
+        .execute();
       if (0 < result.affected) {
         return result;
       } else {

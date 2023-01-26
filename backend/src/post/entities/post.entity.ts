@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { Entity } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
+import { PostCommentMapper } from './post.comment.mapping.entity';
 import { PostFileMapper } from './post.file.mapping.entity';
 import { PostTagMapper } from './post.tag.mapping.entity';
 import { Region } from './region.entity';
@@ -71,6 +72,9 @@ export class Post {
 
   @OneToMany(() => PostTagMapper, (mapper) => mapper.post)
   tagMappers: PostTagMapper[];
+
+  @OneToMany(() => PostCommentMapper, (mapper) => mapper.post)
+  commentMappers: PostCommentMapper[];
 
   @OneToOne(() => User, (user) => user, {
     createForeignKeyConstraints: false,

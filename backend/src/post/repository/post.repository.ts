@@ -9,6 +9,7 @@ import { File } from 'src/file/entities/file.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { getConnection, Repository } from 'typeorm';
+import { UpdatePostDto } from '../dto/update-post.dto';
 
 @Injectable()
 export class PostRepository {
@@ -21,6 +22,10 @@ export class PostRepository {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Tag)
     private readonly tagRepository: Repository<Tag>,
+    @InjectRepository(PostTagMapper)
+    private readonly postTagMapperRepository: Repository<PostTagMapper>,
+    @InjectRepository(PostFileMapper)
+    private readonly postFileMapperRepository: Repository<PostFileMapper>,
   ) {}
 
   async create(createPostDto: CreatePostDto, req: Request): Promise<Post> {
@@ -119,6 +124,29 @@ export class PostRepository {
     delete post.regionId.regionId;
 
     return post;
+  }
+
+  async delete(id: string) {
+    const postId = await this.postRepository.findOne({
+      postId: id,
+    });
+
+    const fileId = await this.postFileMapperRepository.findOne({
+      post: postId,
+    });
+
+    const a = fileId.file.fileId;
+
+    const result = await this.postRepository.delete({ postId: id });
+    await this.postTagMapperRepository.delete({ post: postId });
+    await this.postTagMapperRepository.delete({ post: postId });
+    await this.fileRepository.delete({ fileId: a });
+    return result;
+  }
+
+  async update(id: string, updatePostDto: UpdatePostDto) {
+    const result = await this.postRepository.update(id, updatePostDto);
+    return result;
   }
 
   async findAll(region: string, tag: string) {
