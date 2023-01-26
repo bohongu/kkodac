@@ -66,3 +66,23 @@ export const selectedRegionState = atom<string>({
   key: `selectedRegion/${v1()}`,
   default: '',
 });
+
+export const whoTagState = atom({
+  key: `whoTagState/${v1()}`,
+  default: '',
+});
+
+export const placeTagState = atom({
+  key: `placeTagState/${v1()}`,
+  default: '',
+});
+
+export const typeTagState = atom({
+  key: `typeTagState/${v1()}`,
+  default: '',
+});
+
+export const seasonTagState = atom({
+  key: `seasonTagState/${v1()}`,
+  default: '',
+});

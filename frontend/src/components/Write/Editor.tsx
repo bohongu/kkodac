@@ -4,9 +4,16 @@ import { FaImages } from 'react-icons/fa';
 import { MdDeleteOutline } from 'react-icons/md';
 import TagDrop from './TagDrop';
 import RegionDrop from './RegionDrop';
-import { useRecoilState } from 'recoil';
-import { selectedRegionState } from '../../recoil/atoms';
-import { selectedTagsState } from './../../recoil/atoms';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import {
+  placeTagState,
+  seasonTagState,
+  selectedRegionState,
+  whoTagState,
+  typeTagState,
+  currentUser,
+} from '../../recoil/atoms';
+
 import { useMutation, useQueryClient } from 'react-query';
 import { createPost, deleteFile, postFile } from '../../api/api';
 import { useNavigate } from 'react-router-dom';
@@ -28,8 +35,11 @@ const Editor = () => {
 
   /* Recoil */
   const [regionValue, setRegionValue] = useRecoilState(selectedRegionState);
-  const [selectTags, setSelectTags] =
-    useRecoilState<string[]>(selectedTagsState);
+  const [whotag, setWhotag] = useRecoilState(whoTagState);
+  const [placetag, setPlacetag] = useRecoilState(placeTagState);
+  const [typetag, setTypetag] = useRecoilState(typeTagState);
+  const [seasontag, setSeasontag] = useRecoilState(seasonTagState);
+  const user = useRecoilValue(currentUser);
 
   /* React-Query */
   const queryClient = useQueryClient();
@@ -91,15 +101,13 @@ const Editor = () => {
     for (let i = 0; i < postImage.length; i++) {
       sendImages.push(postImage[i].id);
     }
-    const tagString = selectTags.join();
+    console.log(whotag, placetag, typetag, seasontag);
     sendPost.mutate(
       {
         title,
         description,
-        tagString,
         files: sendImages,
-        tags: selectTags,
-        authorId: 'test',
+        authorId: user.nickname,
         regionId: regionValue,
       },
       {
@@ -108,7 +116,10 @@ const Editor = () => {
           setDescription('');
           setRegionValue('');
           setPostImage([]);
-          setSelectTags([]);
+          setWhotag('');
+          setPlacetag('');
+          setTypetag('');
+          setSeasontag('');
           navigate(`/tour/${regionValue}`);
           queryClient.invalidateQueries('getPostRegion');
         },

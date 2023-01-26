@@ -17,9 +17,7 @@ interface ILogin {
 interface IPost {
   title: string;
   description: string;
-  tagString: string;
   files: string[];
-  tags: string[];
   authorId: string;
   regionId: string;
 }

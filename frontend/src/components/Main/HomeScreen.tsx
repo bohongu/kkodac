@@ -17,9 +17,7 @@ const Jeju = () => {
   const { data: springPosts } = useQuery<IRecommendPost[]>('recommend', () =>
     getPostTag('봄'),
   );
-
   const navigate = useNavigate();
-  const postMatch = useMatch('');
 
   const offset = 5;
   const [index, setIndex] = useState(0);

@@ -1,43 +1,65 @@
 import React from 'react';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
-import { selectedTagsState } from '../../recoil/atoms';
+import {
+  placeTagState,
+  seasonTagState,
+  typeTagState,
+  whoTagState,
+} from '../../recoil/atoms';
 import { TAG_LIST } from '../../utils/jeju';
 
 const TagDrop = () => {
   /* Recoil */
-  const [selectTags, setSelectTags] =
-    useRecoilState<string[]>(selectedTagsState);
-
+  const [whoTag, setWhoTag] = useRecoilState(whoTagState);
+  const [placeTag, setPlaceTag] = useRecoilState(placeTagState);
+  const [typeTag, setTypeTag] = useRecoilState(typeTagState);
+  const [seasonTag, setSeasonTag] = useRecoilState(seasonTagState);
   /* Handlers */
   const tagChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, checked } = event.currentTarget;
+    const { value, name } = event.currentTarget;
 
-    if (checked) {
-      if (selectTags.length > 4) {
-        alert('태그는 최대 5개까지 가능합니다.');
+    switch (name) {
+      case 'who':
+        setWhoTag(value);
         return;
-      }
-      setSelectTags([...selectTags, value]);
-    } else if (!checked) {
-      setSelectTags(selectTags.filter((item) => item !== value));
+      case 'place':
+        setPlaceTag(value);
+        return;
+      case 'type':
+        setTypeTag(value);
+        return;
+      case 'season':
+        setSeasonTag(value);
+        return;
+      default:
+        return;
     }
   };
 
   return (
     <DropWrapper>
-      <h1>
-        태그 <span>중복 선택 가능합니다 (5개)</span>
-      </h1>
+      <h1>태그</h1>
       <Tags>
         {TAG_LIST.map((item) => (
           <Label
+            check={
+              whoTag === item.data
+                ? true
+                : false || placeTag === item.data
+                ? true
+                : false || typeTag === item.data
+                ? true
+                : false || seasonTag === item.data
+                ? true
+                : false
+            }
             key={item.id}
-            check={selectTags.includes(item.data) ? true : false}
           >
             {item.data}
             <input
-              type="checkbox"
+              type="radio"
+              name={item.name}
               value={item.data}
               onChange={tagChangeHandler}
             />

@@ -2,17 +2,19 @@ import { AnimatePresence, motion } from 'framer-motion';
 import React, { useState } from 'react';
 import { useMatch, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { REGION_LIST, TAG_LIST } from '../../utils/jeju';
+import { REGION_LIST } from '../../utils/jeju';
 import { HoverDownVariants, ContentVariants } from '../../utils/variants';
 import { useQuery } from 'react-query';
 import { getPostRegion } from './../../api/api';
 import PostModal from '../ui/PostModal';
 import { IPost } from '../../utils/interface';
 import LoadingSpinner from '../ui/LoadingSpinner';
+import SearchTags from './SearchTags';
+import { MdOutlineArrowDropDown, MdOutlineArrowDropUp } from 'react-icons/md';
 
 const TourScreen = () => {
   /* State */
-  const [tags, setTags] = useState<string[]>([]);
+  const [showSearch, setShowSearch] = useState(false);
 
   /* React-Router-Dom */
   const navigate = useNavigate();
@@ -31,16 +33,8 @@ const TourScreen = () => {
   const postDetailHandler = (postId: string) => {
     navigate(`/tour/${region}/${postId}`);
   };
-
-  const tagChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, checked } = event.currentTarget;
-
-    if (checked) {
-      setTags([...tags, value]);
-    } else {
-      setTags(tags.filter((tag) => tag !== value));
-    }
-    /* 태그 검색 API */
+  const toggleShowSearch = () => {
+    setShowSearch((prev) => !prev);
   };
 
   return (
@@ -61,20 +55,30 @@ const TourScreen = () => {
           </RegionBtn>
         ))}
       </RegionNav>
-      <TagNav>
-        {TAG_LIST.map((list) => (
-          <TagWrapper key={list.id}>
-            <Label check={tags.includes(list.data) ? true : false}>
-              {list.data}
-              <input
-                type="checkbox"
-                value={list.data}
-                onChange={tagChangeHandler}
-              />
-            </Label>
-          </TagWrapper>
-        ))}
-      </TagNav>
+      {showSearch && (
+        <TagNav>
+          <SearchTags />
+        </TagNav>
+      )}
+      <div>
+        {showSearch ? (
+          <ToggleWrapper>
+            <MdOutlineArrowDropUp
+              onClick={toggleShowSearch}
+              style={{ fontSize: '30px', cursor: 'pointer' }}
+            />
+            <span>닫기!</span>
+          </ToggleWrapper>
+        ) : (
+          <ToggleWrapper>
+            <MdOutlineArrowDropDown
+              onClick={toggleShowSearch}
+              style={{ fontSize: '30px', cursor: 'pointer' }}
+            />
+            <span>태그로 검색하기!</span>
+          </ToggleWrapper>
+        )}
+      </div>
       <Posts>
         {isLoading ? (
           <div>
@@ -137,29 +141,20 @@ const RegionBtn = styled.button<{ region: boolean }>`
 `;
 
 const TagNav = styled.nav`
-  display: grid;
   margin: 20px 0;
-  grid-template-columns: repeat(9, 1fr);
-  gap: 5px;
   width: 100%;
   height: 100px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) 0.3fr;
+  gap: 15px;
 `;
 
-const TagWrapper = styled.div`
-  input {
-    display: none;
-  }
-`;
-
-const Label = styled.label<{ check: boolean }>`
+const ToggleWrapper = styled.div`
   display: flex;
-  align-items: center;
-  border: 1px solid black;
-  width: 100%;
-  height: 100%;
-  padding-left: 10px;
-  background: ${(props) => (props.check ? 'tomato' : 'white')};
-  cursor: pointer;
+  ${(props) => props.theme.flex.flexCenterColumn}
+  span {
+    font-size: 12px;
+  }
 `;
 
 const Posts = styled.div`
