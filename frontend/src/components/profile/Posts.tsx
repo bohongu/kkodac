@@ -1,40 +1,26 @@
 import { motion } from 'framer-motion';
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { ContentVariants, HoverDownVariants } from '../../utils/variants';
+import { useQuery } from 'react-query';
+import { getUserPost } from '../../api/api';
+import { useRecoilValue } from 'recoil';
+import { currentUser } from '../../recoil/atoms';
 
 const PostSection = () => {
+  const user = useRecoilValue(currentUser);
+
+  const { data, isLoading } = useQuery('getUserPost', () =>
+    getUserPost(user.userId),
+  );
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
   return (
     <PostWrapper>
       <Posts>
-        <Post variants={HoverDownVariants} whileHover="hover">
-          <Content variants={ContentVariants}>
-            <h1>제목</h1>
-            <h2>2022-12-31</h2>
-            <h3>❤ 300</h3>
-          </Content>
-        </Post>
-        <Post variants={HoverDownVariants} whileHover="hover">
-          <Content variants={ContentVariants}>
-            <h1>제목</h1>
-            <h2>2022-12-31</h2>
-            <h3>❤ 300</h3>
-          </Content>
-        </Post>
-        <Post variants={HoverDownVariants} whileHover="hover">
-          <Content variants={ContentVariants}>
-            <h1>제목</h1>
-            <h2>2022-12-31</h2>
-            <h3>❤ 300</h3>
-          </Content>
-        </Post>
-        <Post variants={HoverDownVariants} whileHover="hover">
-          <Content variants={ContentVariants}>
-            <h1>제목</h1>
-            <h2>2022-12-31</h2>
-            <h3>❤ 300</h3>
-          </Content>
-        </Post>
         <Post variants={HoverDownVariants} whileHover="hover">
           <Content variants={ContentVariants}>
             <h1>제목</h1>

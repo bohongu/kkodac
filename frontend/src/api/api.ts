@@ -103,3 +103,8 @@ export const getTags = async () => {
   const { data } = await axios.get(`${BASE_URL}/kkodac/tags`);
   return data.result;
 };
+
+export const getUserPost = async (id: string) => {
+  const { data } = await axios.get(`${BASE_URL}/kkodac/posts/user/${id}`);
+  return data.result;
+};
