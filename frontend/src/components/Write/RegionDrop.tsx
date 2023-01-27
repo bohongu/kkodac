@@ -15,9 +15,6 @@ const RegionDrop = () => {
 
   return (
     <DropWrapper>
-      <h1>
-        지역 <span>하나만 선택해 주세요 (필수)</span>
-      </h1>
       <Tags>
         {REGION_LIST.map((item) => (
           <Label key={item.id} check={region === item.data ? true : false}>
@@ -58,14 +55,16 @@ const Radio = styled.input.attrs({ type: 'radio' })`
 
 const Tags = styled.div`
   display: grid;
-  height: 320px;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 5px;
+  grid-template-columns: repeat(14, 1fr);
+  gap: 10px;
+  margin: 10px 0;
 `;
 
 const Label = styled.label<{ check: boolean }>`
   border: 1px solid black;
   ${(props) => props.theme.flex.flexCenter}
   background: ${(props) => (props.check ? 'tomato' : 'white')};
+  padding: 3px;
   cursor: pointer;
+  font-size: 12px;
 `;

@@ -15,6 +15,11 @@ interface IUser {
   _id: string;
 }
 
+interface ITag {
+  id: number;
+  data: string;
+}
+
 export const initialUser = {
   createdAt: '',
   googleAccount: '',
@@ -57,37 +62,12 @@ export const subscriberModalState = atom<{ showModal: boolean; exit: boolean }>(
   },
 );
 
-export const selectedTagsState = atom<string[]>({
-  key: `selectedTags/${v1()}`,
-  default: [],
-});
-
 export const selectedRegionState = atom<string>({
   key: `selectedRegion/${v1()}`,
   default: '',
 });
 
-export const whoTagState = atom({
-  key: `whoTagState/${v1()}`,
-  default: '',
-});
-
-export const placeTagState = atom({
-  key: `placeTagState/${v1()}`,
-  default: '',
-});
-
-export const typeTagState = atom({
-  key: `typeTagState/${v1()}`,
-  default: '',
-});
-
-export const seasonTagState = atom({
-  key: `seasonTagState/${v1()}`,
-  default: '',
-});
-
-export const searchTagState = atom({
-  key: `searchTagState/${v1()}`,
-  default: '',
+export const selectedTagState = atom<ITag[]>({
+  key: `selectedTagState/${v1()}`,
+  default: [],
 });

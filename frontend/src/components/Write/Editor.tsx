@@ -2,22 +2,19 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaImages } from 'react-icons/fa';
 import { MdDeleteOutline } from 'react-icons/md';
-import TagDrop from './TagDrop';
 import RegionDrop from './RegionDrop';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
-  placeTagState,
-  seasonTagState,
   selectedRegionState,
-  whoTagState,
-  typeTagState,
   currentUser,
+  selectedTagState,
 } from '../../recoil/atoms';
 
 import { useMutation, useQueryClient } from 'react-query';
 import { createPost, deleteFile, postFile } from '../../api/api';
 import { useNavigate } from 'react-router-dom';
 import { FILE_MAX_SIZE } from '../../utils/jeju';
+import Tag from './Tags';
 
 interface IPostImage {
   id: string;
@@ -35,11 +32,8 @@ const Editor = () => {
 
   /* Recoil */
   const [regionValue, setRegionValue] = useRecoilState(selectedRegionState);
-  const [whotag, setWhotag] = useRecoilState(whoTagState);
-  const [placetag, setPlacetag] = useRecoilState(placeTagState);
-  const [typetag, setTypetag] = useRecoilState(typeTagState);
-  const [seasontag, setSeasontag] = useRecoilState(seasonTagState);
   const user = useRecoilValue(currentUser);
+  const [tagList, setTagList] = useRecoilState(selectedTagState);
 
   /* React-Query */
   const queryClient = useQueryClient();
@@ -96,12 +90,13 @@ const Editor = () => {
     let sendImages = [];
     if (!regionValue) {
       alert('지역을 선택해주세요 (필수)');
+      setTagList([]);
       return;
     }
     for (let i = 0; i < postImage.length; i++) {
       sendImages.push(postImage[i].id);
     }
-    console.log(whotag, placetag, typetag, seasontag);
+
     sendPost.mutate(
       {
         title,
@@ -116,10 +111,7 @@ const Editor = () => {
           setDescription('');
           setRegionValue('');
           setPostImage([]);
-          setWhotag('');
-          setPlacetag('');
-          setTypetag('');
-          setSeasontag('');
+          setTagList([]);
           navigate(`/tour/${regionValue}`);
           queryClient.invalidateQueries('getPostRegion');
         },
@@ -129,22 +121,17 @@ const Editor = () => {
 
   return (
     <EditorWrapper>
-      <EditorForm onSubmit={formSubmitHandler}>
+      <EditorForm onSubmit={formSubmitHandler} noValidate>
         <Top>
           <Title
             value={title}
             onChange={titleChangeHandler}
-            placeholder="제목을 입력하세요"
+            placeholder="TITLE"
           />
-          <button>글쓰기</button>
         </Top>
-        <Description
-          value={description}
-          onChange={descriptionChangeHandler}
-          cols={50}
-          rows={10}
-          placeholder="본문"
-        ></Description>
+        <Region>
+          <RegionDrop />
+        </Region>
         <ImageSection>
           <ImageInput>
             <label htmlFor="post_image">
@@ -170,15 +157,18 @@ const Editor = () => {
             ))}
           </Images>
         </ImageSection>
+        <Description
+          value={description}
+          onChange={descriptionChangeHandler}
+          cols={50}
+          rows={10}
+          placeholder="본문"
+        ></Description>
+        <Bottom>
+          <Tag />
+          <button>완료</button>
+        </Bottom>
       </EditorForm>
-      <TagSection>
-        <Tags>
-          <RegionDrop />
-        </Tags>
-        <Tags>
-          <TagDrop />
-        </Tags>
-      </TagSection>
     </EditorWrapper>
   );
 };
@@ -186,12 +176,9 @@ const Editor = () => {
 export default Editor;
 
 const EditorWrapper = styled.div`
-  display: grid;
-  grid-template-columns: 75% 25%;
-  gap: 15px;
-  border: 1px solid blue;
-  width: 80%;
+  width: 60%;
   padding: 15px;
+  margin-top: 120px;
 `;
 
 const EditorForm = styled.form`
@@ -199,49 +186,27 @@ const EditorForm = styled.form`
   flex-direction: column;
 `;
 
-const TagSection = styled.header`
-  margin-right: 15px;
-  display: grid;
-  grid-template-rows: repeat(2, 1fr);
-`;
-
-const Tags = styled.div`
-  border: 1px solid black;
-  padding: 10px;
-`;
-
 const Top = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  button {
-    font-size: 12px;
-    height: 30px;
-    width: 55px;
-  }
 `;
 
 const Title = styled.input`
   padding-left: 10px;
-  height: 60px;
+  height: 40px;
   border: none;
   border-bottom: 1px solid black;
-  font-size: 25px;
-  width: 700px;
+  font-size: 22px;
+  width: 100%;
 `;
 
-const Description = styled.textarea`
-  height: 500px;
-  font-size: 16px;
-  margin: 10px 0;
-  resize: none;
-  padding: 10px;
-`;
+const Region = styled.div``;
 
 const ImageSection = styled.div`
   display: grid;
-  grid-template-columns: 10% 90%;
+  grid-template-columns: 8% 92%;
   height: 180px;
 `;
 
@@ -267,8 +232,8 @@ const ImageInput = styled.div`
 
 const Images = styled.div`
   display: flex;
-  gap: 10px;
-  padding-left: 10px;
+  gap: 5px;
+  padding-left: 5px;
 `;
 
 const Choosen = styled.div<{ photo: string }>`
@@ -279,7 +244,7 @@ const Choosen = styled.div<{ photo: string }>`
   background-position: center center;
   position: relative;
   background-color: black;
-  width: 250px;
+  width: 25%;
 `;
 
 const Delete = styled.div`
@@ -290,4 +255,23 @@ const Delete = styled.div`
   width: 25px;
   height: 25px;
   font-size: 23px;
+`;
+
+const Description = styled.textarea`
+  height: 500px;
+  font-size: 16px;
+  margin: 10px 0;
+  resize: none;
+  padding: 10px;
+`;
+
+const Bottom = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  button {
+    width: 50px;
+    height: 30px;
+    align-self: flex-end;
+  }
 `;

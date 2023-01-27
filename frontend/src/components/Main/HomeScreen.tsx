@@ -71,11 +71,6 @@ const Jeju = () => {
                     <Content variants={ContentVariants}>
                       <h1>{post.title}</h1>
                       <h2>{post.authorId.nickname}</h2>
-                      <Tags>
-                        {post.tagMappers.map((tag) => (
-                          <div key={tag.tag._id}>{tag.tag.name}</div>
-                        ))}
-                      </Tags>
                     </Content>
                   </ThumbNail>
                 ))}

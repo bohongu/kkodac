@@ -9,10 +9,7 @@ import { getPostRegion } from './../../api/api';
 import PostModal from '../ui/PostModal';
 import { IPost } from '../../utils/interface';
 import LoadingSpinner from '../ui/LoadingSpinner';
-import SearchTags from './SearchTags';
 import { MdOutlineArrowDropDown, MdOutlineArrowDropUp } from 'react-icons/md';
-import { searchTagState } from './../../recoil/atoms';
-import { useRecoilState } from 'recoil';
 
 const TourScreen = () => {
   /* State */
@@ -25,16 +22,13 @@ const TourScreen = () => {
   const region = regionMatch?.params.region;
 
   /* Recoil */
-  const [tags, setTags] = useRecoilState(searchTagState);
 
   /* React-Query */
   const {
     data: regionPosts,
     isLoading,
     refetch,
-  } = useQuery<IPost[]>('getPostRegion', () =>
-    getPostRegion(region + '', tags),
-  );
+  } = useQuery<IPost[]>('getPostRegion', () => getPostRegion(region + ''));
 
   /* Handlers */
   const postDetailHandler = (postId: string) => {
@@ -42,18 +36,10 @@ const TourScreen = () => {
   };
   const closeSearch = () => {
     setShowSearch(false);
-    setTags('');
-    setTimeout(() => {
-      refetch();
-    }, 500);
   };
 
   const openSearch = () => {
     setShowSearch(true);
-    setTags('');
-    setTimeout(() => {
-      refetch();
-    }, 500);
   };
 
   return (
@@ -74,11 +60,7 @@ const TourScreen = () => {
           </RegionBtn>
         ))}
       </RegionNav>
-      {showSearch && (
-        <TagNav>
-          <SearchTags refetch={refetch()} />
-        </TagNav>
-      )}
+
       <div>
         {showSearch ? (
           <ToggleWrapper>
@@ -119,12 +101,6 @@ const TourScreen = () => {
               <Content variants={ContentVariants}>
                 <h1>{post.title}</h1>
                 <h2>{post.authorId.nickname}</h2>
-
-                <Tags>
-                  {post.tagMappers.map((tag) => (
-                    <div key={tag.tag.name}>{tag.tag.name}</div>
-                  ))}
-                </Tags>
               </Content>
             </Post>
           ))
@@ -160,16 +136,6 @@ const RegionBtn = styled.button<{ region: boolean }>`
   border: none;
   background: none;
   border-bottom: ${(props) => (props.region ? '2px solid tomato' : 'none')};
-`;
-
-const TagNav = styled.nav`
-  margin-top: 20px;
-  margin-bottom: 10px;
-  width: 100%;
-  height: 100px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr) 0.2fr;
-  gap: 15px;
 `;
 
 const ToggleWrapper = styled.div`
@@ -217,18 +183,5 @@ const Content = styled(motion.div)`
   h2 {
     font-size: 12px;
     margin-bottom: 10px;
-  }
-`;
-
-const Tags = styled.div`
-  display: flex;
-  div {
-    ${(props) => props.theme.flex.flexCenter}
-    border: 1px solid black;
-    width: 60px;
-    height: 20px;
-    font-size: 12px;
-    margin-right: 10px;
-    padding: 5px;
   }
 `;
