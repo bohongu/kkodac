@@ -4,6 +4,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeORMConfig } from 'config/typeorm.config';
 import { AuthModule } from './auth/auth.module';
+import { CommentModule } from './comment/comment.module';
 import { FileModule } from './file/file.module';
 import { HttpExceptionFilter } from './http.exception.filter';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
@@ -19,6 +20,7 @@ import { UserModule } from './user/user.module';
     PostModule,
     AuthModule,
     UserModule,
+    CommentModule,
     TypeOrmModule.forRoot(TypeORMConfig),
   ],
   providers: [

@@ -19,12 +19,12 @@ export class Tag {
   @Index({ unique: true })
   @Column({
     name: 'tag_id',
-    comment: '태그 UUID',
+    comment: '태그 ID',
     type: 'varchar',
     length: 40,
     nullable: false,
   })
-  tagId: string;
+  tagId: string = uuidv4();
 
   @CreateDateColumn({
     name: 'created_at',
@@ -32,13 +32,4 @@ export class Tag {
     type: 'datetime',
   })
   createdAt: Date;
-
-  @Column({
-    name: 'name',
-    type: 'varchar',
-    length: 50,
-    nullable: false,
-    comment: '태그 이름',
-  })
-  name: string;
 }

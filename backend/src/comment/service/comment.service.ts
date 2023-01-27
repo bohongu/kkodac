@@ -9,8 +9,8 @@ export class CommentService {
     private readonly commentRepository: CommentRepository,
   ) {}
 
-  async create(createCommentDto: CreateCommentDto, req: Request) {
-    const result = await this.commentRepository.create(createCommentDto, req);
+  async create(createCommentDto: CreateCommentDto) {
+    const result = await this.commentRepository.create(createCommentDto);
 
     return result;
   }

@@ -10,9 +10,13 @@ import { LocalStrategy } from 'src/auth/strategy/local.strategy';
 import { KakaoStrategy } from 'src/auth/strategy/kakao.strategy';
 import { JwtStrategy } from 'src/auth/strategy/jwt.strategy';
 import { GoogleStrategy } from 'src/auth/strategy/google.strategy';
+import { File } from 'src/file/entities/file.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), forwardRef(() => AuthModule)],
+  imports: [
+    TypeOrmModule.forFeature([User, File]),
+    forwardRef(() => AuthModule),
+  ],
   providers: [
     UserService,
     AuthService,

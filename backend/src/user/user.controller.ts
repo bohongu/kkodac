@@ -87,14 +87,15 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(@User() user, @Res() res: Response) {
-    const result = user;
+  async getProfile(@User() user, @Res() res: Response) {
+    const result = await this.userService.findUser(user);
+    console.log('result', result);
     if (result) {
       this.logger.debug(
         {
           message: 'profile',
           result: {
-            ...result,
+            result,
           },
         },
         LABEL,

@@ -19,7 +19,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { CreatePostDto } from '../dto/create-post.dto';
 import { PostService } from '../service/post.service';
 import { UpdatePostDto } from '../dto/update-post.dto';
-import { Update } from 'aws-sdk/clients/dynamodb';
 
 const LABEL = 'Post';
 
@@ -72,33 +71,6 @@ export class PostController {
           result: result,
         },
         'Get',
-      );
-      res.status(200).json({
-        result,
-      });
-    } else {
-      throw new Error('서버 측 에러');
-    }
-  }
-
-  @Patch(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() updatePostDto: UpdatePostDto,
-    @Res() res: Response,
-  ) {
-    const result = await this.postService.update(id, updatePostDto);
-    if (result) {
-      this.logger.debug(
-        {
-          message: 'update',
-          query: {
-            id: id,
-            data: updatePostDto,
-          },
-          result: result,
-        },
-        'Patch',
       );
       res.status(200).json({
         result,

@@ -20,10 +20,7 @@ export class CommentRepository {
     private readonly postCommentMapperRepository: Repository<PostCommentMapper>,
   ) {}
 
-  async create(
-    createCommentDto: CreateCommentDto,
-    req: Request,
-  ): Promise<Comment> {
+  async create(createCommentDto: CreateCommentDto): Promise<Comment> {
     let comment: Comment;
 
     const queryRunner = await getConnection().createQueryRunner();

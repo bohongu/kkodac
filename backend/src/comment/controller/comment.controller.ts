@@ -27,9 +27,8 @@ export class CommentController {
   async create(
     @Body() createCommentDto: CreateCommentDto,
     @Res() res: Response,
-    @Req() req: Request,
   ) {
-    const result = await this.commentService.create(createCommentDto, req);
+    const result = await this.commentService.create(createCommentDto);
     if (result) {
       this.logger.debug(
         {

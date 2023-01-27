@@ -22,11 +22,6 @@ export class PostService {
     return result;
   }
 
-  async update(id: string, updatePostDto: UpdatePostDto) {
-    const result = await this.postRepository.update(id, updatePostDto);
-    return result;
-  }
-
   async delete(id: string) {
     const result = await this.postRepository.delete(id);
     return result;
@@ -42,8 +37,13 @@ export class PostService {
     return result;
   }
 
-  async findUserAll(userId: string) {
-    const result = await this.postRepository.findUserAll(userId);
+  async findUserAll(id: string) {
+    const result = await this.postRepository.findUserAll(id);
+    return result;
+  }
+
+  async findTag() {
+    const result = await this.postRepository.findTag();
     return result;
   }
 }

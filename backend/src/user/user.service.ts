@@ -1,17 +1,20 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
+import { DeepPartial, Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { CreateLocalUserDto } from './dto/create-local-user.dto';
 import { Err } from 'src/error';
 import { v4 as uuidv4 } from 'uuid';
+import { File } from 'src/file/entities/file.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(File)
+    private readonly fileRepository: Repository<File>,
   ) {}
 
   async localRegister(createLocalUserDto: CreateLocalUserDto) {
@@ -31,12 +34,19 @@ export class UserService {
     if (existingNickname) {
       throw new BadRequestException(Err.USER.EXISTING_NICKNAME);
     }
+
+    const defaultProfile = await this.fileRepository.findOne({
+      where: {
+        fileId: '5df27f11-1a0f-4cec-b9b7-24b7b0447b44',
+      },
+    });
     const hashedPassword = await bcrypt.hash(createLocalUserDto.password, 10);
     await this.userRepository.save({
       userId: uuidv4(),
       username: createLocalUserDto.username,
       password: hashedPassword,
       nickname: createLocalUserDto.nickname,
+      fileId: defaultProfile,
     });
 
     const result = await this.userRepository.findOne({
@@ -95,6 +105,21 @@ export class UserService {
     if (!existingUser) {
       throw new BadRequestException(Err.USER.NOT_FOUND);
     }
+    return existingUser;
+  }
+
+  async findUser(user) {
+    const existingUser = await this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.fileId', 'fileId')
+      .where({ userId: user.userId })
+      .getOne();
+
+    console.log(existingUser);
+    if (!existingUser) {
+      throw new BadRequestException(Err.USER.NOT_FOUND);
+    }
+    console.log(existingUser);
     return existingUser;
   }
 }

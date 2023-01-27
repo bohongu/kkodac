@@ -43,6 +43,24 @@ export class PostRepository {
       );
     }
 
+    const defaultProfile = await this.fileRepository.findOne({
+      where: {
+        fileId: '5df27f11-1a0f-4cec-b9b7-24b7b0447b44',
+      },
+    });
+    console.log('aaa', defaultProfile);
+
+    for (const i in createPostDto.tags) {
+      const a = await this.tagRepository.findOne({ tagId: tagIds[i] });
+
+      if (a === undefined) {
+        const entity = this.tagRepository.create({
+          tagId: createPostDto.tags[i],
+        });
+        await this.tagRepository.save(entity);
+      }
+    }
+
     for (const tagId of tagIds) {
       tags.push(
         await this.tagRepository.findOne({
@@ -69,9 +87,7 @@ export class PostRepository {
             file: file,
             post: post,
           });
-        const test = await queryRunner.manager
-          .getRepository(PostFileMapper)
-          .save(entity);
+        await queryRunner.manager.getRepository(PostFileMapper).save(entity);
       }
 
       for (const tag of tags) {
@@ -79,9 +95,10 @@ export class PostRepository {
           tag: tag,
           post: post,
         });
-        const test = await queryRunner.manager
+        const a = await queryRunner.manager
           .getRepository(PostTagMapper)
           .save(entity);
+        console.log(entity, a);
       }
     } catch (error) {
       throw new Error(error);
@@ -110,14 +127,13 @@ export class PostRepository {
       delete post.tagMappers[num]._id;
       delete post.tagMappers[num].tag._id;
       delete post.tagMappers[num].tag.createdAt;
-      delete post.tagMappers[num].tag.tagId;
     }
 
-    // delete post.authorId._id;
+    delete post.authorId._id;
     delete post.authorId.password;
-    // delete post.authorId.introduce;
-    // delete post.authorId.createdAt;
-    // delete post.authorId.updatedAt;
+    delete post.authorId.introduce;
+    delete post.authorId.createdAt;
+    delete post.authorId.updatedAt;
 
     delete post.regionId._id;
     delete post.regionId.createdAt;
@@ -131,25 +147,13 @@ export class PostRepository {
       postId: id,
     });
 
-    const fileId = await this.postFileMapperRepository.findOne({
-      post: postId,
-    });
-
-    const a = fileId.file.fileId;
-
     const result = await this.postRepository.delete({ postId: id });
     await this.postTagMapperRepository.delete({ post: postId });
-    await this.postTagMapperRepository.delete({ post: postId });
-    await this.fileRepository.delete({ fileId: a });
+    await this.postFileMapperRepository.delete({ post: postId });
     return result;
   }
 
-  async update(id: string, updatePostDto: UpdatePostDto) {
-    const result = await this.postRepository.update(id, updatePostDto);
-    return result;
-  }
-
-  async findAll(region: string, tag: string) {
+  async findAll(region?: string, tag?: string) {
     const posts = await this.postRepository
       .createQueryBuilder('post')
       .leftJoinAndSelect('post.fileMappers', 'filemapper')
@@ -187,7 +191,19 @@ export class PostRepository {
       delete post.authorId.googleAccount;
       delete post.authorId.refreshToken;
     }
+
     return posts;
+  }
+
+  async findTag() {
+    const tags = await this.tagRepository
+      .createQueryBuilder('tag')
+      .select('tag.tagId')
+      .orderBy('RAND()')
+      .take(15)
+      .getMany();
+
+    return tags;
   }
 
   async findTagAll(tag: string) {
@@ -202,7 +218,7 @@ export class PostRepository {
       .where('post.tagString like :tag', {
         tag: `%${tag ? tag : ''}%`,
       })
-      .orderBy('post.updatedAt', 'DESC')
+      .orderBy('RAND()')
       .getMany();
 
     for (const post of posts) {
@@ -228,7 +244,8 @@ export class PostRepository {
 
     return posts;
   }
-  async findUserAll(userId: string) {
+
+  async findUserAll(id: string) {
     const posts = await this.postRepository
       .createQueryBuilder('post')
       .leftJoinAndSelect('post.fileMappers', 'filemapper')
@@ -238,7 +255,7 @@ export class PostRepository {
       .leftJoinAndSelect('post.authorId', 'authorId')
       .leftJoinAndSelect('post.regionId', 'regionId')
       .where('post.authorId = :userId', {
-        userId: userId,
+        userId: id,
       })
       .orderBy('post.updatedAt', 'DESC')
       .getMany();
