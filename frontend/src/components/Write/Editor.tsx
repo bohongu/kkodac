@@ -86,6 +86,8 @@ const Editor = () => {
     setPostImage(postImage.filter((data) => data.id !== id));
   };
 
+  const stringArray: string[] = [];
+
   const formSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     let sendImages = [];
@@ -97,35 +99,36 @@ const Editor = () => {
       sendImages.push(postImage[i].id);
     }
 
-    console.log(
-      title,
-      description,
-      user.nickname,
-      regionValue,
-      tagList,
-      sendImages,
-    );
+    for (let i = 0; i < tagList.length; i++) {
+      stringArray.push(tagList[i].data);
+    }
 
-    // sendPost.mutate(
-    //   {
-    //     title,
-    //     description,
-    //     files: sendImages,
-    //     authorId: user.nickname,
-    //     regionId: regionValue,
-    //   },
-    //   {
-    //     onSuccess: () => {
-    //       setTitle('');
-    //       setDescription('');
-    //       setRegionValue('');
-    //       setPostImage([]);
-    //       setTagList([]);
-    //       navigate(`/tour/${regionValue}`);
-    //       queryClient.invalidateQueries('getPostRegion');
-    //     },
-    //   },
-    // );
+    let tagString = null;
+    tagString = stringArray.join();
+
+    sendPost.mutate(
+      {
+        title,
+        description,
+        files: sendImages,
+        authorId: user.userId,
+        regionId: regionValue,
+        tags: tagList,
+        tagString,
+      },
+      {
+        onSuccess: () => {
+          setTitle('');
+          setDescription('');
+          setRegionValue('');
+          setPostImage([]);
+          setTagList([]);
+          tagString = null;
+          navigate(`/tour/${regionValue}`);
+          queryClient.invalidateQueries('getPostRegion');
+        },
+      },
+    );
   };
 
   return (

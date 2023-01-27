@@ -80,7 +80,7 @@ const UserSection = () => {
   return (
     <UserWrapper>
       <UserImageSection>
-        <UserImage photo={preview} />
+        <UserImage photo={user.fileId.fileUrl} />
         {editProfile && (
           <>
             <UserImageBtn>
@@ -167,7 +167,6 @@ const UserImage = styled.img<{ photo: string }>`
   background-image: url(${(props) => props.photo});
   background-size: cover;
   background-position: center center;
-  border: 0.3px solid rgba(0, 0, 0, 0.3);
   width: 300px;
   height: 300px;
   border-radius: 50%;

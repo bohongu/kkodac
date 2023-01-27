@@ -7,6 +7,8 @@ import { useQuery } from 'react-query';
 import { getPostDetail } from '../../api/api';
 import { useNavigate } from 'react-router-dom';
 import { IPostDetail } from '../../utils/interface';
+import { useRecoilValue } from 'recoil';
+import { currentUser } from '../../recoil/atoms';
 
 interface IModal {
   id: string;
@@ -26,6 +28,9 @@ const PostModal = ({ id }: IModal) => {
     getPostDetail(id),
   );
   const createdAt = data?.createdAt.substring(0, 10);
+
+  /* Recoil */
+  const user = useRecoilValue(currentUser);
 
   /* Handlers */
   const commentSubmitHandler = () => {
@@ -92,8 +97,8 @@ const PostModal = ({ id }: IModal) => {
             </Post>
             <Comment>
               <Me>
-                <div></div>
-                <h1>엄지혜</h1>
+                <Profile photo={user.fileId.fileUrl} />
+                <h1>{user.nickname}</h1>
               </Me>
               <CommentList>
                 <CommentItem>
@@ -286,14 +291,16 @@ const Me = styled.div`
   padding-left: 5px;
   ${(props) => props.theme.flex.flexCenter}
   justify-content: start;
+`;
 
-  div {
-    border: 1px solid black;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-right: 15px;
-  }
+const Profile = styled.img<{ photo: string }>`
+  background-image: url(${(props) => props.photo});
+  background-size: cover;
+  background-position: center center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 15px;
 `;
 
 const CommentList = styled.ul`

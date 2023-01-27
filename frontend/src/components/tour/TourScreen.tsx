@@ -5,12 +5,11 @@ import styled from 'styled-components';
 import { REGION_LIST } from '../../utils/jeju';
 import { HoverDownVariants, ContentVariants } from '../../utils/variants';
 import { useQuery } from 'react-query';
-import { getPostRegion } from './../../api/api';
+import { getPostRegion, getTags } from './../../api/api';
 import PostModal from '../ui/PostModal';
 import { IPost } from '../../utils/interface';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { MdOutlineArrowDropDown, MdOutlineArrowDropUp } from 'react-icons/md';
-
 const TourScreen = () => {
   /* State */
   const [showSearch, setShowSearch] = useState(false);
@@ -29,12 +28,17 @@ const TourScreen = () => {
     isLoading,
     refetch,
   } = useQuery<IPost[]>('getPostRegion', () => getPostRegion(region + ''));
+  const { data: tagDatas, refetch: tagRefetch } = useQuery<{ tagId: string }[]>(
+    'getTags',
+    getTags,
+  );
 
   /* Handlers */
   const postDetailHandler = (postId: string) => {
     navigate(`/tour/${region}/${postId}`);
   };
   const closeSearch = () => {
+    tagRefetch();
     setShowSearch(false);
   };
 
@@ -60,7 +64,9 @@ const TourScreen = () => {
           </RegionBtn>
         ))}
       </RegionNav>
-
+      {showSearch &&
+        tagDatas &&
+        tagDatas.map((data) => <div key={data.tagId}>{data.tagId}</div>)}
       <div>
         {showSearch ? (
           <ToggleWrapper>

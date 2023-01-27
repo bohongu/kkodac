@@ -13,6 +13,7 @@ interface IUser {
   userId: string;
   username: string;
   _id: string;
+  fileId: { fileUrl: string };
 }
 
 interface ITag {
@@ -32,6 +33,7 @@ export const initialUser = {
   userId: '',
   username: '',
   _id: '',
+  fileId: { fileUrl: '' },
 };
 
 /* Auth */

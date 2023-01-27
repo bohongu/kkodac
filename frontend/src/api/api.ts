@@ -14,12 +14,19 @@ interface ILogin {
   password: string;
 }
 
+interface ITags {
+  id: number;
+  data: string;
+}
+
 interface IPost {
   title: string;
   description: string;
   files: string[];
   authorId: string;
   regionId: string;
+  tags: ITags[];
+  tagString: string;
 }
 
 /* 날씨 API */
@@ -73,7 +80,11 @@ export const createPost = async (data: IPost) => {
 
 export const getPostRegion = async (region: string, tags?: string) => {
   const { data } = await axios.get(
-    `${BASE_URL}/kkodac/posts?tag=${tags}&region=${region}`,
+    `${
+      tags
+        ? `${BASE_URL}/kkodac/posts?region=${region}&tag=${tags}`
+        : `${BASE_URL}/kkodac/posts?region=${region}`
+    }`,
   );
   return data.result;
 };
@@ -85,5 +96,10 @@ export const getPostDetail = async (id: string) => {
 
 export const getPostTag = async (tag: string) => {
   const { data } = await axios.get(`${BASE_URL}/kkodac/posts/tag?tag=${tag}`);
+  return data.result;
+};
+
+export const getTags = async () => {
+  const { data } = await axios.get(`${BASE_URL}/kkodac/tags`);
   return data.result;
 };
