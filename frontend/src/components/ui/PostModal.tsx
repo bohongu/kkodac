@@ -65,11 +65,6 @@ const PostModal = ({ id }: IModal) => {
               </TitleAndLike>
               <Tags>
                 <h1>{data.regionId.name}</h1>
-                <Tag>
-                  {data.tagMappers.map((tag) => (
-                    <h2 key={tag.tag.name}>{tag.tag.name}</h2>
-                  ))}
-                </Tag>
               </Tags>
               <AuthorAndDate>
                 <h2>{data.authorId.nickname}</h2>

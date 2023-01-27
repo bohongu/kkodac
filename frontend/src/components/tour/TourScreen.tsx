@@ -13,6 +13,7 @@ import { MdOutlineArrowDropDown, MdOutlineArrowDropUp } from 'react-icons/md';
 const TourScreen = () => {
   /* State */
   const [showSearch, setShowSearch] = useState(false);
+  const [tag, setTag] = useState('');
 
   /* React-Router-Dom */
   const navigate = useNavigate();
@@ -27,7 +28,8 @@ const TourScreen = () => {
     data: regionPosts,
     isLoading,
     refetch,
-  } = useQuery<IPost[]>('getPostRegion', () => getPostRegion(region + ''));
+  } = useQuery<IPost[]>('getPostRegion', () => getPostRegion(region + '', tag));
+
   const { data: tagDatas, refetch: tagRefetch } = useQuery<{ tagId: string }[]>(
     'getTags',
     getTags,
@@ -38,12 +40,23 @@ const TourScreen = () => {
     navigate(`/tour/${region}/${postId}`);
   };
   const closeSearch = () => {
+    setTag('');
     tagRefetch();
+    setTimeout(() => {
+      refetch();
+    }, 100);
     setShowSearch(false);
   };
 
   const openSearch = () => {
     setShowSearch(true);
+  };
+
+  const chooseTag = (tagId: string) => {
+    setTag(tagId);
+    setTimeout(() => {
+      refetch();
+    }, 100);
   };
 
   return (
@@ -64,9 +77,20 @@ const TourScreen = () => {
           </RegionBtn>
         ))}
       </RegionNav>
-      {showSearch &&
-        tagDatas &&
-        tagDatas.map((data) => <div key={data.tagId}>{data.tagId}</div>)}
+      {showSearch && (
+        <Tags>
+          {tagDatas &&
+            tagDatas.map((data) => (
+              <Tag
+                check={tag === data.tagId ? true : false}
+                key={data.tagId}
+                onClick={() => chooseTag(data.tagId)}
+              >
+                {data.tagId}
+              </Tag>
+            ))}
+        </Tags>
+      )}
       <div>
         {showSearch ? (
           <ToggleWrapper>
@@ -189,5 +213,29 @@ const Content = styled(motion.div)`
   h2 {
     font-size: 12px;
     margin-bottom: 10px;
+  }
+`;
+
+const Tags = styled.div`
+  margin-top: 10px;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  min-height: 100px;
+  padding: 10px;
+  border: 1px solid black;
+`;
+
+const Tag = styled.div<{ check: boolean }>`
+  border-bottom: 1px solid black;
+  display: flex;
+  margin: 5px 20px;
+  cursor: pointer;
+  height: 20px;
+  color: ${(props) => (props.check ? 'red' : 'black')};
+  border-color: ${(props) => (props.check ? 'red' : 'black')};
+  &:hover {
+    color: tomato;
+    border-bottom: 1px solid tomato;
   }
 `;
