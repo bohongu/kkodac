@@ -29,6 +29,7 @@ const Editor = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [postImage, setPostImage] = useState<IPostImage[]>([]);
+  const [error, setError] = useState('');
 
   /* Recoil */
   const [regionValue, setRegionValue] = useRecoilState(selectedRegionState);
@@ -89,34 +90,42 @@ const Editor = () => {
     event.preventDefault();
     let sendImages = [];
     if (!regionValue) {
-      alert('지역을 선택해주세요 (필수)');
-      setTagList([]);
+      setError('지역을 선택해주세요(필수)');
       return;
     }
     for (let i = 0; i < postImage.length; i++) {
       sendImages.push(postImage[i].id);
     }
 
-    sendPost.mutate(
-      {
-        title,
-        description,
-        files: sendImages,
-        authorId: user.nickname,
-        regionId: regionValue,
-      },
-      {
-        onSuccess: () => {
-          setTitle('');
-          setDescription('');
-          setRegionValue('');
-          setPostImage([]);
-          setTagList([]);
-          navigate(`/tour/${regionValue}`);
-          queryClient.invalidateQueries('getPostRegion');
-        },
-      },
+    console.log(
+      title,
+      description,
+      user.nickname,
+      regionValue,
+      tagList,
+      sendImages,
     );
+
+    // sendPost.mutate(
+    //   {
+    //     title,
+    //     description,
+    //     files: sendImages,
+    //     authorId: user.nickname,
+    //     regionId: regionValue,
+    //   },
+    //   {
+    //     onSuccess: () => {
+    //       setTitle('');
+    //       setDescription('');
+    //       setRegionValue('');
+    //       setPostImage([]);
+    //       setTagList([]);
+    //       navigate(`/tour/${regionValue}`);
+    //       queryClient.invalidateQueries('getPostRegion');
+    //     },
+    //   },
+    // );
   };
 
   return (
@@ -128,6 +137,10 @@ const Editor = () => {
             onChange={titleChangeHandler}
             placeholder="TITLE"
           />
+          <Submit>
+            <div>{error ? error : null}</div>
+            <button>완료</button>
+          </Submit>
         </Top>
         <Region>
           <RegionDrop />
@@ -164,11 +177,10 @@ const Editor = () => {
           rows={10}
           placeholder="본문"
         ></Description>
-        <Bottom>
-          <Tag />
-          <button>완료</button>
-        </Bottom>
       </EditorForm>
+      <Bottom>
+        <Tag />
+      </Bottom>
     </EditorWrapper>
   );
 };
@@ -178,7 +190,7 @@ export default Editor;
 const EditorWrapper = styled.div`
   width: 60%;
   padding: 15px;
-  margin-top: 120px;
+  margin-top: 50px;
 `;
 
 const EditorForm = styled.form`
@@ -199,14 +211,14 @@ const Title = styled.input`
   border: none;
   border-bottom: 1px solid black;
   font-size: 22px;
-  width: 100%;
+  width: 70%;
 `;
 
 const Region = styled.div``;
 
 const ImageSection = styled.div`
   display: grid;
-  grid-template-columns: 8% 92%;
+  grid-template-columns: 9% 91%;
   height: 180px;
 `;
 
@@ -221,7 +233,7 @@ const ImageInput = styled.div`
     font-size: 40px;
     cursor: pointer;
     div {
-      font-size: 10px;
+      font-size: 5px;
       margin-top: 1rem;
     }
   }
@@ -268,6 +280,17 @@ const Description = styled.textarea`
 const Bottom = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+const Submit = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 23%;
+
+  div {
+    color: red;
+  }
 
   button {
     width: 50px;
