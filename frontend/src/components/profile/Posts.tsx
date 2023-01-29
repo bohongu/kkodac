@@ -1,34 +1,46 @@
 import { motion } from 'framer-motion';
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { ContentVariants, HoverDownVariants } from '../../utils/variants';
 import { useQuery } from 'react-query';
 import { getUserPost } from '../../api/api';
 import { useRecoilValue } from 'recoil';
 import { currentUser } from '../../recoil/atoms';
+import { IPost } from './../../utils/interface';
+import LoadingSpinner from '../ui/LoadingSpinner';
+import { useNavigate } from 'react-router-dom';
 
 const PostSection = () => {
+  const navigate = useNavigate();
   const user = useRecoilValue(currentUser);
 
-  const { data, isLoading } = useQuery('getUserPost', () =>
+  const { data, isLoading } = useQuery<IPost[]>('getUserPost', () =>
     getUserPost(user.userId),
   );
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
+  const postDetailHandler = (region: string, postId: string) => {
+    navigate(`/tour/${region}/${postId}`);
+  };
 
   return (
     <PostWrapper>
-      <Posts>
-        <Post variants={HoverDownVariants} whileHover="hover">
-          <Content variants={ContentVariants}>
-            <h1>제목</h1>
-            <h2>2022-12-31</h2>
-            <h3>❤ 300</h3>
-          </Content>
-        </Post>
-      </Posts>
+      {isLoading && <LoadingSpinner />}
+      {data &&
+        data.map((data) => (
+          <Posts key={data.postId}>
+            <Post
+              variants={HoverDownVariants}
+              whileHover="hover"
+              bgphoto={data.fileMappers[0].file.fileUrl}
+              layoutId={data.postId}
+              onClick={() => postDetailHandler(data.regionId.name, data.postId)}
+            >
+              <Content variants={ContentVariants}>
+                <h1>{data.title}</h1>
+              </Content>
+            </Post>
+          </Posts>
+        ))}
     </PostWrapper>
   );
 };
@@ -53,11 +65,14 @@ const Posts = styled.div`
   }
 `;
 
-const Post = styled(motion.div)`
-  border: 1px solid black;
+const Post = styled(motion.div)<{ bgphoto: string }>`
+  background-image: url(${(props) => props.bgphoto});
+  background-size: cover;
+  background-position: center center;
   height: 300px;
   border-radius: 10px;
-  background: white;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  cursor: pointer;
 `;
 
 const Content = styled(motion.div)`
@@ -67,16 +82,7 @@ const Content = styled(motion.div)`
   border-top: 1px solid black;
   opacity: 0;
   padding: 10px;
-  h1 {
-    font-size: 20px;
-    margin-bottom: 10px;
-  }
-  h2 {
-    font-size: 12px;
-    margin-bottom: 15px;
-  }
-  h3 {
-    font-size: 12px;
-    text-align: right;
-  }
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  background: white;
 `;
