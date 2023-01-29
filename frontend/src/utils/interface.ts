@@ -43,10 +43,38 @@ export interface IPost {
   };
 }
 
-export interface IPostDetail extends IPost {
-  description: string;
-}
-
 export interface IRecommendPost extends IPost {
   tagMappers: IRecommendTagMapper[];
+}
+
+export interface IPostDetail {
+  post: {
+    postId: string;
+    createdAt: string;
+    updatedAt: string;
+    title: string;
+    description: string;
+    tagString: string;
+    fileMappers: { file: { fileUrl: string } }[];
+    tagMappers: { tag: { tagId: string } }[];
+    authorId: {
+      userId: string;
+      socialFileId: string | null;
+      username: string;
+      nickname: string;
+    };
+    regionId: {
+      name: string;
+    };
+  };
+  comments: {
+    commentId: string;
+    description: string;
+    createdAt: string;
+    authorId: {
+      userId: string;
+      socialFileId: string | null;
+      nickname: string;
+    };
+  }[];
 }

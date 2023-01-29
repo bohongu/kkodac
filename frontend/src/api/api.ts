@@ -29,6 +29,12 @@ interface IPost {
   tagString: string;
 }
 
+interface IComment {
+  description: string;
+  authorId: string;
+  postId: string;
+}
+
 /* 날씨 API */
 
 export const getWeather = async (lat: number, lon: number) => {
@@ -107,4 +113,13 @@ export const getTags = async () => {
 export const getUserPost = async (id: string) => {
   const { data } = await axios.get(`${BASE_URL}/kkodac/posts/user/${id}`);
   return data.result;
+};
+
+/* 댓글 */
+export const createComments = async (data: IComment) => {
+  return await axios.post(`${BASE_URL}/kkodac/comment`, data);
+};
+
+export const deleteComment = async (id: string) => {
+  return await axios.delete(`${BASE_URL}/kkodac/comment/${id}`);
 };

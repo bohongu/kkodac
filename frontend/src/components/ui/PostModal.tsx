@@ -3,12 +3,13 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { IoIosSend } from 'react-icons/io';
 import { RiDeleteBin6Line } from 'react-icons/ri';
-import { useQuery } from 'react-query';
-import { getPostDetail } from '../../api/api';
+import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { deleteComment, getPostDetail } from '../../api/api';
 import { useNavigate } from 'react-router-dom';
 import { IPostDetail } from '../../utils/interface';
 import { useRecoilValue } from 'recoil';
 import { currentUser } from '../../recoil/atoms';
+import { createComments } from './../../api/api';
 
 interface IModal {
   id: string;
@@ -24,19 +25,32 @@ const PostModal = ({ id }: IModal) => {
   const [z, setZ] = useState(0);
 
   /* React-Query */
+  const queryClient = useQueryClient();
   const { data } = useQuery<IPostDetail>('getPostDetail', () =>
     getPostDetail(id),
   );
-  const createdAt = data?.createdAt.substring(0, 10);
+  const sendComment = useMutation(createComments);
+  const createdAt = data?.post.createdAt.substring(0, 10);
+  const removeComment = useMutation(deleteComment);
 
   /* Recoil */
   const user = useRecoilValue(currentUser);
 
   /* Handlers */
   const commentSubmitHandler = () => {
-    console.log(comment);
-    /* axios 댓글 */
-    setComment('');
+    sendComment.mutate(
+      {
+        description: comment,
+        authorId: user.userId,
+        postId: id,
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries('getPostDetail');
+          setComment('');
+        },
+      },
+    );
   };
   const commentChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setComment(event.currentTarget.value);
@@ -45,8 +59,12 @@ const PostModal = ({ id }: IModal) => {
     setMainImg('');
     navigate(-1);
   };
-  const deleteCommentHandler = () => {
-    /* 댓글 삭제  */
+  const deleteCommentHandler = (id: string) => {
+    removeComment.mutate(id, {
+      onSuccess: () => {
+        queryClient.invalidateQueries('getPostDetail');
+      },
+    });
   };
   const viewHandler = (url: string) => {
     setMainImg(url);
@@ -60,24 +78,24 @@ const PostModal = ({ id }: IModal) => {
           <Modal layoutId={id}>
             <Post>
               <TitleAndLike>
-                <h1>{data.title}</h1>
+                <h1>{data.post.title}</h1>
                 <div>❤</div>
               </TitleAndLike>
               <Tags>
-                <h1>{data.regionId.name}</h1>
+                <h1>{data.post.regionId.name}</h1>
               </Tags>
               <AuthorAndDate>
-                <h2>{data.authorId.nickname}</h2>
+                <h2>{data.post.authorId.nickname}</h2>
                 <h3>{createdAt}</h3>
               </AuthorAndDate>
               <MainContent>
                 <ImageSection>
-                  <Thumb bgPhoto={data.fileMappers[0].file.fileUrl} />
+                  <Thumb bgPhoto={data.post.fileMappers[0].file.fileUrl} />
                   <Image z={z} bgPhoto={mainImg} />
                   <ImageGrid>
-                    {data.fileMappers.map((img) => (
+                    {data.post.fileMappers.map((img) => (
                       <Images
-                        key={img.file.fileId}
+                        key={img.file.fileUrl}
                         bgPhoto={img.file.fileUrl}
                         onClick={() => {
                           viewHandler(img.file.fileUrl);
@@ -87,7 +105,7 @@ const PostModal = ({ id }: IModal) => {
                     ))}
                   </ImageGrid>
                 </ImageSection>
-                <Description>{data.description}</Description>
+                <Description>{data.post.description}</Description>
               </MainContent>
             </Post>
             <Comment>
@@ -96,20 +114,22 @@ const PostModal = ({ id }: IModal) => {
                 <h1>{user.nickname}</h1>
               </Me>
               <CommentList>
-                <CommentItem>
-                  <div></div>
-                  <h1>엄지혜</h1>
-                  <CommentText>
-                    consectetur quae hic officiis est, culpa nihil modi placeat
-                    id, iconsectetur quae hic officiis est, culpa nihil modi
-                    placeat id, iconsectetur quae hic officiis est, culpa nihil
-                    modi placeat id, iconsectetur quae hic officiis est, culpa
-                    nihil modi placeat id, i
-                  </CommentText>
-                  <CommentNav>
-                    <RiDeleteBin6Line onClick={deleteCommentHandler} />
-                  </CommentNav>
-                </CommentItem>
+                {data.comments.map((comment) => (
+                  <CommentItem key={comment.commentId}>
+                    <div></div>
+                    <h1>{comment.authorId.nickname}</h1>
+                    <CommentText>{comment.description}</CommentText>
+                    <CommentNav>
+                      {comment.authorId.userId === user.userId ? (
+                        <RiDeleteBin6Line
+                          onClick={() =>
+                            deleteCommentHandler(comment.commentId)
+                          }
+                        />
+                      ) : null}
+                    </CommentNav>
+                  </CommentItem>
+                ))}
               </CommentList>
               <InputSection>
                 <label>
@@ -119,6 +139,7 @@ const PostModal = ({ id }: IModal) => {
                     value={comment}
                     placeholder="댓글"
                   />
+
                   <button onClick={commentSubmitHandler}>
                     <IoIosSend />
                   </button>
@@ -195,16 +216,6 @@ const Tags = styled.div`
     background: teal;
     padding: 5px;
     color: white;
-  }
-`;
-
-const Tag = styled.div`
-  ${(props) => props.theme.flex.flexCenter}
-  h2 {
-    font-size: 12px;
-    margin-left: 5px;
-    background: tomato;
-    padding: 5px;
   }
 `;
 

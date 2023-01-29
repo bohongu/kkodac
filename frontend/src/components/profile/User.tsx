@@ -72,7 +72,6 @@ const UserSection = () => {
   };
 
   const submitProfileHandler = () => {
-    console.log(nickname, bio);
     setNickname('');
     setBio('');
   };
