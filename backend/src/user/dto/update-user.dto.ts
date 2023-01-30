@@ -4,6 +4,4 @@ export class UpdateUserDto {
   fileId: string;
 
   introduce: string;
-
-  id: string;
 }

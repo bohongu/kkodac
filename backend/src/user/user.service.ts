@@ -132,7 +132,7 @@ export class UserService {
     return existingUser;
   }
 
-  async patch(updateUserDto) {
+  async patch(updateUserDto, id) {
     const file = await this.fileRepository.findOne({
       fileId: updateUserDto.fileId,
     });
@@ -142,21 +142,25 @@ export class UserService {
         .createQueryBuilder('user')
         .update({ socialFileId: null, fileId: file, ...updateUserDto })
         .where({
-          userId: updateUserDto.id,
+          userId: id,
         })
         .execute();
 
       return result;
     } else {
-      const result = await this.userRepository
-        .createQueryBuilder('user')
-        .update({ socialFileId: null, ...updateUserDto })
-        .where({
-          userId: updateUserDto.id,
-        })
-        .execute();
+      try {
+        const result = await this.userRepository
+          .createQueryBuilder('user')
+          .update({ socialFileId: null, ...updateUserDto })
+          .where({
+            userId: id,
+          })
+          .execute();
 
-      return result;
+        return result;
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 

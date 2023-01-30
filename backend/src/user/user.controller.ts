@@ -24,8 +24,9 @@ import { KakaoAuthGuard } from './../auth/guard/kakao-auth.guard';
 import { Response } from 'express';
 import { GoogleAuthGuard } from './../auth/guard/google-auth.guard';
 import { JwtRefreshGuard } from './../auth/guard/jwt-refresh.guard';
-import { UpdateUserDto } from './dto/update-user.dto';
+
 import { FollowDto } from './dto/follow-dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 const LABEL = 'User';
 @Controller('kkodac/user')
@@ -215,13 +216,17 @@ export class UserController {
   }
 
   @Patch('')
-  async patch(@Body() updateUserDto: UpdateUserDto, @Res() res: Response) {
-    const result = await this.userService.patch(updateUserDto);
+  async patch(
+    @Body() updateUserDto: UpdateUserDto,
+    @Body('id') id: string,
+    @Res() res: Response,
+  ) {
+    const result = await this.userService.patch(updateUserDto, id);
     if (result) {
       this.logger.debug(
         {
           message: 'update',
-          param: { id: updateUserDto.id },
+          param: { id: id },
         },
         'User',
       );
