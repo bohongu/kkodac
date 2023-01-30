@@ -6,6 +6,7 @@ import { TypeORMConfig } from 'config/typeorm.config';
 import { AuthModule } from './auth/auth.module';
 import { CommentModule } from './comment/comment.module';
 import { FileModule } from './file/file.module';
+import { FollowModule } from './follow/follow.module';
 import { HttpExceptionFilter } from './http.exception.filter';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { PostModule } from './post/post.module';
@@ -21,6 +22,7 @@ import { UserModule } from './user/user.module';
     AuthModule,
     UserModule,
     CommentModule,
+    FollowModule,
     TypeOrmModule.forRoot(TypeORMConfig),
   ],
   providers: [

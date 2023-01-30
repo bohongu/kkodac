@@ -115,6 +115,8 @@ export class PostRepository {
       .leftJoinAndSelect('tagmapper.tag', 'tag')
       .leftJoinAndSelect('post.authorId', 'authorId')
       .leftJoinAndSelect('post.regionId', 'regionId')
+      .leftJoinAndSelect('post.likes', 'like')
+      .leftJoinAndSelect('like.user', 'likeUser')
       .where({ postId: id })
       .getOne();
 
@@ -127,6 +129,19 @@ export class PostRepository {
       delete post.tagMappers[num]._id;
       delete post.tagMappers[num].tag._id;
       delete post.tagMappers[num].tag.createdAt;
+    }
+
+    for (const num in post.likes) {
+      delete post.likes[num]._id;
+      delete post.likes[num].user._id;
+      delete post.likes[num].user.createdAt;
+      delete post.likes[num].user.googleAccount;
+      delete post.likes[num].user.updatedAt;
+      delete post.likes[num].user.kakaoAccount;
+      delete post.likes[num].user.introduce;
+      delete post.likes[num].user.refreshToken;
+      delete post.likes[num].user.password;
+      delete post.likes[num].user.username;
     }
 
     delete post.authorId._id;
@@ -282,5 +297,20 @@ export class PostRepository {
     }
 
     return posts;
+  }
+
+  async findLikeListByPostId(id: string) {
+    const data = await this.postRepository
+      .createQueryBuilder('post')
+      .leftJoinAndSelect('post.likes', 'like')
+      .leftJoinAndSelect('like.user', 'user')
+      .select([
+        'user.userId as userId',
+        'user.nickname as nickname',
+        'user.fileId as fileUrl',
+      ])
+      .where('post.postId = :postId', { postId: id })
+      .execute();
+    return { users: data };
   }
 }

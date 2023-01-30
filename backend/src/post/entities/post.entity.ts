@@ -1,3 +1,4 @@
+import { Like } from 'src/like/entities/like.entity';
 import { User } from 'src/user/entities/user.entity';
 import {
   Column,
@@ -75,6 +76,9 @@ export class Post {
 
   @OneToMany(() => PostCommentMapper, (mapper) => mapper.post)
   commentMappers: PostCommentMapper[];
+
+  @OneToMany(() => Like, (like) => like.post)
+  likes: Like[];
 
   @OneToOne(() => User, (user) => user, {
     createForeignKeyConstraints: false,

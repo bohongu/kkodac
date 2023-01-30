@@ -11,10 +11,12 @@ import { KakaoStrategy } from 'src/auth/strategy/kakao.strategy';
 import { JwtStrategy } from 'src/auth/strategy/jwt.strategy';
 import { GoogleStrategy } from 'src/auth/strategy/google.strategy';
 import { File } from 'src/file/entities/file.entity';
+import { Follow } from 'src/follow/entities/follow.entity';
+import { FollowRepository } from 'src/follow/repository/follow.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, File]),
+    TypeOrmModule.forFeature([User, File, Follow]),
     forwardRef(() => AuthModule),
   ],
   providers: [
@@ -27,6 +29,7 @@ import { File } from 'src/file/entities/file.entity';
     KakaoStrategy,
     GoogleStrategy,
     Logger,
+    FollowRepository,
   ],
   controllers: [UserController],
   exports: [UserService],

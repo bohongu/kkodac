@@ -1,11 +1,13 @@
 import { Exclude } from 'class-transformer';
 import { File } from 'src/file/entities/file.entity';
+import { Like } from 'src/like/entities/like.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
   Index,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -49,6 +51,9 @@ export class User {
     referencedColumnName: 'fileId',
   })
   fileId: File;
+
+  @OneToMany(() => Like, (like) => like.user)
+  likes: Like[];
 
   @Column({
     name: 'social_file_id',

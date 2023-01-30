@@ -12,7 +12,7 @@ export class CreatePostDto {
 
   files: string[];
 
-  tags: string[];
+  tags: any[];
 
   @IsString()
   region: string;

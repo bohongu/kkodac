@@ -53,12 +53,12 @@ export class CommentRepository {
   }
 
   async delete(id: string) {
-    const postId = await this.postRepository.findOne({
-      postId: id,
+    const commentId = await this.commentRepository.findOne({
+      commentId: id,
     });
-
     const result = await this.commentRepository.delete({ commentId: id });
-    await this.postCommentMapperRepository.delete({ post: postId });
+    await this.postCommentMapperRepository.delete({ comment: commentId });
+
     return result;
   }
 }

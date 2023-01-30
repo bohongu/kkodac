@@ -10,6 +10,9 @@ import {
   LoggerService,
   HttpStatus,
   Req,
+  Param,
+  Patch,
+  Delete,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateLocalUserDto } from './dto/create-local-user.dto';
@@ -21,6 +24,8 @@ import { KakaoAuthGuard } from './../auth/guard/kakao-auth.guard';
 import { Response } from 'express';
 import { GoogleAuthGuard } from './../auth/guard/google-auth.guard';
 import { JwtRefreshGuard } from './../auth/guard/jwt-refresh.guard';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { FollowDto } from './dto/follow-dto';
 
 const LABEL = 'User';
 @Controller('kkodac/user')
@@ -207,5 +212,45 @@ export class UserController {
       res.redirect('http://localhost:3000');
       res.end();
     }
+  }
+
+  @Patch('')
+  async patch(@Body() updateUserDto: UpdateUserDto, @Res() res: Response) {
+    const result = await this.userService.patch(updateUserDto);
+    if (result) {
+      this.logger.debug(
+        {
+          message: 'update',
+          param: { id: updateUserDto.id },
+        },
+        'User',
+      );
+      res.status(HttpStatus.OK).json('OK');
+    } else {
+      throw new Error('서버 측 에러');
+    }
+  }
+
+  @Post('/follow')
+  addFollow(@Body() followDto: FollowDto) {
+    return this.userService.addFollow(followDto);
+  }
+
+  @Delete('/follow')
+  deleteFolllow(@Body() followDto: FollowDto) {
+    return this.userService.deleteFollow(followDto);
+  }
+
+  @Get('/follow')
+  getFollowList(
+    @Body('userId') userId: string,
+    @Body('viewer') viewerId: string,
+  ) {
+    return this.userService.getFollowList(userId, viewerId);
+  }
+
+  @Get(':id')
+  getUser(@Param('id') id: string) {
+    return this.userService.getUser(id);
   }
 }

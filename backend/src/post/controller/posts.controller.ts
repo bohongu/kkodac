@@ -1,21 +1,27 @@
 import {
+  Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Logger,
   LoggerService,
   Param,
+  Post,
   Query,
   Res,
 } from '@nestjs/common';
 import { PostService } from '../service/post.service';
 import { Response } from 'express';
+import { LikeService } from 'src/like/service/like.service';
+import { LikePostDto } from '../dto/like-post.dto';
 
 @Controller('')
 export class PostsController {
   constructor(
     private readonly postService: PostService,
     @Inject(Logger) private readonly logger: LoggerService,
+    private readonly likeService: LikeService,
   ) {}
 
   @Get('kkodac/posts')
@@ -105,5 +111,20 @@ export class PostsController {
     } else {
       throw new Error('서버 측 에러');
     }
+  }
+
+  @Get('kkodac/posts/like/:id')
+  searchLikePeople(@Param('id') id: string) {
+    return this.likeService.getPostLikeList(id);
+  }
+
+  @Post('kkodac/posts/like')
+  postLike(@Body() likePostDto: LikePostDto) {
+    return this.likeService.postLike(likePostDto);
+  }
+
+  @Delete('kkodac/posts/like')
+  postLikeDelete(@Body() likePostDto: LikePostDto) {
+    return this.likeService.postUnLike(likePostDto);
   }
 }

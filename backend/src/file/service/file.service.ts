@@ -6,12 +6,6 @@ import { Repository } from 'typeorm';
 import { File } from '../entities/file.entity';
 import { FileRepository } from '../repository/file.repository';
 
-const s3 = new AWS.S3({
-  accessKeyId: config.aws.AWS_ACCESS_KEY_ID,
-  secretAccessKey: config.aws.AWS_SECRET_ACCESS_KEY,
-  region: config.aws.AWS_REGION,
-});
-
 @Injectable()
 export class FileService {
   constructor(
@@ -24,7 +18,11 @@ export class FileService {
   ) {}
 
   async upload(file: Express.Multer.File) {
-    const s3 = new AWS.S3();
+    const s3 = new AWS.S3({
+      accessKeyId: config.aws.AWS_ACCESS_KEY_ID,
+      secretAccessKey: config.aws.AWS_SECRET_ACCESS_KEY,
+      region: config.aws.AWS_REGION,
+    });
     try {
       const originalName = Buffer.from(file.originalname).toString('utf8');
       const response = await s3
@@ -57,7 +55,11 @@ export class FileService {
   }
 
   async delete(id: string) {
-    const s3 = new AWS.S3();
+    const s3 = new AWS.S3({
+      accessKeyId: config.aws.AWS_ACCESS_KEY_ID,
+      secretAccessKey: config.aws.AWS_SECRET_ACCESS_KEY,
+      region: config.aws.AWS_REGION,
+    });
     try {
       const findOne = this.findOne(id);
 
