@@ -36,9 +36,10 @@ interface IComment {
 }
 
 interface IEditProfile {
-  introduce: string;
-  fileId: string;
-  nickname: string;
+  id: string;
+  introduce?: string;
+  fileId?: string;
+  nickname?: string;
 }
 
 /* 날씨 API */
@@ -71,6 +72,15 @@ export const profile = async (token: string) => {
   const data = await axios.get(`${BASE_URL}/kkodac/user/profile`, {
     headers: { Authorization: `${token}` },
   });
+  return data;
+};
+
+export const editingProfile = async (data: IEditProfile) => {
+  return await axios.patch(`${BASE_URL}/kkodac/user`, data);
+};
+
+export const getUser = async (id: string) => {
+  const { data } = await axios.get(`${BASE_URL}/kkodac/user/${id}`);
   return data;
 };
 

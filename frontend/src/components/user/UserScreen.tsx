@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
-import { getUserPost } from '../../api/api';
+import { getUser, getUserPost } from '../../api/api';
 import styled from 'styled-components';
-import { IPost } from './../../utils/interface';
+import { IGetUser, IPost } from './../../utils/interface';
 import { motion } from 'framer-motion';
 
 const UserScreen = () => {
@@ -13,6 +13,9 @@ const UserScreen = () => {
   const { data: posts } = useQuery<IPost[]>('getOtherUserPost', () =>
     getUserPost(userId!),
   );
+  const { data: user } = useQuery<IGetUser>('getUserProfile', () =>
+    getUser(userId!),
+  );
 
   const postDetailHandler = (region: string, postId: string) => {
     navigate(`/tour/${region}/${postId}`);
@@ -20,16 +23,38 @@ const UserScreen = () => {
 
   return (
     <UserWrapper>
-      <Info>
-        <Image></Image>
-        <Text>
-          <Statistic></Statistic>
-          <Personal></Personal>
-          <Btn>
-            <button>Follow</button>
-          </Btn>
-        </Text>
-      </Info>
+      {user && posts && (
+        <Info>
+          <ImageSection>
+            <Image bgphoto={user.result.fileId.fileUrl} />
+          </ImageSection>
+          <Text>
+            <Statistic>
+              <Box>
+                <h1>글</h1>
+                <h2>{posts!.length}</h2>
+              </Box>
+              <Box>
+                <h1>팔로우</h1>
+                <h2>{user.follow[0].count}</h2>
+              </Box>
+              <Box>
+                <h1>팔로잉</h1>
+                <h2>{user.follower[0].count}</h2>
+              </Box>
+            </Statistic>
+            <Personal>
+              <h1>{user.result.nickname}</h1>
+              <h2>{user.result.username}</h2>
+              <p>{user.result.introduce}</p>
+            </Personal>
+            <Btn>
+              <button>Follow</button>
+            </Btn>
+          </Text>
+        </Info>
+      )}
+
       <Posts>
         {posts &&
           posts.map((post) => (
@@ -71,8 +96,19 @@ const Info = styled.div`
   grid-template-columns: 21rem auto;
 `;
 
-const Image = styled.div`
-  border: 1px solid red;
+const ImageSection = styled.div`
+  display: flex;
+  ${(props) => props.theme.flex.flexCenter}
+`;
+
+const Image = styled.div<{ bgphoto: string }>`
+  border: 1px solid black;
+  height: 19rem;
+  width: 19rem;
+  border-radius: 50%;
+  background-image: url(${(props) => props.bgphoto});
+  background-size: cover;
+  background-position: center center;
 `;
 
 const Text = styled.div`
@@ -82,6 +118,17 @@ const Text = styled.div`
 
 const Statistic = styled.div`
   border: 1px solid blue;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+`;
+
+const Box = styled.div`
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Personal = styled.div`

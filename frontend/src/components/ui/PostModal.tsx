@@ -30,7 +30,6 @@ const PostModal = ({ id }: IModal) => {
     getPostDetail(id),
   );
   const sendComment = useMutation(createComments);
-  const createdAt = data?.post.createdAt.substring(0, 10);
   const removeComment = useMutation(deleteComment);
 
   /* Recoil */
@@ -78,24 +77,24 @@ const PostModal = ({ id }: IModal) => {
           <Modal layoutId={id}>
             <Post>
               <TitleAndLike>
-                <h1>{data.post.title}</h1>
+                <h1>{data.title}</h1>
                 <div>❤</div>
               </TitleAndLike>
               <Tags>
-                <h1>{data.post.regionId.name}</h1>
+                <h1>{data.regionId.name}</h1>
               </Tags>
               <AuthorAndDate>
-                <Author to={`/user/${data.post.authorId.userId}`}>
-                  {data.post.authorId.nickname}
+                <Author to={`/user/${data.authorId.userId}`}>
+                  {data.authorId.nickname}
                 </Author>
-                <h3>{createdAt}</h3>
+                <h3>{data.createdAt.slice(0, 10)}</h3>
               </AuthorAndDate>
               <MainContent>
                 <ImageSection>
-                  <Thumb bgPhoto={data.post.fileMappers[0].file.fileUrl} />
+                  <Thumb bgPhoto={data.fileMappers[0].file.fileUrl} />
                   <Image z={z} bgPhoto={mainImg} />
                   <ImageGrid>
-                    {data.post.fileMappers.map((img) => (
+                    {data.fileMappers.map((img) => (
                       <Images
                         key={img.file.fileUrl}
                         bgPhoto={img.file.fileUrl}
@@ -107,7 +106,7 @@ const PostModal = ({ id }: IModal) => {
                     ))}
                   </ImageGrid>
                 </ImageSection>
-                <Description>{data.post.description}</Description>
+                <Description>{data.description}</Description>
               </MainContent>
             </Post>
             <Comment>
@@ -116,16 +115,16 @@ const PostModal = ({ id }: IModal) => {
                 <h1>{user.nickname}</h1>
               </Me>
               <CommentList>
-                {data.comments.map((comment) => (
-                  <CommentItem key={comment.commentId}>
+                {data.commentMappers.map((comment) => (
+                  <CommentItem key={comment.comment.commentId}>
                     <div></div>
-                    <h1>{comment.authorId.nickname}</h1>
-                    <CommentText>{comment.description}</CommentText>
+                    <h1>{comment.comment.authorId.nickname}</h1>
+                    <CommentText>{comment.comment.description}</CommentText>
                     <CommentNav>
-                      {comment.authorId.userId === user.userId ? (
+                      {comment.comment.authorId.userId === user.userId ? (
                         <RiDeleteBin6Line
                           onClick={() =>
-                            deleteCommentHandler(comment.commentId)
+                            deleteCommentHandler(comment.comment.commentId)
                           }
                         />
                       ) : null}

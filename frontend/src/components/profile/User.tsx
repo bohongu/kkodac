@@ -6,6 +6,7 @@ import { MdFace } from 'react-icons/md';
 import { FILE_MAX_SIZE } from '../../utils/jeju';
 import { useMutation } from 'react-query';
 import { postFile } from '../../api/api';
+import { editingProfile } from './../../api/api';
 
 const UserSection = () => {
   /* State */
@@ -25,12 +26,16 @@ const UserSection = () => {
 
   /* React-Query */
   const sendFile = useMutation(postFile);
+  const updateProfile = useMutation(editingProfile);
 
   /* Handlers */
   const setEditProfileHandler = () => {
     setEditProfile(true);
   };
   const closeEditProfileHandler = () => {
+    setBio('');
+    setNickname('');
+    setProfileImage({ id: '', url: user.fileId.fileUrl });
     setEditProfile(false);
   };
   const removeImageHandler = () => {
@@ -72,8 +77,20 @@ const UserSection = () => {
   };
 
   const submitProfileHandler = () => {
-    setNickname('');
-    setBio('');
+    updateProfile.mutate(
+      {
+        id: user.userId,
+        introduce: bio,
+        fileId: profileImage.url,
+        nickname,
+      },
+      {
+        onSuccess: () => {
+          setNickname('');
+          setBio('');
+        },
+      },
+    );
   };
 
   return (

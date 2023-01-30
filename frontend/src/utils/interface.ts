@@ -49,33 +49,81 @@ export interface IRecommendPost extends IPost {
 }
 
 export interface IPostDetail {
-  post: {
-    postId: string;
-    createdAt: string;
-    updatedAt: string;
-    title: string;
-    description: string;
-    tagString: string;
-    fileMappers: { file: { fileUrl: string } }[];
-    tagMappers: { tag: { tagId: string } }[];
-    authorId: {
-      userId: string;
-      socialFileId: string | null;
-      username: string;
-      nickname: string;
+  postId: string;
+  createdAt: string;
+  updatedAt: string;
+  title: string;
+  description: string;
+  tagString: string;
+  fileMappers: {
+    file: {
+      fileId: string;
+      fileUrl: string;
     };
-    regionId: {
-      name: string;
+  }[];
+  tagMappers: {
+    tag: {
+      tagId: string;
+    };
+  }[];
+  commentMappers: {
+    comment: {
+      commentId: string;
+      description: string;
+      createdAt: string;
+      authorId: {
+        userId: string;
+        socialFileId: string | null;
+        username: string;
+        nickname: string;
+        fileId: {
+          fileId: string;
+          fileUrl: string;
+        };
+      };
+    };
+  }[];
+  authorId: {
+    userId: string;
+    socialFileId: string | null;
+    username: string;
+    nickname: string;
+    fileId: {
+      fileId: string;
+      fildUrl: string;
     };
   };
-  comments: {
-    commentId: string;
-    description: string;
-    createdAt: string;
-    authorId: {
+  regionId: {
+    name: string;
+  };
+  likes: {
+    user: {
       userId: string;
       socialFileId: string | null;
       nickname: string;
+      fileId: {
+        fileId: string;
+        fileUrl: string;
+      };
     };
+  }[];
+}
+
+export interface IGetUser {
+  result: {
+    userId: string;
+    socialFileId: string | null;
+    username: string;
+    nickname: string;
+    introduce: string;
+    fileId: {
+      fileUrl: string;
+    };
+  };
+  follow: {
+    count: string;
+  }[];
+  follower: {
+    count: string;
   }[];
 }
