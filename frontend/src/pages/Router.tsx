@@ -10,6 +10,7 @@ import Navigation from '../components/ui/Navigation';
 import Subscription from './Subscription';
 import NotFound from './NotFound';
 import Write from './Write';
+import UserScreen from './../components/user/UserScreen';
 
 const Router = () => {
   /* Recoil */
@@ -26,7 +27,8 @@ const Router = () => {
             <Route path="/profile/:userId" element={<Profile />} />
             <Route path="/tour/:region" element={<Tour />} />
             <Route path="/tour/:region/:postId" element={<Tour />} />
-            <Route path="/subscribe/:userId" element={<Subscription />} />
+            <Route path="/subscribes/:userId" element={<Subscription />} />
+            <Route path="/user/:userId" element={<UserScreen />} />
           </>
         ) : (
           <>

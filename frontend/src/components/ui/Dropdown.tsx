@@ -45,7 +45,7 @@ const Dropdown = () => {
         <BsFillPencilFill />
         &nbsp; 글쓰기
       </Menus>
-      <Menus to="/subscribe/재홍">
+      <Menus to={`/subscribes/${user.userId}`}>
         <GiThreeFriends />
         &nbsp; 구독
       </Menus>

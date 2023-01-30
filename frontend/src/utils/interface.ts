@@ -30,6 +30,7 @@ export interface IPost {
   updatedAt: string;
   tagString: string;
   title: string;
+  description: string;
   fileMappers: IPostFileMapper[];
   tagMappers: IPostTagMapper[];
   authorId: {

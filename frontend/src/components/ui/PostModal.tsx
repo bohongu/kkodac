@@ -5,7 +5,7 @@ import { IoIosSend } from 'react-icons/io';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { deleteComment, getPostDetail } from '../../api/api';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { IPostDetail } from '../../utils/interface';
 import { useRecoilValue } from 'recoil';
 import { currentUser } from '../../recoil/atoms';
@@ -85,7 +85,9 @@ const PostModal = ({ id }: IModal) => {
                 <h1>{data.post.regionId.name}</h1>
               </Tags>
               <AuthorAndDate>
-                <h2>{data.post.authorId.nickname}</h2>
+                <Author to={`/user/${data.post.authorId.userId}`}>
+                  {data.post.authorId.nickname}
+                </Author>
                 <h3>{createdAt}</h3>
               </AuthorAndDate>
               <MainContent>
@@ -226,11 +228,9 @@ const AuthorAndDate = styled.div`
   align-items: center;
   border-bottom: 1px solid black;
   margin-bottom: 10px;
-  h2 {
-  }
-  h3 {
-  }
 `;
+
+const Author = styled(Link)``;
 
 const MainContent = styled.div`
   height: 80%;

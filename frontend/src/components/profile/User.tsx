@@ -11,17 +11,17 @@ const UserSection = () => {
   /* State */
   const [drop, setDrop] = useState(false);
   const [editProfile, setEditProfile] = useState(false);
-  const [preview, setPreview] = useState('');
   const [nickname, setNickname] = useState('');
   const [bio, setBio] = useState('');
-  const [profileImage, setProfileImage] = useState<{
-    id: string;
-    url: string;
-  }>({ id: '', url: '' });
 
   /* Recoil */
   const setModal = useSetRecoilState(subscriberModalState);
   const user = useRecoilValue(currentUser);
+
+  const [profileImage, setProfileImage] = useState<{
+    id: string;
+    url: string;
+  }>({ id: '', url: user.fileId.fileUrl });
 
   /* React-Query */
   const sendFile = useMutation(postFile);
@@ -34,7 +34,7 @@ const UserSection = () => {
     setEditProfile(false);
   };
   const removeImageHandler = () => {
-    setPreview('');
+    setProfileImage({ ...profileImage, url: user.fileId.fileUrl });
   };
 
   const profileImageChangeHandler = (
@@ -79,7 +79,7 @@ const UserSection = () => {
   return (
     <UserWrapper>
       <UserImageSection>
-        <UserImage photo={user.fileId.fileUrl} />
+        <UserImage photo={profileImage.url} />
         {editProfile && (
           <>
             <UserImageBtn>

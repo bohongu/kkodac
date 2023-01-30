@@ -35,6 +35,12 @@ interface IComment {
   postId: string;
 }
 
+interface IEditProfile {
+  introduce: string;
+  fileId: string;
+  nickname: string;
+}
+
 /* 날씨 API */
 
 export const getWeather = async (lat: number, lon: number) => {
