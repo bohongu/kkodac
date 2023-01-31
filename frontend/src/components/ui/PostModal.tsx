@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { IoIosSend } from 'react-icons/io';
+import { AiOutlineLike, AiFillLike } from 'react-icons/ai';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { deleteComment, getPostDetail } from '../../api/api';
+import { deleteComment, deleteLike, getPostDetail } from '../../api/api';
 import { useNavigate, Link } from 'react-router-dom';
 import { IPostDetail } from '../../utils/interface';
 import { useRecoilValue } from 'recoil';
 import { currentUser } from '../../recoil/atoms';
-import { createComments } from './../../api/api';
+import { createComments, createLike } from './../../api/api';
 
 interface IModal {
   id: string;
@@ -23,6 +24,7 @@ const PostModal = ({ id }: IModal) => {
   const [comment, setComment] = useState('');
   const [mainImg, setMainImg] = useState<string>('');
   const [z, setZ] = useState(0);
+  const [like, setLike] = useState(false);
 
   /* React-Query */
   const queryClient = useQueryClient();
@@ -31,16 +33,18 @@ const PostModal = ({ id }: IModal) => {
   );
   const sendComment = useMutation(createComments);
   const removeComment = useMutation(deleteComment);
+  const likeMutation = useMutation(createLike);
+  const unlikeMutation = useMutation(deleteLike);
 
   /* Recoil */
-  const user = useRecoilValue(currentUser);
+  const cUser = useRecoilValue(currentUser);
 
   /* Handlers */
   const commentSubmitHandler = () => {
     sendComment.mutate(
       {
         description: comment,
-        authorId: user.userId,
+        authorId: cUser.userId,
         postId: id,
       },
       {
@@ -69,6 +73,44 @@ const PostModal = ({ id }: IModal) => {
     setMainImg(url);
   };
 
+  useEffect(() => {
+    const checkLike = () => {
+      if (data) {
+        if (data.likes.find((user) => user.user.userId === cUser.userId)) {
+          setLike(true);
+        } else {
+          setLike(false);
+        }
+      }
+    };
+
+    checkLike();
+  }, [cUser.userId, data, like]);
+
+  const onLike = () => {
+    likeMutation.mutate(
+      { postId: data!.postId, userId: cUser.userId },
+      {
+        onSuccess: () => {
+          setLike(true);
+          queryClient.invalidateQueries('getPostDetail');
+        },
+      },
+    );
+  };
+
+  const onUnLike = () => {
+    unlikeMutation.mutate(
+      { postId: data!.postId, userId: cUser.userId },
+      {
+        onSuccess: () => {
+          setLike(false);
+          queryClient.invalidateQueries('getPostDetail');
+        },
+      },
+    );
+  };
+
   return (
     <>
       {data && (
@@ -78,7 +120,13 @@ const PostModal = ({ id }: IModal) => {
             <Post>
               <TitleAndLike>
                 <h1>{data.title}</h1>
-                <div>❤</div>
+                <div>
+                  {like ? (
+                    <AiFillLike onClick={onUnLike} />
+                  ) : (
+                    <AiOutlineLike onClick={onLike} />
+                  )}
+                </div>
               </TitleAndLike>
               <Tags>
                 <h1>{data.regionId.name}</h1>
@@ -111,8 +159,8 @@ const PostModal = ({ id }: IModal) => {
             </Post>
             <Comment>
               <Me>
-                <Profile photo={user.fileId.fileUrl} />
-                <h1>{user.nickname}</h1>
+                <Profile photo={cUser.fileId.fileUrl} />
+                <h1>{cUser.nickname}</h1>
               </Me>
               <CommentList>
                 {data.commentMappers.map((comment) => (
@@ -121,7 +169,7 @@ const PostModal = ({ id }: IModal) => {
                     <h1>{comment.comment.authorId.nickname}</h1>
                     <CommentText>{comment.comment.description}</CommentText>
                     <CommentNav>
-                      {comment.comment.authorId.userId === user.userId ? (
+                      {comment.comment.authorId.userId === cUser.userId ? (
                         <RiDeleteBin6Line
                           onClick={() =>
                             deleteCommentHandler(comment.comment.commentId)
@@ -200,10 +248,6 @@ const TitleAndLike = styled.div`
   align-items: center;
   h1 {
     font-size: 24px;
-  }
-  div {
-    font-size: 20px;
-    color: red;
   }
 `;
 

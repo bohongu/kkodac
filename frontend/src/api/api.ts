@@ -42,6 +42,11 @@ interface IEditProfile {
   nickname?: string;
 }
 
+interface ILike {
+  postId: string;
+  userId: string;
+}
+
 /* 날씨 API */
 
 export const getWeather = async (lat: number, lon: number) => {
@@ -138,4 +143,13 @@ export const createComments = async (data: IComment) => {
 
 export const deleteComment = async (id: string) => {
   return await axios.delete(`${BASE_URL}/kkodac/comment/${id}`);
+};
+
+/* 좋아요 */
+export const createLike = async (data: ILike) => {
+  return await axios.post(`${BASE_URL}/kkodac/posts/like`, data);
+};
+
+export const deleteLike = async (data: ILike) => {
+  return await axios.delete(`${BASE_URL}/kkodac/posts/like`, { data: data });
 };

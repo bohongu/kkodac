@@ -51,19 +51,36 @@ export interface IRecommendPost extends IPost {
 export interface IPostDetail {
   postId: string;
   createdAt: string;
-  updatedAt: string;
   title: string;
   description: string;
   tagString: string;
   fileMappers: {
     file: {
-      fileId: string;
       fileUrl: string;
     };
   }[];
   tagMappers: {
     tag: {
       tagId: string;
+    };
+  }[];
+  authorId: {
+    userId: string;
+    socialFileId: string | null;
+    username: string;
+    nickname: string;
+  };
+  regionId: {
+    name: string;
+  };
+  likes: {
+    user: {
+      userId: string;
+      socialFileId: string | null;
+      nickname: string;
+      fileId: {
+        fileUrl: string;
+      };
     };
   }[];
   commentMappers: {
@@ -77,33 +94,8 @@ export interface IPostDetail {
         username: string;
         nickname: string;
         fileId: {
-          fileId: string;
           fileUrl: string;
         };
-      };
-    };
-  }[];
-  authorId: {
-    userId: string;
-    socialFileId: string | null;
-    username: string;
-    nickname: string;
-    fileId: {
-      fileId: string;
-      fildUrl: string;
-    };
-  };
-  regionId: {
-    name: string;
-  };
-  likes: {
-    user: {
-      userId: string;
-      socialFileId: string | null;
-      nickname: string;
-      fileId: {
-        fileId: string;
-        fileUrl: string;
       };
     };
   }[];
