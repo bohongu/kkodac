@@ -1,15 +1,41 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
-import { AiOutlineSearch } from 'react-icons/ai';
 import { SlUserUnfollow } from 'react-icons/sl';
 import { subscriberModalState } from './../../recoil/atoms';
 import { modalVarints } from '../../utils/variants';
+import { useQuery, useMutation } from 'react-query';
+import { IFollow } from './../../utils/interface';
+import { deleteFollow, getFollows } from './../../api/api';
+import { Link } from 'react-router-dom';
 
-const Subscriber = () => {
+interface IUserId {
+  userId: string;
+}
+
+const Subscriber = ({ userId }: IUserId) => {
   /* Recoil */
   const [modal, setModal] = useRecoilState(subscriberModalState);
+
+  const { data: follows } = useQuery<IFollow>('follows', () =>
+    getFollows(userId!),
+  );
+  const unFollow = useMutation(deleteFollow);
+
+  const unFollowHandler = (followedUserId: string) => {
+    unFollow.mutate(
+      {
+        userId,
+        followedUserId,
+      },
+      {
+        onSuccess: () => {
+          alert('언팔로우하였습니다');
+        },
+      },
+    );
+  };
 
   return (
     <AnimatePresence initial={false}>
@@ -27,36 +53,20 @@ const Subscriber = () => {
             exit="exit"
             custom={modal.exit}
           >
-            <Search>
-              <label>
-                <Input />
-                <Glass>
-                  <AiOutlineSearch />
-                </Glass>
-              </label>
-            </Search>
             <Lists>
-              <List>
-                <Img></Img>
-                <Nickname>정재홍</Nickname>
-                <UnFollow>
-                  <SlUserUnfollow />
-                </UnFollow>
-              </List>
-              <List>
-                <Img></Img>
-                <Nickname>엄지혜</Nickname>
-                <UnFollow>
-                  <SlUserUnfollow />
-                </UnFollow>
-              </List>
-              <List>
-                <Img></Img>
-                <Nickname>엄지원</Nickname>
-                <UnFollow>
-                  <SlUserUnfollow />
-                </UnFollow>
-              </List>
+              {follows?.users_followed_by_user.map((user, idx) => (
+                <List key={idx}>
+                  <Img bgphoto={user.fileId.fileUrl} />
+                  <Nickname to={`/user/${user.userId}`}>
+                    {user.nickname}
+                  </Nickname>
+                  <UnFollow>
+                    <SlUserUnfollow
+                      onClick={() => unFollowHandler(user.userId)}
+                    />
+                  </UnFollow>
+                </List>
+              ))}
             </Lists>
           </FollowingModal>
         </>
@@ -89,42 +99,6 @@ const FollowingModal = styled(motion.div)`
   z-index: 30;
 `;
 
-const Search = styled.div`
-  height: 10%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  label {
-    width: 90%;
-    position: relative;
-  }
-`;
-
-const Input = styled.input`
-  height: 45px;
-  width: 100%;
-  padding: 0 15px;
-  border: none;
-  border-radius: 10px;
-  background: white;
-  border: 1px solid black;
-  color: black;
-  margin-bottom: 10px;
-`;
-
-const Glass = styled.div`
-  display: flex;
-  align-items: center;
-  height: 45px;
-  position: absolute;
-  top: 0;
-  right: 5px;
-  border: none;
-  background: none;
-  font-size: 25px;
-  color: black;
-`;
-
 const Lists = styled.ul`
   display: flex;
   flex-direction: column;
@@ -141,14 +115,17 @@ const List = styled.li`
   border-radius: 10px;
 `;
 
-const Img = styled.div`
+const Img = styled.div<{ bgphoto: string }>`
+  background-image: url(${(props) => props.bgphoto});
+  background-size: cover;
+  background-position: center center;
   border: 1px solid black;
   width: 40px;
   height: 40px;
   border-radius: 50%;
 `;
 
-const Nickname = styled.div`
+const Nickname = styled(Link)`
   width: 80%;
   padding-left: 10px;
 `;

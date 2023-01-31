@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { currentUser, subscriberModalState } from './../../recoil/atoms';
 import { MdFace } from 'react-icons/md';
 import { FILE_MAX_SIZE } from '../../utils/jeju';
-import { useMutation } from 'react-query';
-import { postFile } from '../../api/api';
+import { useMutation, useQuery } from 'react-query';
+import { getUser, postFile } from '../../api/api';
 import { editingProfile } from './../../api/api';
+import { IGetUser } from '../../utils/interface';
 
 const UserSection = () => {
   /* State */
@@ -17,16 +18,19 @@ const UserSection = () => {
 
   /* Recoil */
   const setModal = useSetRecoilState(subscriberModalState);
-  const user = useRecoilValue(currentUser);
+  const cUser = useRecoilValue(currentUser);
 
   const [profileImage, setProfileImage] = useState<{
     id: string;
     url: string;
-  }>({ id: '', url: user.fileId.fileUrl });
+  }>({ id: '', url: cUser.fileId.fileUrl });
 
   /* React-Query */
   const sendFile = useMutation(postFile);
   const updateProfile = useMutation(editingProfile);
+  const { data: user } = useQuery<IGetUser>('getMe', () =>
+    getUser(cUser.userId),
+  );
 
   /* Handlers */
   const setEditProfileHandler = () => {
@@ -35,11 +39,11 @@ const UserSection = () => {
   const closeEditProfileHandler = () => {
     setBio('');
     setNickname('');
-    setProfileImage({ id: '', url: user.fileId.fileUrl });
+    setProfileImage({ id: '', url: cUser.fileId.fileUrl });
     setEditProfile(false);
   };
   const removeImageHandler = () => {
-    setProfileImage({ ...profileImage, url: user.fileId.fileUrl });
+    setProfileImage({ ...profileImage, url: cUser.fileId.fileUrl });
   };
 
   const profileImageChangeHandler = (
@@ -79,7 +83,7 @@ const UserSection = () => {
   const submitProfileHandler = () => {
     updateProfile.mutate(
       {
-        id: user.userId,
+        id: cUser.userId,
         data: { introduce: bio, fileId: profileImage.url, nickname },
       },
       {
@@ -127,10 +131,10 @@ const UserSection = () => {
       </UserImageSection>
       {!editProfile ? (
         <>
-          <UserId>{user.nickname}</UserId>
-          <Nickname>{user.username}</Nickname>
+          <UserId>{cUser.nickname}</UserId>
+          <Nickname>{cUser.username}</Nickname>
           <Introduce>
-            {user.introduce ? user.introduce : '자기소개가 없습니다.'}
+            {cUser.introduce ? cUser.introduce : '자기소개가 없습니다.'}
           </Introduce>
         </>
       ) : (
@@ -159,7 +163,7 @@ const UserSection = () => {
             setModal({ showModal: true, exit: false });
           }}
         >
-          4
+          {user?.follower[0].count}
         </span>
       </Followers>
     </UserWrapper>

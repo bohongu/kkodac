@@ -132,7 +132,13 @@ const PostModal = ({ id }: IModal) => {
                 <h1>{data.regionId.name}</h1>
               </Tags>
               <AuthorAndDate>
-                <Author to={`/user/${data.authorId.userId}`}>
+                <Author
+                  to={
+                    cUser.userId === data.authorId.userId
+                      ? `/profile/${cUser.userId}`
+                      : `/user/${data.authorId.userId}`
+                  }
+                >
                   {data.authorId.nickname}
                 </Author>
                 <h3>{data.createdAt.slice(0, 10)}</h3>

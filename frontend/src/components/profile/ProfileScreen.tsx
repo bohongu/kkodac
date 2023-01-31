@@ -3,13 +3,17 @@ import styled from 'styled-components';
 import User from './User';
 import Posts from './Posts';
 import Subscriber from './Subscriber';
+import { useRecoilValue } from 'recoil';
+import { currentUser } from '../../recoil/atoms';
 
 const ProfileScreen = () => {
+  const cUser = useRecoilValue(currentUser);
+
   return (
     <ProfileWrapper>
       <User />
       <Posts />
-      <Subscriber />
+      <Subscriber userId={cUser.userId} />
     </ProfileWrapper>
   );
 };

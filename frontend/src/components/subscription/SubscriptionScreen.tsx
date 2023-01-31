@@ -1,21 +1,50 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
+import { useQuery } from 'react-query';
+import { IFollow, IPost } from './../../utils/interface';
+import { getFollows, getUserPost } from './../../api/api';
+import { useRecoilValue } from 'recoil';
+import { currentUser } from '../../recoil/atoms';
 
 const SubscriptionScreen = () => {
+  const { userId } = useParams();
+  const cUser = useRecoilValue(currentUser);
+
+  const { data: follows } = useQuery<IFollow>('follows', () =>
+    getFollows(userId!),
+  );
+
+  const [subUser, setSubUser] = useState<string>(userId!);
+
+  const { data: posts, refetch } = useQuery<IPost[]>('subGetUserPost', () =>
+    getUserPost(subUser!),
+  );
+
+  const changeSubUser = (id: string) => {
+    setSubUser(id);
+    setTimeout(() => {
+      refetch();
+    }, 300);
+  };
+
   return (
     <SubscriptionWrapper>
       <Subscribers>
-        <Subscriber>
-          <div></div>
-          <h1>닉네임</h1>
+        <Subscriber onClick={() => changeSubUser(cUser.userId)}>
+          <Image bgphoto={cUser.fileId.fileUrl} />
+          <h1>{cUser.nickname}</h1>
         </Subscriber>
+        {follows?.users_followed_by_user.map((user, idx) => (
+          <Subscriber onClick={() => changeSubUser(user.userId)} key={idx}>
+            <Image bgphoto={user.fileId.fileUrl} />
+            <h1>{user.nickname}</h1>
+          </Subscriber>
+        ))}
       </Subscribers>
       <Posts>
-        <Post></Post>
-        <Post></Post>
-        <Post></Post>
-        <Post></Post>
-        <Post></Post>
+        {posts &&
+          posts.map((post) => <Post key={post.postId}>{post.title}</Post>)}
       </Posts>
     </SubscriptionWrapper>
   );
@@ -49,16 +78,21 @@ const Subscriber = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 5px;
-  div {
-    border: 1px solid black;
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-  }
+
   h1 {
     margin-top: 5px;
     font-size: 12px;
   }
+`;
+
+const Image = styled.div<{ bgphoto: string }>`
+  background-image: url(${(props) => props.bgphoto});
+  background-size: cover;
+  background-position: center center;
+  border: 1px solid black;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
 `;
 
 const Posts = styled.div`
