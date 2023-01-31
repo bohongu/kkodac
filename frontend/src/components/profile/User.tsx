@@ -80,14 +80,17 @@ const UserSection = () => {
     updateProfile.mutate(
       {
         id: user.userId,
-        introduce: bio,
-        fileId: profileImage.url,
-        nickname,
+        data: { introduce: bio, fileId: profileImage.url, nickname },
       },
       {
         onSuccess: () => {
+          console.log('성공');
           setNickname('');
           setBio('');
+          setEditProfile(false);
+        },
+        onError(error, variables, context) {
+          console.log(error);
         },
       },
     );

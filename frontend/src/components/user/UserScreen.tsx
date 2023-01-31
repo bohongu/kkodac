@@ -1,14 +1,21 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery } from 'react-query';
-import { getUser, getUserPost } from '../../api/api';
+import { useQuery, useMutation } from 'react-query';
+import { deleteFollow, getUser, getUserPost } from '../../api/api';
 import styled from 'styled-components';
-import { IGetUser, IPost } from './../../utils/interface';
+import { IGetUser, IPost, IFollow } from './../../utils/interface';
 import { motion } from 'framer-motion';
+import { createFollow, getFollows } from './../../api/api';
+import { useRecoilValue } from 'recoil';
+import { currentUser } from '../../recoil/atoms';
 
 const UserScreen = () => {
+  const [canFollow, setCanFollow] = useState(false);
+
   const navigate = useNavigate();
   const { userId } = useParams();
+
+  const cUser = useRecoilValue(currentUser);
 
   const { data: posts } = useQuery<IPost[]>('getOtherUserPost', () =>
     getUserPost(userId!),
@@ -16,10 +23,55 @@ const UserScreen = () => {
   const { data: user } = useQuery<IGetUser>('getUserProfile', () =>
     getUser(userId!),
   );
+  const follow = useMutation(createFollow);
+  const unFollow = useMutation(deleteFollow);
+  const { data: follows } = useQuery<IFollow>('follows', () =>
+    getFollows(userId!),
+  );
 
   const postDetailHandler = (region: string, postId: string) => {
     navigate(`/tour/${region}/${postId}`);
   };
+
+  const onFollow = () => {
+    if (canFollow === false) {
+      follow.mutate(
+        { userId: cUser.userId, followedUserId: userId! },
+        {
+          onSuccess: () => {
+            setCanFollow(true);
+            alert('팔로잉하였습니다');
+          },
+        },
+      );
+    } else {
+      unFollow.mutate(
+        { userId: cUser.userId, followedUserId: userId! },
+        {
+          onSuccess: () => {
+            setCanFollow(false);
+            alert('언팔로우하였습니다');
+          },
+        },
+      );
+    }
+  };
+
+  useEffect(() => {
+    const checkFollow = () => {
+      if (follows) {
+        if (
+          follows.users_follow_user.find((user) => user.userId === cUser.userId)
+        ) {
+          setCanFollow(true);
+        } else {
+          setCanFollow(false);
+        }
+      }
+    };
+
+    checkFollow();
+  }, [cUser.userId, follows]);
 
   return (
     <UserWrapper>
@@ -36,11 +88,11 @@ const UserScreen = () => {
               </Box>
               <Box>
                 <h1>팔로우</h1>
-                <h2>{user.follow[0].count}</h2>
+                <h2>{user.follower[0].count}</h2>
               </Box>
               <Box>
                 <h1>팔로잉</h1>
-                <h2>{user.follower[0].count}</h2>
+                <h2>{user.follow[0].count}</h2>
               </Box>
             </Statistic>
             <Personal>
@@ -49,7 +101,9 @@ const UserScreen = () => {
               <p>{user.result.introduce}</p>
             </Personal>
             <Btn>
-              <button>Follow</button>
+              <button onClick={onFollow}>
+                {canFollow ? 'UnFollow' : 'Follow'}
+              </button>
             </Btn>
           </Text>
         </Info>

@@ -119,3 +119,23 @@ export interface IGetUser {
     count: string;
   }[];
 }
+
+export interface IFollow {
+  userId: string;
+  users_followed_by_user: {
+    userId: string;
+    socialFiledId: string | null;
+    nickname: string;
+    fileId: {
+      fileUrl: string;
+    };
+  }[];
+  users_follow_user: {
+    userId: string;
+    socialFiledId: string | null;
+    nickname: string;
+    fileId: {
+      fileUrl: string;
+    };
+  }[];
+}

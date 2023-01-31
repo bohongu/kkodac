@@ -37,14 +37,22 @@ interface IComment {
 
 interface IEditProfile {
   id: string;
-  introduce?: string;
-  fileId?: string;
-  nickname?: string;
+  data: { introduce?: string; fileId?: string; nickname?: string };
 }
 
 interface ILike {
   postId: string;
   userId: string;
+}
+
+interface IFollow {
+  userId: string;
+  followedUserId: string;
+}
+
+interface ICreateFollow {
+  userId: string;
+  viewerId: string;
 }
 
 /* 날씨 API */
@@ -80,8 +88,11 @@ export const profile = async (token: string) => {
   return data;
 };
 
-export const editingProfile = async (data: IEditProfile) => {
-  return await axios.patch(`${BASE_URL}/kkodac/user`, data);
+export const editingProfile = async (bigData: IEditProfile) => {
+  return await axios.patch(
+    `${BASE_URL}/kkodac/user/${bigData.id}`,
+    bigData.data,
+  );
 };
 
 export const getUser = async (id: string) => {
@@ -152,4 +163,19 @@ export const createLike = async (data: ILike) => {
 
 export const deleteLike = async (data: ILike) => {
   return await axios.delete(`${BASE_URL}/kkodac/posts/like`, { data: data });
+};
+
+/* 팔로우 */
+
+export const getFollows = async (id: string) => {
+  const { data } = await axios.get(`${BASE_URL}/kkodac/user/follow/${id}`);
+  return data;
+};
+
+export const deleteFollow = async (data: IFollow) => {
+  return await axios.delete(`${BASE_URL}/kkodac/user/follow`, { data: data });
+};
+
+export const createFollow = async (data: IFollow) => {
+  return await axios.post(`${BASE_URL}/kkodac/user/follow`, data);
 };
