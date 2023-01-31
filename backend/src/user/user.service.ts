@@ -219,36 +219,48 @@ export class UserService {
   }
 
   async getFollowList(userId: string, viewerId: string) {
-    const users_followed_by_user = await this.followRepository.findFollowing(
-      userId,
-      viewerId,
-    );
-    const users_follow_user = await this.followRepository.findFollower(
-      userId,
-      viewerId,
-    );
+    try {
+      const users_followed_by_user = await this.followRepository.findFollowing(
+        userId,
+        viewerId,
+      );
+      const users_follow_user = await this.followRepository.findFollower(
+        userId,
+        viewerId,
+      );
 
-    // users_followed_by_user.map((record) => {
-    //   record.is_followed_by_viewer = record.is_followed_by_viewer === '0';
-    //   return record;
-    // });
+      if (users_followed_by_user) {
+        users_followed_by_user.map((record) => {
+          record.is_followed_by_viewer = record.is_followed_by_viewer === '0';
+          return record;
+        });
+      } else {
+        return users_followed_by_user;
+      }
 
-    // users_follow_user.map((record) => {
-    //   record.is_followed_by_viewer = record.is_followed_by_viewer === '0';
-    //   return record;
-    // });
+      if (users_follow_user) {
+        users_follow_user.map((record) => {
+          record.is_followed_by_viewer = record.is_followed_by_viewer === '0';
+          return record;
+        });
+      } else {
+        return users_follow_user;
+      }
 
-    return {
-      statusCode: 200,
-      message: 'Success',
-      userId: userId,
-      users_followed_by_user,
-      users_follow_user,
-    };
+      return {
+        statusCode: 200,
+        message: 'Success',
+        userId: userId,
+        users_followed_by_user,
+        users_follow_user,
+      };
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async getUser(id: string) {
-    const existingUser = await this.userRepository
+    const result = await this.userRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.fileId', 'fileId')
       .where({ userId: id })
@@ -257,9 +269,22 @@ export class UserService {
     const follow = await this.followRepository.findFollowingCnt(id);
     const follower = await this.followRepository.findFollowerCnt(id);
 
-    if (!existingUser) {
+    delete result._id;
+    delete result.createdAt;
+    delete result.googleAccount;
+    delete result.kakaoAccount;
+    delete result.nickname;
+    delete result.password;
+    delete result.refreshToken;
+    delete result.updatedAt;
+    delete result.fileId._id;
+    delete result.fileId.createdAt;
+    delete result.fileId.deployName;
+    delete result.fileId.fileId;
+    delete result.fileId.fileName;
+    if (!result) {
       throw new BadRequestException(Err.USER.NOT_FOUND);
     }
-    return { existingUser, follow, follower };
+    return { result, follow, follower };
   }
 }

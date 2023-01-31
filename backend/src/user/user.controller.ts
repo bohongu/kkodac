@@ -249,7 +249,7 @@ export class UserController {
   @Get('/follow')
   getFollowList(
     @Body('userId') userId: string,
-    @Body('viewer') viewerId: string,
+    @Body('viewerId') viewerId: string,
   ) {
     return this.userService.getFollowList(userId, viewerId);
   }

@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
-@Entity()
+@Entity({ name: 'follow_tb' })
 export class Follow {
   @PrimaryGeneratedColumn('increment', {
     type: 'bigint',

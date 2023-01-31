@@ -44,30 +44,34 @@ export class FollowRepository {
       LEFT JOIN (SELECT followed_user_Id FROM follow WHERE follow.followed_user_id='${viewerId}') AS sub ON sub.followed_user_id = follows.user_id;`,
     );
 
-    if (!result) {
+    if (result.length === 0) {
       return result;
     } else {
-      const fileId = await this.userRepository
-        .createQueryBuilder('user')
-        .leftJoinAndSelect('user.fileId', 'fileId')
-        .where({ userId: userId })
-        .getOne();
+      for (const i in result) {
+        const fileId = await this.userRepository
+          .createQueryBuilder('user')
+          .leftJoinAndSelect('user.fileId', 'fileId')
+          .where({ userId: result[i].user_id })
+          .getOne();
 
-      delete fileId._id;
-      delete fileId.kakaoAccount;
-      delete fileId.googleAccount;
-      delete fileId.refreshToken;
-      delete fileId.password;
-      delete fileId.username;
-      delete fileId.createdAt;
-      delete fileId.updatedAt;
-      delete fileId.fileId.createdAt;
-      delete fileId.fileId._id;
-      delete fileId.fileId.deployName;
-      delete fileId.fileId.fileId;
-      delete fileId.fileId.fileName;
+        delete fileId._id;
+        delete fileId.userId;
+        delete fileId.kakaoAccount;
+        delete fileId.googleAccount;
+        delete fileId.refreshToken;
+        delete fileId.password;
+        delete fileId.username;
+        delete fileId.createdAt;
+        delete fileId.updatedAt;
+        delete fileId.fileId.createdAt;
+        delete fileId.fileId._id;
+        delete fileId.fileId.deployName;
+        delete fileId.fileId.fileId;
+        delete fileId.fileId.fileName;
 
-      return { result, fileId };
+        result[i] = [result[i], fileId];
+      }
+      return result;
     }
   }
 
@@ -79,30 +83,35 @@ export class FollowRepository {
       FROM (SELECT follow.user_id FROM follow LEFT JOIN user_tb ON user_tb.user_id=follow.user_id WHERE followed_user_id='${userId}') AS followers\
       LEFT JOIN (SELECT followed_user_Id FROM follow WHERE follow.user_id='${viewerId}') AS sub ON sub.followed_user_id = followers.user_id;`);
 
-    if (!result) {
+    console.log('b', result);
+    if (result.length === 0) {
       return result;
     } else {
-      const fileId = await this.userRepository
-        .createQueryBuilder('user')
-        .leftJoinAndSelect('user.fileId', 'fileId')
-        .where({ userId: userId })
-        .getOne();
+      for (const i in result) {
+        const fileId = await this.userRepository
+          .createQueryBuilder('user')
+          .leftJoinAndSelect('user.fileId', 'fileId')
+          .where({ userId: result[i].user_id })
+          .getOne();
 
-      delete fileId._id;
-      delete fileId.kakaoAccount;
-      delete fileId.googleAccount;
-      delete fileId.refreshToken;
-      delete fileId.password;
-      delete fileId.username;
-      delete fileId.createdAt;
-      delete fileId.updatedAt;
-      delete fileId.fileId.createdAt;
-      delete fileId.fileId._id;
-      delete fileId.fileId.deployName;
-      delete fileId.fileId.fileId;
-      delete fileId.fileId.fileName;
+        delete fileId._id;
+        delete fileId.userId;
+        delete fileId.kakaoAccount;
+        delete fileId.googleAccount;
+        delete fileId.refreshToken;
+        delete fileId.password;
+        delete fileId.username;
+        delete fileId.createdAt;
+        delete fileId.updatedAt;
+        delete fileId.fileId.createdAt;
+        delete fileId.fileId._id;
+        delete fileId.fileId.deployName;
+        delete fileId.fileId.fileId;
+        delete fileId.fileId.fileName;
 
-      return { result, fileId };
+        result[i] = [result[i], fileId];
+      }
+      return result;
     }
   }
 

@@ -9,7 +9,6 @@ import { File } from 'src/file/entities/file.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { getConnection, Repository } from 'typeorm';
-import { UpdatePostDto } from '../dto/update-post.dto';
 
 @Injectable()
 export class PostRepository {
@@ -117,6 +116,11 @@ export class PostRepository {
       .leftJoinAndSelect('post.regionId', 'regionId')
       .leftJoinAndSelect('post.likes', 'like')
       .leftJoinAndSelect('like.user', 'likeUser')
+      .leftJoinAndSelect('likeUser.fileId', 'likeUserFileId')
+      .leftJoinAndSelect('post.commentMappers', 'commentMapper')
+      .leftJoinAndSelect('commentMapper.comment', 'comment')
+      .leftJoinAndSelect('comment.authorId', 'commentAuthorId')
+      .leftJoinAndSelect('commentAuthorId.fileId', 'commentUserfileId')
       .where({ postId: id })
       .getOne();
 
@@ -124,11 +128,34 @@ export class PostRepository {
 
     for (const num in post.fileMappers) {
       delete post.fileMappers[num]._id;
+      delete post.fileMappers[num].file._id;
+      delete post.fileMappers[num].file.createdAt;
+      delete post.fileMappers[num].file.deployName;
+      delete post.fileMappers[num].file.fileName;
+      delete post.fileMappers[num].file.fileId;
     }
     for (const num in post.tagMappers) {
       delete post.tagMappers[num]._id;
       delete post.tagMappers[num].tag._id;
       delete post.tagMappers[num].tag.createdAt;
+    }
+
+    for (const num in post.commentMappers) {
+      delete post.commentMappers[num]._id;
+      delete post.commentMappers[num].comment._id;
+      delete post.commentMappers[num].comment.authorId._id;
+      delete post.commentMappers[num].comment.authorId.createdAt;
+      delete post.commentMappers[num].comment.authorId.googleAccount;
+      delete post.commentMappers[num].comment.authorId.introduce;
+      delete post.commentMappers[num].comment.authorId.kakaoAccount;
+      delete post.commentMappers[num].comment.authorId.password;
+      delete post.commentMappers[num].comment.authorId.refreshToken;
+      delete post.commentMappers[num].comment.authorId.updatedAt;
+      delete post.commentMappers[num].comment.authorId.fileId._id;
+      delete post.commentMappers[num].comment.authorId.fileId.createdAt;
+      delete post.commentMappers[num].comment.authorId.fileId.deployName;
+      delete post.commentMappers[num].comment.authorId.fileId.fileId;
+      delete post.commentMappers[num].comment.authorId.fileId.fileName;
     }
 
     for (const num in post.likes) {
@@ -142,17 +169,26 @@ export class PostRepository {
       delete post.likes[num].user.refreshToken;
       delete post.likes[num].user.password;
       delete post.likes[num].user.username;
+      delete post.likes[num].user.fileId._id;
+      delete post.likes[num].user.fileId.createdAt;
+      delete post.likes[num].user.fileId.deployName;
+      delete post.likes[num].user.fileId.fileName;
+      delete post.likes[num].user.fileId.fileId;
     }
 
     delete post.authorId._id;
     delete post.authorId.password;
+    delete post.authorId.kakaoAccount;
+    delete post.authorId.googleAccount;
+    delete post.authorId.refreshToken;
     delete post.authorId.introduce;
-    delete post.authorId.createdAt;
     delete post.authorId.updatedAt;
+    delete post.authorId.createdAt;
 
     delete post.regionId._id;
     delete post.regionId.createdAt;
     delete post.regionId.regionId;
+    delete post.updatedAt;
 
     return post;
   }
@@ -304,10 +340,11 @@ export class PostRepository {
       .createQueryBuilder('post')
       .leftJoinAndSelect('post.likes', 'like')
       .leftJoinAndSelect('like.user', 'user')
+      .leftJoinAndSelect('user.fileId', 'fileId')
       .select([
         'user.userId as userId',
         'user.nickname as nickname',
-        'user.fileId as fileUrl',
+        'fileId.fileUrl as fileUrl',
       ])
       .where('post.postId = :postId', { postId: id })
       .execute();
