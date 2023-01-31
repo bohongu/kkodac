@@ -254,8 +254,6 @@ export class UserService {
       // }
 
       return {
-        statusCode: 200,
-        message: 'Success',
         userId: id,
         users_followed_by_user,
         users_follow_user,

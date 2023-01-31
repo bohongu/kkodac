@@ -38,20 +38,21 @@ export class FollowRepository {
   }
 
   async findFollowing(userId: string, viewerId: string) {
-    const result = await this.followRepository.query(
-      `SELECT follows.*, ISNULL(followed_user_Id) AS is_followed_by_viewer FROM\
-      (SELECT follow.user_id FROM follow LEFT JOIN user_tb ON user_tb.user_id = follow.followed_user_id WHERE follow.user_id='${userId}') AS follows\
-      LEFT JOIN (SELECT followed_user_Id FROM follow WHERE follow.followed_user_id='${viewerId}') AS sub ON sub.followed_user_id = follows.user_id;`,
-    );
+    let result = [];
+    const entity = await this.followRepository
+      .createQueryBuilder('follow')
+      .leftJoinAndSelect('follow.followedUser', 'followedUser')
+      .where({ user: userId })
+      .getMany();
 
-    if (result.length === 0) {
-      return result;
+    if (entity.length === 0) {
+      return entity;
     } else {
-      for (const i in result) {
+      for (const i in entity) {
         const fileId = await this.userRepository
           .createQueryBuilder('user')
           .leftJoinAndSelect('user.fileId', 'fileId')
-          .where({ userId: result[i].user_id })
+          .where({ userId: entity[i].followedUser.userId })
           .getOne();
 
         delete fileId._id;
@@ -63,13 +64,15 @@ export class FollowRepository {
         delete fileId.username;
         delete fileId.createdAt;
         delete fileId.updatedAt;
-        delete fileId.fileId.createdAt;
-        delete fileId.fileId._id;
-        delete fileId.fileId.deployName;
-        delete fileId.fileId.fileId;
-        delete fileId.fileId.fileName;
 
-        result[i] = fileId;
+        if (fileId.fileId !== null) {
+          delete fileId.fileId.createdAt;
+          delete fileId.fileId._id;
+          delete fileId.fileId.deployName;
+          delete fileId.fileId.fileId;
+          delete fileId.fileId.fileName;
+        }
+        result.push(fileId);
       }
       return result;
     }
@@ -80,8 +83,8 @@ export class FollowRepository {
   async findFollower(id: string, viewerId: string) {
     const result = await this.followRepository
       .query(`SELECT followers.*, ISNULL(followed_user_Id) AS is_followed_by_viewer\
-      FROM (SELECT follow.user_id FROM follow LEFT JOIN user_tb ON user_tb.user_id=follow.user_id WHERE followed_user_id='${id}') AS followers\
-      LEFT JOIN (SELECT followed_user_Id FROM follow WHERE follow.user_id='${viewerId}') AS sub ON sub.followed_user_id = followers.user_id;`);
+      FROM (SELECT follow_tb.user_id FROM follow_tb LEFT JOIN user_tb ON user_tb.user_id=follow_tb.user_id WHERE followed_user_id='${id}') AS followers\
+      LEFT JOIN (SELECT followed_user_Id FROM follow_tb WHERE follow_tb.user_id='${viewerId}') AS sub ON sub.followed_user_id = followers.user_id;`);
 
     if (result.length === 0) {
       return result;
@@ -102,11 +105,13 @@ export class FollowRepository {
         delete fileId.username;
         delete fileId.createdAt;
         delete fileId.updatedAt;
-        delete fileId.fileId.createdAt;
-        delete fileId.fileId._id;
-        delete fileId.fileId.deployName;
-        delete fileId.fileId.fileId;
-        delete fileId.fileId.fileName;
+        if (fileId.fileId !== null) {
+          delete fileId.fileId.createdAt;
+          delete fileId.fileId._id;
+          delete fileId.fileId.deployName;
+          delete fileId.fileId.fileId;
+          delete fileId.fileId.fileName;
+        }
 
         result[i] = fileId;
       }
