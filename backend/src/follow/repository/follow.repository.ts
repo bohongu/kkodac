@@ -55,8 +55,8 @@ export class FollowRepository {
           .getOne();
 
         delete fileId._id;
-        delete fileId.userId;
         delete fileId.kakaoAccount;
+        delete fileId.introduce;
         delete fileId.googleAccount;
         delete fileId.refreshToken;
         delete fileId.password;
@@ -69,7 +69,7 @@ export class FollowRepository {
         delete fileId.fileId.fileId;
         delete fileId.fileId.fileName;
 
-        result[i] = [result[i], fileId];
+        result[i] = fileId;
       }
       return result;
     }
@@ -77,13 +77,12 @@ export class FollowRepository {
 
   isExistQuery = (query: string) => `SELECT EXISTS(${query})`;
 
-  async findFollower(userId: string, viewerId: string) {
+  async findFollower(id: string, viewerId: string) {
     const result = await this.followRepository
       .query(`SELECT followers.*, ISNULL(followed_user_Id) AS is_followed_by_viewer\
-      FROM (SELECT follow.user_id FROM follow LEFT JOIN user_tb ON user_tb.user_id=follow.user_id WHERE followed_user_id='${userId}') AS followers\
+      FROM (SELECT follow.user_id FROM follow LEFT JOIN user_tb ON user_tb.user_id=follow.user_id WHERE followed_user_id='${id}') AS followers\
       LEFT JOIN (SELECT followed_user_Id FROM follow WHERE follow.user_id='${viewerId}') AS sub ON sub.followed_user_id = followers.user_id;`);
 
-    console.log('b', result);
     if (result.length === 0) {
       return result;
     } else {
@@ -95,9 +94,9 @@ export class FollowRepository {
           .getOne();
 
         delete fileId._id;
-        delete fileId.userId;
         delete fileId.kakaoAccount;
         delete fileId.googleAccount;
+        delete fileId.introduce;
         delete fileId.refreshToken;
         delete fileId.password;
         delete fileId.username;
@@ -109,21 +108,21 @@ export class FollowRepository {
         delete fileId.fileId.fileId;
         delete fileId.fileId.fileName;
 
-        result[i] = [result[i], fileId];
+        result[i] = fileId;
       }
       return result;
     }
   }
 
-  async findFollowingCnt(userId: string) {
+  async findFollowingCnt(id: string) {
     return await this.followRepository.query(
-      `SELECT COUNT(*) AS count FROM follow LEFT JOIN user_tb ON user_tb.user_id = follow.followed_user_id WHERE follow.user_id = '${userId}';`,
+      `SELECT COUNT(*) AS count FROM follow_tb LEFT JOIN user_tb ON user_tb.user_id = follow_tb.followed_user_id WHERE follow_tb.user_id = '${id}';`,
     );
   }
 
-  async findFollowerCnt(userId: string) {
+  async findFollowerCnt(id: string) {
     return await this.followRepository.query(
-      `SELECT COUNT(*) AS count FROM follow LEFT JOIN user_tb ON user_tb.user_id = follow.user_id WHERE follow.followed_user_id = '${userId}'; `,
+      `SELECT COUNT(*) AS count FROM follow_tb LEFT JOIN user_tb ON user_tb.user_id = follow_tb.user_id WHERE follow_tb.followed_user_id = '${id}'; `,
     );
   }
 }

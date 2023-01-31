@@ -224,39 +224,39 @@ export class UserService {
     return { statusCode: 200, message: 'Success' };
   }
 
-  async getFollowList(userId: string, viewerId: string) {
+  async getFollowList(id: string, viewerId: string) {
     try {
       const users_followed_by_user = await this.followRepository.findFollowing(
-        userId,
+        id,
         viewerId,
       );
       const users_follow_user = await this.followRepository.findFollower(
-        userId,
+        id,
         viewerId,
       );
 
-      if (users_followed_by_user) {
-        users_followed_by_user.map((record) => {
-          record.is_followed_by_viewer = record.is_followed_by_viewer === '0';
-          return record;
-        });
-      } else {
-        return users_followed_by_user;
-      }
+      // if (users_followed_by_user) {
+      //   users_followed_by_user.map((record) => {
+      //     record.is_followed_by_viewer = record.is_followed_by_viewer === '0';
+      //     return record;
+      //   });
+      // } else {
+      //   return users_followed_by_user;
+      // }
 
-      if (users_follow_user) {
-        users_follow_user.map((record) => {
-          record.is_followed_by_viewer = record.is_followed_by_viewer === '0';
-          return record;
-        });
-      } else {
-        return users_follow_user;
-      }
+      // if (users_follow_user) {
+      //   users_follow_user.map((record) => {
+      //     record.is_followed_by_viewer = record.is_followed_by_viewer === '0';
+      //     return record;
+      //   });
+      // } else {
+      //   return users_follow_user;
+      // }
 
       return {
         statusCode: 200,
         message: 'Success',
-        userId: userId,
+        userId: id,
         users_followed_by_user,
         users_follow_user,
       };

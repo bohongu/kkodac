@@ -13,6 +13,7 @@ import {
   Param,
   Patch,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateLocalUserDto } from './dto/create-local-user.dto';
@@ -244,12 +245,9 @@ export class UserController {
     return this.userService.deleteFollow(followDto);
   }
 
-  @Get('/follow')
-  getFollowList(
-    @Body('userId') userId: string,
-    @Body('viewerId') viewerId: string,
-  ) {
-    return this.userService.getFollowList(userId, viewerId);
+  @Get('/follow/:id')
+  getFollowList(@Param('id') id: string, @Body('viewerId') viewerId: string) {
+    return this.userService.getFollowList(id, viewerId);
   }
 
   @Get(':id')
