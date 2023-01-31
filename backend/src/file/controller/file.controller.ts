@@ -30,7 +30,6 @@ export class FileController {
     @UploadedFile() file: Express.Multer.File,
     @Res() res: Response,
   ) {
-    console.log(file);
     const result = await this.fileService.upload(file);
     if (result) {
       this.logger.debug(

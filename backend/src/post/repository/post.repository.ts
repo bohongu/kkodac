@@ -47,7 +47,6 @@ export class PostRepository {
         fileId: '5df27f11-1a0f-4cec-b9b7-24b7b0447b44',
       },
     });
-    console.log('aaa', defaultProfile);
 
     for (const i in createPostDto.tags) {
       const a = await this.tagRepository.findOne({ tagId: tagIds[i] });
@@ -97,7 +96,6 @@ export class PostRepository {
         const a = await queryRunner.manager
           .getRepository(PostTagMapper)
           .save(entity);
-        console.log(entity, a);
       }
     } catch (error) {
       throw new Error(error);

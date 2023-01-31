@@ -36,10 +36,10 @@ export class LikeService {
           postId: postId,
         },
       });
-      console.log(post);
+
       const user = await this.userRepository.findOne({ userId: userId });
       const like = plainToInstance(Like, { post, user });
-      console.log(like);
+
       await this.likeRepository.save(like);
       return await this.likeRepository.findLikeCountByPostId(postId);
     } catch (error) {

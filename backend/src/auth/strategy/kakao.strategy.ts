@@ -25,7 +25,6 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
 
     const findUser = await this.authService.validateKakao(kakaoId);
 
-    console.log('find', findUser);
     if (findUser === null) {
       // 유저가 없을때
       const user = {

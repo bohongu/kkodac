@@ -50,7 +50,6 @@ export class UserService {
         fileId: 'ae59725b-d72e-41d5-937b-bd717f78d6a8',
       },
     });
-    console.log('a');
     const hashedPassword = await bcrypt.hash(createLocalUserDto.password, 10);
     await this.userRepository.save({
       userId: uuidv4(),
@@ -140,7 +139,11 @@ export class UserService {
     if (updateUserDto.fileId) {
       const result = await this.userRepository
         .createQueryBuilder('user')
-        .update({ socialFileId: null, fileId: file, ...updateUserDto })
+        .update({
+          socialFileId: null,
+          fileId: file,
+          ...updateUserDto,
+        })
         .where({
           userId: id,
         })
@@ -151,7 +154,10 @@ export class UserService {
       try {
         const result = await this.userRepository
           .createQueryBuilder('user')
-          .update({ socialFileId: null, ...updateUserDto })
+          .update({
+            socialFileId: null,
+            ...updateUserDto,
+          })
           .where({
             userId: id,
           })

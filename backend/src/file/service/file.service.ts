@@ -68,8 +68,6 @@ export class FileService {
         Key: `${(await findOne).deployName}`,
       }).promise();
 
-      console.log((await findOne).deployName);
-
       const deleteResult = await this.fileeRepository.delete(id);
 
       return deleteResult;

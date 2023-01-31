@@ -44,7 +44,6 @@ export class UserController {
   ) {
     const result = await this.userService.localRegister(createLocalUserDto);
 
-    console.log(result);
     if (result) {
       this.logger.debug(
         {
@@ -95,7 +94,6 @@ export class UserController {
   @Get('profile')
   async getProfile(@User() user, @Res() res: Response) {
     const result = await this.userService.findUser(user);
-    console.log('result', result);
     if (result) {
       this.logger.debug(
         {
