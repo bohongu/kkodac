@@ -50,11 +50,6 @@ interface IFollow {
   followedUserId: string;
 }
 
-interface ICreateFollow {
-  userId: string;
-  viewerId: string;
-}
-
 /* 날씨 API */
 
 export const getWeather = async (lat: number, lon: number) => {
@@ -145,6 +140,10 @@ export const getTags = async () => {
 export const getUserPost = async (id: string) => {
   const { data } = await axios.get(`${BASE_URL}/kkodac/posts/user/${id}`);
   return data.result;
+};
+
+export const deletePost = async (id: string) => {
+  return await axios.delete(`${BASE_URL}/kkodac/post/${id}`);
 };
 
 /* 댓글 */

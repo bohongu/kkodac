@@ -2,19 +2,21 @@ import { motion } from 'framer-motion';
 import React from 'react';
 import styled from 'styled-components';
 import { ContentVariants, HoverDownVariants } from '../../utils/variants';
-import { useQuery } from 'react-query';
+import { useQuery, useMutation } from 'react-query';
 import { getUserPost } from '../../api/api';
 import { useRecoilValue } from 'recoil';
 import { currentUser } from '../../recoil/atoms';
 import { IPost } from './../../utils/interface';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { useNavigate } from 'react-router-dom';
+import { ImCancelCircle } from 'react-icons/im';
+import { deletePost } from './../../api/api';
 
 const PostSection = () => {
   const navigate = useNavigate();
   const user = useRecoilValue(currentUser);
 
-  const { data, isLoading } = useQuery<IPost[]>('getUserPost', () =>
+  const { data, isLoading, refetch } = useQuery<IPost[]>('getUserPost', () =>
     getUserPost(user.userId),
   );
 
@@ -22,12 +24,24 @@ const PostSection = () => {
     navigate(`/tour/${region}/${postId}`);
   };
 
+  const removePost = useMutation(deletePost);
+
+  const removeHandler = (id: string) => {
+    removePost.mutate(id, {
+      onSuccess: () => {
+        setTimeout(() => {
+          refetch();
+        }, 200);
+      },
+    });
+  };
+
   return (
     <PostWrapper>
       {isLoading && <LoadingSpinner />}
-      {data &&
-        data.map((data) => (
-          <Posts key={data.postId}>
+      <Posts>
+        {data &&
+          data.map((data) => (
             <Post
               variants={HoverDownVariants}
               whileHover="hover"
@@ -35,12 +49,15 @@ const PostSection = () => {
               layoutId={data.postId}
               onClick={() => postDetailHandler(data.regionId.name, data.postId)}
             >
+              <Delete onClick={() => removeHandler(data.postId)}>
+                <ImCancelCircle />
+              </Delete>
               <Content variants={ContentVariants}>
                 <h1>{data.title}</h1>
               </Content>
             </Post>
-          </Posts>
-        ))}
+          ))}
+      </Posts>
     </PostWrapper>
   );
 };
@@ -65,7 +82,19 @@ const Posts = styled.div`
   }
 `;
 
+const Delete = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 18px;
+  color: white;
+  &:hover {
+    color: red;
+  }
+`;
+
 const Post = styled(motion.div)<{ bgphoto: string }>`
+  position: relative;
   background-image: url(${(props) => props.bgphoto});
   background-size: cover;
   background-position: center center;

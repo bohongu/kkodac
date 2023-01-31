@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { currentUser, subscriberModalState } from './../../recoil/atoms';
