@@ -9,6 +9,8 @@ import { File } from 'src/file/entities/file.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { getConnection, Repository } from 'typeorm';
+import { Like } from 'src/like/entities/like.entity';
+import { PostCommentMapper } from '../entities/post.comment.mapping.entity';
 
 @Injectable()
 export class PostRepository {
@@ -25,15 +27,24 @@ export class PostRepository {
     private readonly postTagMapperRepository: Repository<PostTagMapper>,
     @InjectRepository(PostFileMapper)
     private readonly postFileMapperRepository: Repository<PostFileMapper>,
+    @InjectRepository(Like)
+    private readonly likeRepository: Repository<Like>,
+    @InjectRepository(PostCommentMapper)
+    private readonly postCommentMapperRepository: Repository<PostCommentMapper>,
   ) {}
 
   async create(createPostDto: CreatePostDto, req: Request): Promise<Post> {
     let post: Post;
     const fileIds = createPostDto.files ? createPostDto.files : [];
     const files = [];
-    const tagIds = createPostDto.tags ? createPostDto.tags : [];
+    const tagIds = [];
     const tags = [];
 
+    for (const i in createPostDto.tags) {
+      tagIds.push(createPostDto.tags[i].data);
+    }
+
+    console.log(tagIds);
     for (const fileId of fileIds) {
       files.push(
         await this.fileRepository.findOne({
@@ -53,7 +64,7 @@ export class PostRepository {
 
       if (a === undefined) {
         const entity = this.tagRepository.create({
-          tagId: createPostDto.tags[i],
+          tagId: tagIds[i],
         });
         await this.tagRepository.save(entity);
       }
@@ -100,6 +111,7 @@ export class PostRepository {
     } catch (error) {
       throw new Error(error);
     }
+
     return post;
   }
 
@@ -192,6 +204,31 @@ export class PostRepository {
   }
 
   async delete(id: string) {
+    const post = await this.postRepository
+      .createQueryBuilder('post')
+      .leftJoinAndSelect('post.tagMappers', 'tagmapper')
+      .leftJoinAndSelect('tagmapper.tag', 'tag')
+      .where({ postId: id })
+      .getOne();
+
+    for (const i in post.tagMappers) {
+      const b = post.tagMappers[i].tag.tagId;
+
+      const tags = await this.tagRepository
+        .createQueryBuilder('tag')
+        .where({ tagId: post.tagMappers[i].tag.tagId })
+        .getOne();
+
+      const tagg = await this.postTagMapperRepository.find({
+        tag: tags,
+      });
+
+      if (tagg.length <= 2)
+        await this.tagRepository.delete({
+          tagId: tags.tagId,
+        });
+    }
+
     const postId = await this.postRepository.findOne({
       postId: id,
     });
@@ -199,6 +236,8 @@ export class PostRepository {
     const result = await this.postRepository.delete({ postId: id });
     await this.postTagMapperRepository.delete({ post: postId });
     await this.postFileMapperRepository.delete({ post: postId });
+    await this.likeRepository.delete({ post: postId });
+    await this.postCommentMapperRepository.delete({ post: postId });
     return result;
   }
 

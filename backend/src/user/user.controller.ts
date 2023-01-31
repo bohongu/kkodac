@@ -215,17 +215,13 @@ export class UserController {
   }
 
   @Patch('')
-  async patch(
-    @Body() updateUserDto: UpdateUserDto,
-    @Body('id') id: string,
-    @Res() res: Response,
-  ) {
-    const result = await this.userService.patch(updateUserDto, id);
+  async patch(@Body() updateUserDto: UpdateUserDto, @Res() res: Response) {
+    const result = await this.userService.patch(updateUserDto);
     if (result) {
       this.logger.debug(
         {
           message: 'update',
-          param: { id: id },
+          param: { id: updateUserDto.userId },
         },
         'User',
       );

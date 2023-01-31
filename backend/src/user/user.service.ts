@@ -131,7 +131,7 @@ export class UserService {
     return existingUser;
   }
 
-  async patch(updateUserDto, id) {
+  async patch(updateUserDto) {
     const file = await this.fileRepository.findOne({
       fileId: updateUserDto.fileId,
     });
@@ -145,7 +145,7 @@ export class UserService {
           ...updateUserDto,
         })
         .where({
-          userId: id,
+          userId: updateUserDto.userId,
         })
         .execute();
 
@@ -159,7 +159,7 @@ export class UserService {
             ...updateUserDto,
           })
           .where({
-            userId: id,
+            userId: updateUserDto.userId,
           })
           .execute();
 

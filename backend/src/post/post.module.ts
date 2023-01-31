@@ -8,6 +8,7 @@ import { LikeService } from 'src/like/service/like.service';
 import { User } from 'src/user/entities/user.entity';
 import { PostController } from './controller/post.controller';
 import { PostsController } from './controller/posts.controller';
+import { PostCommentMapper } from './entities/post.comment.mapping.entity';
 import { Post } from './entities/post.entity';
 import { PostFileMapper } from './entities/post.file.mapping.entity';
 import { PostTagMapper } from './entities/post.tag.mapping.entity';
@@ -27,6 +28,7 @@ import { PostService } from './service/post.service';
       Region,
       Comment,
       Like,
+      PostCommentMapper,
     ]),
   ],
   controllers: [PostController, PostsController],
