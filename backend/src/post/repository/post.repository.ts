@@ -212,8 +212,6 @@ export class PostRepository {
       .getOne();
 
     for (const i in post.tagMappers) {
-      const b = post.tagMappers[i].tag.tagId;
-
       const tags = await this.tagRepository
         .createQueryBuilder('tag')
         .where({ tagId: post.tagMappers[i].tag.tagId })
@@ -386,5 +384,55 @@ export class PostRepository {
       .where('post.postId = :postId', { postId: id })
       .execute();
     return { users: data };
+  }
+
+  async getUserLike(id: string) {
+    const post = await this.likeRepository
+      .createQueryBuilder('like')
+      .leftJoinAndSelect('like.user', 'user')
+      .leftJoinAndSelect('like.post', 'post')
+      .leftJoinAndSelect('post.fileMappers', 'filemapper')
+      .leftJoinAndSelect('filemapper.file', 'file')
+      .leftJoinAndSelect('post.tagMappers', 'tagmapper')
+      .leftJoinAndSelect('tagmapper.tag', 'tag')
+      .leftJoinAndSelect('post.authorId', 'authorId')
+      .leftJoinAndSelect('post.regionId', 'regionId')
+      .where('user.userId = :userId', { userId: id })
+      .getMany();
+
+    for (const i in post) {
+      delete post[i].user;
+      delete post[i]._id;
+
+      for (const num in post[i].post.fileMappers) {
+        delete post[i].post.fileMappers[num]._id;
+        delete post[i].post.fileMappers[num].file._id;
+        delete post[i].post.fileMappers[num].file.createdAt;
+        delete post[i].post.fileMappers[num].file.deployName;
+        delete post[i].post.fileMappers[num].file.fileId;
+        delete post[i].post.fileMappers[num].file.fileName;
+      }
+
+      for (const num in post[i].post.tagMappers) {
+        delete post[i].post.tagMappers[num]._id;
+        delete post[i].post.tagMappers[num].tag._id;
+        delete post[i].post.tagMappers[num].tag.createdAt;
+      }
+
+      delete post[i].post._id;
+      delete post[i].post.updatedAt;
+      delete post[i].post.authorId._id;
+      delete post[i].post.authorId.password;
+      delete post[i].post.authorId.introduce;
+      delete post[i].post.authorId.createdAt;
+      delete post[i].post.authorId.updatedAt;
+      delete post[i].post.authorId.kakaoAccount;
+      delete post[i].post.authorId.googleAccount;
+      delete post[i].post.authorId.refreshToken;
+      delete post[i].post.regionId._id;
+      delete post[i].post.regionId.createdAt;
+      delete post[i].post.regionId.name;
+    }
+    return post;
   }
 }

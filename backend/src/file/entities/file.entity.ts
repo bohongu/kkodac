@@ -24,7 +24,7 @@ export class File {
     name: 'file_id',
     comment: '파일 UUID',
     type: 'varchar',
-    length: 50,
+    length: 100,
     nullable: false,
   })
   fileId: string = uuidv4();

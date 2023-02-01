@@ -46,4 +46,9 @@ export class PostService {
     const result = await this.postRepository.findTag();
     return result;
   }
+
+  async getUserLike(id: string) {
+    const result = await this.postRepository.getUserLike(id);
+    return result;
+  }
 }

@@ -13,10 +13,28 @@ import { GoogleStrategy } from 'src/auth/strategy/google.strategy';
 import { File } from 'src/file/entities/file.entity';
 import { Follow } from 'src/follow/entities/follow.entity';
 import { FollowRepository } from 'src/follow/repository/follow.repository';
+import { PostService } from 'src/post/service/post.service';
+import { Post } from 'src/post/entities/post.entity';
+import { PostRepository } from 'src/post/repository/post.repository';
+import { Tag } from 'src/post/entities/tag.entity';
+import { PostTagMapper } from 'src/post/entities/post.tag.mapping.entity';
+import { PostFileMapper } from 'src/post/entities/post.file.mapping.entity';
+import { Like } from 'src/like/entities/like.entity';
+import { PostCommentMapper } from 'src/post/entities/post.comment.mapping.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, File, Follow]),
+    TypeOrmModule.forFeature([
+      User,
+      File,
+      Follow,
+      Post,
+      Tag,
+      PostTagMapper,
+      PostFileMapper,
+      Like,
+      PostCommentMapper,
+    ]),
     forwardRef(() => AuthModule),
   ],
   providers: [
@@ -30,6 +48,8 @@ import { FollowRepository } from 'src/follow/repository/follow.repository';
     GoogleStrategy,
     Logger,
     FollowRepository,
+    PostRepository,
+    PostService,
   ],
   controllers: [UserController],
   exports: [UserService],

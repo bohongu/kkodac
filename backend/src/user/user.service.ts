@@ -47,7 +47,7 @@ export class UserService {
 
     const defaultProfile = await this.fileRepository.findOne({
       where: {
-        fileId: 'ae59725b-d72e-41d5-937b-bd717f78d6a8',
+        fileId: '02d7d498-9305-47cf-866f-4b10e9106c49',
       },
     });
     const hashedPassword = await bcrypt.hash(createLocalUserDto.password, 10);
@@ -234,24 +234,6 @@ export class UserService {
         id,
         viewerId,
       );
-
-      // if (users_followed_by_user) {
-      //   users_followed_by_user.map((record) => {
-      //     record.is_followed_by_viewer = record.is_followed_by_viewer === '0';
-      //     return record;
-      //   });
-      // } else {
-      //   return users_followed_by_user;
-      // }
-
-      // if (users_follow_user) {
-      //   users_follow_user.map((record) => {
-      //     record.is_followed_by_viewer = record.is_followed_by_viewer === '0';
-      //     return record;
-      //   });
-      // } else {
-      //   return users_follow_user;
-      // }
 
       return {
         userId: id,

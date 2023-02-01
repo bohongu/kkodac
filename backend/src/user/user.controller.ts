@@ -28,12 +28,14 @@ import { JwtRefreshGuard } from './../auth/guard/jwt-refresh.guard';
 
 import { FollowDto } from './dto/follow-dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { PostService } from 'src/post/service/post.service';
 
 const LABEL = 'User';
 @Controller('kkodac/user')
 export class UserController {
   constructor(
     private readonly userService: UserService,
+    private readonly postService: PostService,
     private authService: AuthService,
     @Inject(Logger) private readonly logger: LoggerService,
   ) {}
@@ -249,5 +251,10 @@ export class UserController {
   @Get(':id')
   getUser(@Param('id') id: string) {
     return this.userService.getUser(id);
+  }
+
+  @Get('like/:id')
+  getUserLike(@Param('id') id: string) {
+    return this.postService.getUserLike(id);
   }
 }
