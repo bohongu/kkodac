@@ -246,6 +246,9 @@ export class PostRepository {
       .leftJoinAndSelect('filemapper.file', 'file')
       .leftJoinAndSelect('post.tagMappers', 'tagmapper')
       .leftJoinAndSelect('tagmapper.tag', 'tag')
+      .leftJoinAndSelect('post.likes', 'like')
+      .leftJoinAndSelect('like.user', 'user')
+      .leftJoinAndSelect('user.fileId', 'fileId')
       .leftJoinAndSelect('post.authorId', 'authorId')
       .leftJoinAndSelect('post.regionId', 'regionId')
       .where('post.tagString like :tag', {
@@ -266,6 +269,24 @@ export class PostRepository {
 
       for (const num in post.tagMappers) {
         delete post.tagMappers[num]._id;
+      }
+
+      for (const num in post.likes) {
+        delete post.likes[num]._id;
+        delete post.likes[num].post;
+        delete post.likes[num].user.createdAt;
+        delete post.likes[num].user.googleAccount;
+        delete post.likes[num].user.introduce;
+        delete post.likes[num].user.kakaoAccount;
+        delete post.likes[num].user.likes;
+        delete post.likes[num].user.password;
+        delete post.likes[num].user.socialFileId;
+        delete post.likes[num].user.refreshToken;
+        delete post.likes[num].user.updatedAt;
+        delete post.likes[num].user.username;
+        delete post.likes[num].user.nickname;
+        delete post.likes[num].user.fileId;
+        delete post.likes[num].user._id;
       }
 
       delete post.authorId._id;
@@ -299,6 +320,8 @@ export class PostRepository {
       .leftJoinAndSelect('filemapper.file', 'file')
       .leftJoinAndSelect('post.tagMappers', 'tagmapper')
       .leftJoinAndSelect('tagmapper.tag', 'tag')
+      .leftJoinAndSelect('post.likes', 'like')
+      .leftJoinAndSelect('like.user', 'user')
       .leftJoinAndSelect('post.authorId', 'authorId')
       .leftJoinAndSelect('post.regionId', 'regionId')
       .where('post.tagString like :tag', {
@@ -316,6 +339,24 @@ export class PostRepository {
 
       for (const num in post.tagMappers) {
         delete post.tagMappers[num]._id;
+      }
+
+      for (const num in post.likes) {
+        delete post.likes[num]._id;
+        delete post.likes[num].post;
+        delete post.likes[num].user.createdAt;
+        delete post.likes[num].user.googleAccount;
+        delete post.likes[num].user.introduce;
+        delete post.likes[num].user.kakaoAccount;
+        delete post.likes[num].user.likes;
+        delete post.likes[num].user.password;
+        delete post.likes[num].user.socialFileId;
+        delete post.likes[num].user.refreshToken;
+        delete post.likes[num].user.updatedAt;
+        delete post.likes[num].user.username;
+        delete post.likes[num].user.nickname;
+        delete post.likes[num].user.fileId;
+        delete post.likes[num].user._id;
       }
 
       delete post.authorId._id;
@@ -338,6 +379,9 @@ export class PostRepository {
       .leftJoinAndSelect('filemapper.file', 'file')
       .leftJoinAndSelect('post.tagMappers', 'tagmapper')
       .leftJoinAndSelect('tagmapper.tag', 'tag')
+      .leftJoinAndSelect('post.likes', 'like')
+      .leftJoinAndSelect('like.user', 'user')
+      .leftJoinAndSelect('user.fileId', 'fileId')
       .leftJoinAndSelect('post.authorId', 'authorId')
       .leftJoinAndSelect('post.regionId', 'regionId')
       .where('post.authorId = :userId', {
@@ -355,6 +399,24 @@ export class PostRepository {
 
       for (const num in post.tagMappers) {
         delete post.tagMappers[num]._id;
+      }
+
+      for (const num in post.likes) {
+        delete post.likes[num]._id;
+        delete post.likes[num].post;
+        delete post.likes[num].user.createdAt;
+        delete post.likes[num].user.googleAccount;
+        delete post.likes[num].user.introduce;
+        delete post.likes[num].user.kakaoAccount;
+        delete post.likes[num].user.likes;
+        delete post.likes[num].user.password;
+        delete post.likes[num].user.socialFileId;
+        delete post.likes[num].user.refreshToken;
+        delete post.likes[num].user.updatedAt;
+        delete post.likes[num].user.username;
+        delete post.likes[num].user.nickname;
+        delete post.likes[num].user.fileId;
+        delete post.likes[num].user._id;
       }
 
       delete post.authorId._id;
