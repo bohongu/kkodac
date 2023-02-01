@@ -111,6 +111,10 @@ const PostModal = ({ id }: IModal) => {
     );
   };
 
+  useEffect(() => {
+    console.log(data?.likes.length);
+  }, [data?.likes.length]);
+
   return (
     <>
       {data && (

@@ -32,7 +32,7 @@ const Dropdown = () => {
       userId: '',
       username: '',
       _id: '',
-      fileId: { fileUrl: '' },
+      fileId: { fileUrl: '', fileId: '' },
     });
     logout(false);
   };

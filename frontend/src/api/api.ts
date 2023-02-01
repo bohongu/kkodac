@@ -36,8 +36,10 @@ interface IComment {
 }
 
 interface IEditProfile {
-  id: string;
-  data: { introduce?: string; fileId?: string; nickname?: string };
+  userId: string;
+  introduce: string | null;
+  fileId?: string | null;
+  nickname?: string | null;
 }
 
 interface ILike {
@@ -83,11 +85,8 @@ export const profile = async (token: string) => {
   return data;
 };
 
-export const editingProfile = async (bigData: IEditProfile) => {
-  return await axios.patch(
-    `${BASE_URL}/kkodac/user/${bigData.id}`,
-    bigData.data,
-  );
+export const editingProfile = async (data: IEditProfile) => {
+  return await axios.patch(`${BASE_URL}/kkodac/user/`, data);
 };
 
 export const getUser = async (id: string) => {

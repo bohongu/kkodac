@@ -48,6 +48,7 @@ const PostSection = () => {
               bgphoto={data.fileMappers[0].file.fileUrl}
               layoutId={data.postId}
               onClick={() => postDetailHandler(data.regionId.name, data.postId)}
+              key={data.postId}
             >
               <Delete onClick={() => removeHandler(data.postId)}>
                 <ImCancelCircle />

@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { currentUser, subscriberModalState } from './../../recoil/atoms';
 import { MdFace } from 'react-icons/md';
 import { FILE_MAX_SIZE } from '../../utils/jeju';
-import { useMutation, useQuery } from 'react-query';
-import { getUser, postFile } from '../../api/api';
-import { editingProfile } from './../../api/api';
-import { IGetUser } from '../../utils/interface';
+import {
+  useMutation,
+  useQuery,
+  QueryClient,
+  useQueryClient,
+} from 'react-query';
+import { postFile } from '../../api/api';
+import { editingProfile, getFollows } from './../../api/api';
+import { IFollow } from './../../utils/interface';
 
 const UserSection = () => {
   /* State */
@@ -23,14 +28,17 @@ const UserSection = () => {
   const [profileImage, setProfileImage] = useState<{
     id: string;
     url: string;
-  }>({ id: '', url: cUser.fileId.fileUrl });
+  }>({ id: cUser.fileId.fileId, url: cUser.fileId.fileUrl });
 
   /* React-Query */
   const sendFile = useMutation(postFile);
   const updateProfile = useMutation(editingProfile);
-  const { data: user } = useQuery<IGetUser>('getMe', () =>
-    getUser(cUser.userId),
+
+  const { data: follow } = useQuery<IFollow>('getFollowsUser', () =>
+    getFollows(cUser.userId),
   );
+
+  const queryClient = useQueryClient();
 
   /* Handlers */
   const setEditProfileHandler = () => {
@@ -39,11 +47,15 @@ const UserSection = () => {
   const closeEditProfileHandler = () => {
     setBio('');
     setNickname('');
-    setProfileImage({ id: '', url: cUser.fileId.fileUrl });
+    setProfileImage({ id: cUser.fileId.fileId, url: cUser.fileId.fileUrl });
     setEditProfile(false);
   };
   const removeImageHandler = () => {
-    setProfileImage({ ...profileImage, url: cUser.fileId.fileUrl });
+    setProfileImage({
+      ...profileImage,
+      id: cUser.fileId.fileId,
+      url: cUser.fileId.fileUrl,
+    });
   };
 
   const profileImageChangeHandler = (
@@ -83,14 +95,16 @@ const UserSection = () => {
   const submitProfileHandler = () => {
     updateProfile.mutate(
       {
-        id: cUser.userId,
-        data: { introduce: bio, fileId: profileImage.url, nickname },
+        userId: cUser.userId,
+        introduce: bio ? bio : cUser.introduce,
+        fileId: profileImage.id,
+        nickname: nickname ? nickname : cUser.nickname,
       },
       {
         onSuccess: () => {
-          console.log('성공');
-          setNickname('');
-          setBio('');
+          alert('회원 정보를 변경하였습니다');
+          setNickname(nickname);
+          setBio(bio);
           setEditProfile(false);
         },
         onError(error, variables, context) {
@@ -99,6 +113,10 @@ const UserSection = () => {
       },
     );
   };
+
+  useEffect(() => {
+    console.log(profileImage.id);
+  }, [cUser.fileId.fileUrl, profileImage]);
 
   return (
     <UserWrapper>
@@ -163,7 +181,7 @@ const UserSection = () => {
             setModal({ showModal: true, exit: false });
           }}
         >
-          {user?.follower[0].count}
+          {follow?.users_followed_by_user.length}
         </span>
       </Followers>
     </UserWrapper>
