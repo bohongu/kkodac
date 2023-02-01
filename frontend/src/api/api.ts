@@ -163,6 +163,11 @@ export const deleteLike = async (data: ILike) => {
   return await axios.delete(`${BASE_URL}/kkodac/posts/like`, { data: data });
 };
 
+export const likePosts = async (id: string) => {
+  const { data } = await axios.get(`${BASE_URL}/kkodac/user/like/${id}`);
+  return data;
+};
+
 /* 팔로우 */
 
 export const getFollows = async (id: string) => {

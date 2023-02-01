@@ -1,18 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
-import { currentUser, subscriberModalState } from './../../recoil/atoms';
+import {
+  currentUser,
+  subscriberModalState,
+  likeModalState,
+} from './../../recoil/atoms';
 import { MdFace } from 'react-icons/md';
 import { FILE_MAX_SIZE } from '../../utils/jeju';
-import {
-  useMutation,
-  useQuery,
-  QueryClient,
-  useQueryClient,
-} from 'react-query';
-import { postFile } from '../../api/api';
+import { useMutation, useQuery } from 'react-query';
+import { likePosts, postFile } from '../../api/api';
 import { editingProfile, getFollows } from './../../api/api';
-import { IFollow } from './../../utils/interface';
+import { IFollow, ILikePost } from './../../utils/interface';
 
 const UserSection = () => {
   /* State */
@@ -23,6 +22,7 @@ const UserSection = () => {
 
   /* Recoil */
   const setModal = useSetRecoilState(subscriberModalState);
+  const setLikeModal = useSetRecoilState(likeModalState);
   const cUser = useRecoilValue(currentUser);
 
   const [profileImage, setProfileImage] = useState<{
@@ -37,8 +37,9 @@ const UserSection = () => {
   const { data: follow } = useQuery<IFollow>('getFollowsUser', () =>
     getFollows(cUser.userId),
   );
-
-  const queryClient = useQueryClient();
+  const { data: likePostDatas } = useQuery<ILikePost[]>('likePosts', () =>
+    likePosts(cUser.userId),
+  );
 
   /* Handlers */
   const setEditProfileHandler = () => {
@@ -114,10 +115,6 @@ const UserSection = () => {
     );
   };
 
-  useEffect(() => {
-    console.log(profileImage.id);
-  }, [cUser.fileId.fileUrl, profileImage]);
-
   return (
     <UserWrapper>
       <UserImageSection>
@@ -182,6 +179,14 @@ const UserSection = () => {
           }}
         >
           {follow?.users_followed_by_user.length}
+        </span>
+        내가 좋아요한 게시물 :
+        <span
+          onClick={() => {
+            setLikeModal({ showModal: true, exit: false });
+          }}
+        >
+          {likePostDatas?.length}
         </span>
       </Followers>
     </UserWrapper>
@@ -271,6 +276,7 @@ const UserInfoBtn = styled.button``;
 const Followers = styled.span`
   padding: 10px 0;
   ${(props) => props.theme.flex.flexCenter}
+  border:1px solid black;
   span {
     margin-left: 5px;
     font-size: bold;

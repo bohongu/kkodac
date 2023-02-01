@@ -6,13 +6,9 @@ import { SlUserUnfollow } from 'react-icons/sl';
 import { subscriberModalState } from './../../recoil/atoms';
 import { modalVarints } from '../../utils/variants';
 import { useQuery, useMutation } from 'react-query';
-import { IFollow } from './../../utils/interface';
+import { IFollow, IUserId } from './../../utils/interface';
 import { deleteFollow, getFollows } from './../../api/api';
 import { Link } from 'react-router-dom';
-
-interface IUserId {
-  userId: string;
-}
 
 const Subscriber = ({ userId }: IUserId) => {
   /* Recoil */
@@ -77,7 +73,7 @@ const Subscriber = ({ userId }: IUserId) => {
 
 export default Subscriber;
 
-const Overlay = styled(motion.div)`
+export const Overlay = styled(motion.div)`
   position: fixed;
   top: 0;
   width: 100%;

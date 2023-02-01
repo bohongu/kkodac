@@ -5,6 +5,7 @@ import Posts from './Posts';
 import Subscriber from './Subscriber';
 import { useRecoilValue } from 'recoil';
 import { currentUser } from '../../recoil/atoms';
+import LikePost from './LikePost';
 
 const ProfileScreen = () => {
   const cUser = useRecoilValue(currentUser);
@@ -14,6 +15,7 @@ const ProfileScreen = () => {
       <User />
       <Posts />
       <Subscriber userId={cUser.userId} />
+      <LikePost userId={cUser.userId} />
     </ProfileWrapper>
   );
 };

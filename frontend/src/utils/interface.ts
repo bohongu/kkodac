@@ -139,3 +139,29 @@ export interface IFollow {
     };
   }[];
 }
+
+export interface IUserId {
+  userId: string;
+}
+
+export interface ILikePost {
+  post: {
+    postId: string;
+    createdAt: string;
+    updatedAt: string;
+    tagString: string;
+    title: string;
+    description: string;
+    fileMappers: IPostFileMapper[];
+    tagMappers: IPostTagMapper[];
+    authorId: {
+      userId: string;
+      userName: string;
+      nickname: string;
+      user_refresh_token: null;
+    };
+    regionId: {
+      name: string;
+    };
+  };
+}
