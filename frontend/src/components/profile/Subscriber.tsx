@@ -9,12 +9,13 @@ import { useQuery, useMutation } from 'react-query';
 import { IFollow, IUserId } from './../../utils/interface';
 import { deleteFollow, getFollows } from './../../api/api';
 import { Link } from 'react-router-dom';
+import LoadingSpinner from '../ui/LoadingSpinner';
 
 const Subscriber = ({ userId }: IUserId) => {
   /* Recoil */
   const [modal, setModal] = useRecoilState(subscriberModalState);
 
-  const { data: follows } = useQuery<IFollow>('follows', () =>
+  const { data: follows, isLoading } = useQuery<IFollow>('follows', () =>
     getFollows(userId!),
   );
   const unFollow = useMutation(deleteFollow);
@@ -35,6 +36,7 @@ const Subscriber = ({ userId }: IUserId) => {
 
   return (
     <AnimatePresence initial={false}>
+      {isLoading && <LoadingSpinner />}
       {modal.showModal && (
         <>
           <Overlay

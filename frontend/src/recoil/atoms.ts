@@ -66,7 +66,7 @@ export const subscriberModalState = atom<{ showModal: boolean; exit: boolean }>(
 
 export const likeModalState = atom<{ showModal: boolean; exit: boolean }>({
   key: `likeModal/${v1()}`,
-  default: { showModal: true, exit: false },
+  default: { showModal: false, exit: false },
 });
 
 export const selectedRegionState = atom<string>({

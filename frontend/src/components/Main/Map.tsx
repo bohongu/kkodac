@@ -45,10 +45,9 @@ const Map = () => {
     () => getWeather(lat, lon),
   );
   let celsius;
-  let weather;
+
   if (weatherData) {
     celsius = Math.round(weatherData.main?.temp - 273.15);
-    weather = weatherData.weather[0].description;
   }
 
   const selectIcon = () => {
@@ -89,7 +88,6 @@ const Map = () => {
           <>
             <Icon>{selectIcon()}</Icon>
             <Temp>{celsius}&#8451;</Temp>
-            <Info>{weather}</Info>
           </>
         )}
       </Weather>
@@ -305,37 +303,26 @@ const Svg = styled(motion.svg)`
 `;
 
 const Weather = styled.div`
-  border: 1px solid black;
-  width: 200px;
-  height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   position: absolute;
   top: 100px;
   right: 115px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 2fr);
-  grid-template-areas:
-    'icon temp'
-    'info info';
 `;
 
 const Icon = styled.div`
   ${(props) => props.theme.flex.flexCenter}
   grid-area: icon;
-  width: 100px;
-  height: 100px;
-  font-size: 150px;
+
+  font-size: 50px;
 `;
 
 const Temp = styled.div`
   grid-area: temp;
   ${(props) => props.theme.flex.flexCenter}
-  font-size: 40px;
-`;
-
-const Info = styled.div`
-  ${(props) => props.theme.flex.flexCenter}
-  grid-area: info;
+  font-size: 20px;
 `;
 
 const Path = styled(motion.path)`

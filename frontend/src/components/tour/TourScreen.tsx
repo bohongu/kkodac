@@ -30,10 +30,11 @@ const TourScreen = () => {
     refetch,
   } = useQuery<IPost[]>('getPostRegion', () => getPostRegion(region + '', tag));
 
-  const { data: tagDatas, refetch: tagRefetch } = useQuery<{ tagId: string }[]>(
-    'getTags',
-    getTags,
-  );
+  const {
+    data: tagDatas,
+    refetch: tagRefetch,
+    isLoading: tagLoading,
+  } = useQuery<{ tagId: string }[]>('getTags', getTags);
 
   /* Handlers */
   const postDetailHandler = (postId: string) => {
@@ -114,6 +115,7 @@ const TourScreen = () => {
         )}
       </div>
       <Posts>
+        {tagLoading && <LoadingSpinner />}
         {isLoading ? (
           <div>
             <LoadingSpinner />
@@ -131,6 +133,7 @@ const TourScreen = () => {
               <Content variants={ContentVariants}>
                 <h1>{post.title}</h1>
                 <h2>{post.authorId.nickname}</h2>
+                <h3>❤ {post.likes.length}</h3>
               </Content>
             </Post>
           ))

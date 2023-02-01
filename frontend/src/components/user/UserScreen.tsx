@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 import { createFollow, getFollows } from './../../api/api';
 import { useRecoilValue } from 'recoil';
 import { currentUser } from '../../recoil/atoms';
+import LoadingSpinner from '../ui/LoadingSpinner';
 
 const UserScreen = () => {
   const [canFollow, setCanFollow] = useState(false);
@@ -17,16 +18,19 @@ const UserScreen = () => {
 
   const cUser = useRecoilValue(currentUser);
 
-  const { data: posts } = useQuery<IPost[]>('getOtherUserPost', () =>
-    getUserPost(userId!),
+  const { data: posts, isLoading: postsLoading } = useQuery<IPost[]>(
+    'getOtherUserPost',
+    () => getUserPost(userId!),
   );
-  const { data: user } = useQuery<IGetUser>('getUserProfile', () =>
-    getUser(userId!),
+  const { data: user, isLoading: userLoading } = useQuery<IGetUser>(
+    'getUserProfile',
+    () => getUser(userId!),
   );
   const follow = useMutation(createFollow);
   const unFollow = useMutation(deleteFollow);
-  const { data: follows } = useQuery<IFollow>('follows', () =>
-    getFollows(userId!),
+  const { data: follows, isLoading: dataLoading } = useQuery<IFollow>(
+    'follows',
+    () => getFollows(userId!),
   );
 
   const postDetailHandler = (region: string, postId: string) => {
@@ -75,6 +79,9 @@ const UserScreen = () => {
 
   return (
     <UserWrapper>
+      {postsLoading && <LoadingSpinner />}
+      {userLoading && <LoadingSpinner />}
+      {dataLoading && <LoadingSpinner />}
       {user && posts && (
         <Info>
           <ImageSection>

@@ -11,6 +11,7 @@ import { IPostDetail } from '../../utils/interface';
 import { useRecoilValue } from 'recoil';
 import { currentUser } from '../../recoil/atoms';
 import { createComments, createLike } from './../../api/api';
+import LoadingSpinner from './LoadingSpinner';
 
 interface IModal {
   id: string;
@@ -28,7 +29,7 @@ const PostModal = ({ id }: IModal) => {
 
   /* React-Query */
   const queryClient = useQueryClient();
-  const { data } = useQuery<IPostDetail>('getPostDetail', () =>
+  const { data, isLoading } = useQuery<IPostDetail>('getPostDetail', () =>
     getPostDetail(id),
   );
   const sendComment = useMutation(createComments);
@@ -112,6 +113,7 @@ const PostModal = ({ id }: IModal) => {
   };
   return (
     <>
+      {isLoading && <LoadingSpinner />}
       {data && (
         <>
           <Overlay onClick={hideModalHanlder} />

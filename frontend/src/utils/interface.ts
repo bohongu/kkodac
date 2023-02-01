@@ -33,6 +33,11 @@ export interface IPost {
   description: string;
   fileMappers: IPostFileMapper[];
   tagMappers: IPostTagMapper[];
+  likes: {
+    user: {
+      userId: string;
+    };
+  }[];
   authorId: {
     userId: string;
     userName: string;

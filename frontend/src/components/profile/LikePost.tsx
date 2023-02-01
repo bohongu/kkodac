@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRecoilState } from 'recoil';
 import { likeModalState } from './../../recoil/atoms';
@@ -10,21 +10,20 @@ import styled from 'styled-components';
 import { ILikePost } from './../../utils/interface';
 import { modalVarints } from './../../utils/variants';
 import { useNavigate } from 'react-router-dom';
+import LoadingSpinner from '../ui/LoadingSpinner';
 
 const LikePost = ({ userId }: IUserId) => {
   const navigate = useNavigate();
 
   const [modal, setModal] = useRecoilState(likeModalState);
 
-  const { data } = useQuery<ILikePost[]>('likePosts', () => likePosts(userId!));
+  const { data, isLoading } = useQuery<ILikePost[]>('likePosts', () =>
+    likePosts(userId!),
+  );
 
   const postDetailHandler = (region: string, postId: string) => {
     navigate(`/tour/${region}/${postId}`);
   };
-
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
 
   return (
     <AnimatePresence>
@@ -43,6 +42,7 @@ const LikePost = ({ userId }: IUserId) => {
             custom={modal.exit}
           >
             <Lists>
+              {isLoading && <LoadingSpinner />}
               {data?.map((post) => (
                 <List
                   key={post.post.postId}

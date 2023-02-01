@@ -6,20 +6,24 @@ import { IFollow, IPost } from './../../utils/interface';
 import { getFollows, getUserPost } from './../../api/api';
 import { useRecoilValue } from 'recoil';
 import { currentUser } from '../../recoil/atoms';
+import LoadingSpinner from '../ui/LoadingSpinner';
 
 const SubscriptionScreen = () => {
   const { userId } = useParams();
   const cUser = useRecoilValue(currentUser);
 
-  const { data: follows } = useQuery<IFollow>('follows', () =>
-    getFollows(userId!),
+  const { data: follows, isLoading: followLoading } = useQuery<IFollow>(
+    'follows',
+    () => getFollows(userId!),
   );
 
   const [subUser, setSubUser] = useState<string>(userId!);
 
-  const { data: posts, refetch } = useQuery<IPost[]>('subGetUserPost', () =>
-    getUserPost(subUser!),
-  );
+  const {
+    data: posts,
+    refetch,
+    isLoading: postsLoading,
+  } = useQuery<IPost[]>('subGetUserPost', () => getUserPost(subUser!));
 
   const changeSubUser = (id: string) => {
     setSubUser(id);
@@ -30,6 +34,8 @@ const SubscriptionScreen = () => {
 
   return (
     <SubscriptionWrapper>
+      {followLoading && <LoadingSpinner />}
+      {postsLoading && <LoadingSpinner />}
       <Subscribers>
         <Subscriber onClick={() => changeSubUser(cUser.userId)}>
           <Image bgphoto={cUser.fileId.fileUrl} />

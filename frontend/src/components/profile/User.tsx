@@ -12,6 +12,7 @@ import { useMutation, useQuery } from 'react-query';
 import { likePosts, postFile } from '../../api/api';
 import { editingProfile, getFollows } from './../../api/api';
 import { IFollow, ILikePost } from './../../utils/interface';
+import LoadingSpinner from '../ui/LoadingSpinner';
 
 const UserSection = () => {
   /* State */
@@ -34,11 +35,13 @@ const UserSection = () => {
   const sendFile = useMutation(postFile);
   const updateProfile = useMutation(editingProfile);
 
-  const { data: follow } = useQuery<IFollow>('getFollowsUser', () =>
-    getFollows(cUser.userId),
+  const { data: follow, isLoading: followLoading } = useQuery<IFollow>(
+    'getFollowsUser',
+    () => getFollows(cUser.userId),
   );
-  const { data: likePostDatas } = useQuery<ILikePost[]>('likePosts', () =>
-    likePosts(cUser.userId),
+  const { data: likePostDatas, isLoading: likeLoading } = useQuery<ILikePost[]>(
+    'likePosts',
+    () => likePosts(cUser.userId),
   );
 
   /* Handlers */
@@ -117,6 +120,8 @@ const UserSection = () => {
 
   return (
     <UserWrapper>
+      {followLoading && <LoadingSpinner />}
+      {likeLoading && <LoadingSpinner />}
       <UserImageSection>
         <UserImage photo={profileImage.url} />
         {editProfile && (
