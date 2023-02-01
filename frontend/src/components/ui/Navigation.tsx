@@ -7,7 +7,7 @@ import Dropdown from './Dropdown';
 import { logVariants, navVariants } from '../../utils/variants';
 import { useRecoilValue } from 'recoil';
 import { currentUser } from './../../recoil/atoms';
-import logo from '../../assets/images/logo6.png';
+import logo from '../../assets/images/logo1.png';
 
 const Navigation = () => {
   /* State */
@@ -78,7 +78,8 @@ const NavigationWrapper = styled(motion.div)`
   position: fixed;
   display: flex;
   justify-content: space-between;
-  padding: 0 3%;
+  align-items: center;
+  padding: 0 8%;
   width: 100%;
   height: 100px;
   align-items: center;
@@ -90,8 +91,8 @@ const Logo = styled(motion.div)`
   cursor: pointer;
 
   img {
-    width: 80px;
-    height: 80px;
+    width: 200px;
+    height: 60px;
   }
 `;
 
