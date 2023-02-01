@@ -10,6 +10,7 @@ export const GlobalStyle = createGlobalStyle`
   
   body {
     height: 100vh;
+    background: #fff4e6;
   }
 
   button {

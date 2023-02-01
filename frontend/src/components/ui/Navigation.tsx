@@ -7,6 +7,7 @@ import Dropdown from './Dropdown';
 import { logVariants, navVariants } from '../../utils/variants';
 import { useRecoilValue } from 'recoil';
 import { currentUser } from './../../recoil/atoms';
+import logo from '../../assets/images/logo6.png';
 
 const Navigation = () => {
   /* State */
@@ -55,7 +56,7 @@ const Navigation = () => {
         animate={logAnimation}
         initial="top"
       >
-        꼬닥꼬닥
+        <img alt="kkodac_logo" src={logo} />
       </Logo>
       <Nav
         variants={logVariants}
@@ -77,17 +78,21 @@ const NavigationWrapper = styled(motion.div)`
   position: fixed;
   display: flex;
   justify-content: space-between;
-  padding: 0 6%;
+  padding: 0 3%;
   width: 100%;
-  height: 80px;
+  height: 100px;
   align-items: center;
   top: 0;
   z-index: 100;
 `;
 
 const Logo = styled(motion.div)`
-  color: white;
   cursor: pointer;
+
+  img {
+    width: 80px;
+    height: 80px;
+  }
 `;
 
 const Nav = styled(motion.nav)`

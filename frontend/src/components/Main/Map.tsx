@@ -296,10 +296,9 @@ const Map = () => {
 export default Map;
 
 const Svg = styled(motion.svg)`
-  width: 1700px;
-  height: 700px;
+  width: 95vw;
+  height: 800px;
   margin: 5px;
-  border: 1px solid black;
 `;
 
 const Weather = styled.div`
@@ -315,7 +314,6 @@ const Weather = styled.div`
 const Icon = styled.div`
   ${(props) => props.theme.flex.flexCenter}
   grid-area: icon;
-
   font-size: 50px;
 `;
 
@@ -326,10 +324,12 @@ const Temp = styled.div`
 `;
 
 const Path = styled(motion.path)`
-  stroke: black;
+  stroke: ${(props) => props.theme.colors.lime3};
+  stroke-width: 2.5px;
+  fill: ${(props) => props.theme.colors.lime};
 `;
 
 const Region = styled(motion.tspan)`
   font: bolder 13px sans-serif;
-  fill: black;
+  fill: ${(props) => props.theme.colors.green};
 `;
