@@ -3,9 +3,9 @@ import 'styled-components';
 declare module 'styled-components' {
   export interface DefaultTheme {
     colors: {
-      lime: string;
-      lime3: string;
+      skyblue: string;
       green: string;
+      ivory: string;
     };
     flex: {
       flexCenter: string;

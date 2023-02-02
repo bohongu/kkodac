@@ -5,17 +5,17 @@ import { Link } from 'react-router-dom';
 import { svgVariants } from '../../utils/variants';
 import { useQuery } from 'react-query';
 import { getWeather } from '../../api/api';
-import {
-  TiWeatherSunny,
-  TiWeatherPartlySunny,
-  TiWeatherCloudy,
-  TiWeatherDownpour,
-  TiWeatherShower,
-  TiWeatherStormy,
-  TiWeatherSnow,
-} from 'react-icons/ti';
-import { TbMist } from 'react-icons/tb';
 import LoadingSpinner from './../ui/LoadingSpinner';
+import logo from '../../assets/images/logo2.png';
+import background from '../../assets/images/background.png';
+import sun from '../../assets/images/weather/sun.png';
+import partSun from '../../assets/images/weather/partSun.png';
+import cloud from '../../assets/images/weather/cloud.png';
+import rain from '../../assets/images/weather/rain.png';
+import shower from '../../assets/images/weather/shower.png';
+import snow from '../../assets/images/weather/snow.png';
+import thunder from '../../assets/images/weather/thunder.png';
+import mist from '../../assets/images/weather/mist.png';
 
 interface IWeatherArray {
   id: number;
@@ -57,28 +57,31 @@ const Map = () => {
     }
     switch (id) {
       case '01':
-        return <TiWeatherSunny />;
+        return <WeatherIcon alt="sun" src={sun} />;
       case '02':
-        return <TiWeatherPartlySunny />;
+        return <WeatherIcon alt="partSun" src={partSun} />;
       case '03':
-        return <TiWeatherCloudy />;
+        return <WeatherIcon alt="cloud" src={cloud} />;
       case '04':
-        return <TiWeatherCloudy />;
+        return <WeatherIcon alt="cloud" src={cloud} />;
       case '09':
-        return <TiWeatherDownpour />;
+        return <WeatherIcon alt="rain" src={rain} />;
       case '10':
-        return <TiWeatherShower />;
+        return <WeatherIcon alt="shower" src={shower} />;
       case '11':
-        return <TiWeatherStormy />;
+        return <WeatherIcon alt="thunder" src={thunder} />;
       case '13':
-        return <TiWeatherSnow />;
+        return <WeatherIcon alt="snow" src={snow} />;
       case '50':
-        return <TbMist />;
+        return <WeatherIcon alt="mist" src={mist} />;
     }
   };
 
   return (
     <>
+      <Logo>
+        <img alt="logo" src={logo} />
+      </Logo>
       <Weather>
         {isLoading ? (
           <div>
@@ -86,6 +89,7 @@ const Map = () => {
           </div>
         ) : (
           <>
+            <span>오늘의 제주</span>
             <Icon>{selectIcon()}</Icon>
             <Temp>{celsius}&#8451;</Temp>
           </>
@@ -298,6 +302,9 @@ export default Map;
 const Svg = styled(motion.svg)`
   width: 95vw;
   height: 800px;
+  background-image: url(${background});
+  background-size: cover;
+  margin-bottom: 50px;
 `;
 
 const Weather = styled.div`
@@ -306,29 +313,46 @@ const Weather = styled.div`
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 100px;
-  right: 115px;
+  bottom: 100px;
+  right: 90px;
+  padding: 10px 15px;
+  background: #95d5fd;
+  border-radius: 10px;
+  span {
+    margin: 3px 0;
+    font-weight: 600;
+  }
 `;
 
-const Icon = styled.div`
-  ${(props) => props.theme.flex.flexCenter}
-  grid-area: icon;
-  font-size: 50px;
-`;
+const Icon = styled.div``;
 
 const Temp = styled.div`
-  grid-area: temp;
-  ${(props) => props.theme.flex.flexCenter}
-  font-size: 20px;
+  font-size: 25px;
 `;
 
 const Path = styled(motion.path)`
-  stroke: ${(props) => props.theme.colors.lime3};
-  stroke-width: 2.5px;
-  fill: ${(props) => props.theme.colors.lime};
+  stroke: ${(props) => props.theme.colors.ivory};
+  stroke-width: 3px;
+  fill: ${(props) => props.theme.colors.green};
 `;
 
 const Region = styled(motion.tspan)`
-  font: bolder 15px Ttangs;
-  fill: ${(props) => props.theme.colors.green};
+  font: bolder 18px Syong;
+  fill: black;
+`;
+
+const Logo = styled.div`
+  position: absolute;
+  top: 150px;
+  left: 150px;
+  width: 50px;
+  height: 50px;
+`;
+
+const WeatherIcon = styled.img`
+  display: flex;
+  ${(props) => props.theme.flex.flexCenter}
+  width: 80px;
+  height: 80px;
+  margin: 3px 0;
 `;
