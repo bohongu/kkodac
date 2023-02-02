@@ -7,7 +7,7 @@ import Dropdown from './Dropdown';
 import { logVariants, navVariants } from '../../utils/variants';
 import { useRecoilValue } from 'recoil';
 import { currentUser } from './../../recoil/atoms';
-import logo from '../../assets/images/logo1.png';
+import logo from '../../assets/images/logo.png';
 
 const Navigation = () => {
   /* State */
@@ -41,6 +41,10 @@ const Navigation = () => {
       setDrop(false);
     });
   }, [logAnimation, navAnimation, scrollY]);
+
+  if (window.location.pathname === '/') {
+    return <></>;
+  }
 
   return (
     <NavigationWrapper

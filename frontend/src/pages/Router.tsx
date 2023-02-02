@@ -18,7 +18,7 @@ const Router = () => {
 
   return (
     <BrowserRouter>
-      {isLoggedIn && <Navigation />}
+      {isLoggedIn ? <Navigation /> : null}
       <Routes>
         {isLoggedIn ? (
           <>

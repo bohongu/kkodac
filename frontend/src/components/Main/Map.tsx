@@ -298,7 +298,6 @@ export default Map;
 const Svg = styled(motion.svg)`
   width: 95vw;
   height: 800px;
-  margin: 20px;
 `;
 
 const Weather = styled.div`
