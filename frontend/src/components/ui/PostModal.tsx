@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { IoIosSend } from 'react-icons/io';
-import { AiOutlineLike, AiFillLike } from 'react-icons/ai';
-import { RiDeleteBin6Line } from 'react-icons/ri';
+import { TbSend } from 'react-icons/tb';
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import { TiDeleteOutline } from 'react-icons/ti';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { deleteComment, deleteLike, getPostDetail } from '../../api/api';
 import { useNavigate, Link } from 'react-router-dom';
@@ -111,6 +111,7 @@ const PostModal = ({ id }: IModal) => {
       },
     );
   };
+
   return (
     <>
       {isLoading && <LoadingSpinner />}
@@ -121,16 +122,28 @@ const PostModal = ({ id }: IModal) => {
             <Post>
               <TitleAndLike>
                 <h1>{data.title}</h1>
-                <div>
+                <Like>
                   {like ? (
-                    <AiFillLike onClick={onUnLike} />
+                    <FaHeart
+                      onClick={onUnLike}
+                      style={{ fontSize: '20px', color: 'red' }}
+                    />
                   ) : (
-                    <AiOutlineLike onClick={onLike} />
+                    <FaRegHeart
+                      onClick={onLike}
+                      style={{ fontSize: '20px', color: 'red' }}
+                    />
                   )}
-                </div>
+                  <LikeCount>{data.likes.length}</LikeCount>
+                </Like>
               </TitleAndLike>
               <Tags>
                 <h1>{data.regionId.name}</h1>
+                <Tag>
+                  {data.tagMappers.map((tag, idx) => (
+                    <h2 key={idx}>{tag.tag.tagId}</h2>
+                  ))}
+                </Tag>
               </Tags>
               <AuthorAndDate>
                 <Author
@@ -172,12 +185,14 @@ const PostModal = ({ id }: IModal) => {
               <CommentList>
                 {data.commentMappers.map((comment) => (
                   <CommentItem key={comment.comment.commentId}>
-                    <div></div>
+                    <AuthorProfile
+                      bgphoto={comment.comment.authorId.fileId.fileUrl}
+                    />
                     <h1>{comment.comment.authorId.nickname}</h1>
                     <CommentText>{comment.comment.description}</CommentText>
                     <CommentNav>
                       {comment.comment.authorId.userId === cUser.userId ? (
-                        <RiDeleteBin6Line
+                        <TiDeleteOutline
                           onClick={() =>
                             deleteCommentHandler(comment.comment.commentId)
                           }
@@ -195,9 +210,8 @@ const PostModal = ({ id }: IModal) => {
                     value={comment}
                     placeholder="댓글"
                   />
-
                   <button onClick={commentSubmitHandler}>
-                    <IoIosSend />
+                    <TbSend />
                   </button>
                 </label>
               </InputSection>
@@ -238,12 +252,11 @@ const Modal = styled(motion.div)`
 `;
 
 const Post = styled.div`
-  border: 1px solid black;
   padding: 10px;
 `;
 
 const Comment = styled.div`
-  border: 1px solid black;
+  border: 0.5px solid rgba(0, 0, 0, 0.3);
   display: grid;
   grid-template-rows: 1fr 11fr 1fr;
 `;
@@ -265,9 +278,22 @@ const Tags = styled.div`
   height: 40px;
   h1 {
     font-size: 12px;
-    background: teal;
+    background: ${(props) => props.theme.colors.hardGreen};
     padding: 5px;
     color: white;
+  }
+`;
+
+const Tag = styled.div`
+  display: flex;
+  align-items: center;
+
+  h2 {
+    font-size: 12px;
+    background: orange;
+    padding: 5px;
+    color: white;
+    margin-left: 5px;
   }
 `;
 
@@ -278,6 +304,9 @@ const AuthorAndDate = styled.div`
   align-items: center;
   border-bottom: 1px solid black;
   margin-bottom: 10px;
+  h3 {
+    font-size: 14px;
+  }
 `;
 
 const Author = styled(Link)``;
@@ -343,7 +372,7 @@ const Description = styled.p`
 `;
 
 const Me = styled.div`
-  border-bottom: 1px solid black;
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.3);
   padding-left: 5px;
   ${(props) => props.theme.flex.flexCenter}
   justify-content: start;
@@ -369,16 +398,11 @@ const CommentList = styled.ul`
 `;
 
 const CommentItem = styled.li`
+  margin-bottom: 3px;
   display: grid;
   grid-template-columns: 1fr 1fr 8.5fr 0.5fr;
   gap: 3px;
-  div {
-    border: 1px solid black;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    ${(props) => props.theme.flex.flexCenter}
-  }
+
   h1 {
     font-size: 12px;
     font-weight: bold;
@@ -386,6 +410,15 @@ const CommentItem = styled.li`
     ${(props) => props.theme.flex.flexCenter}
     align-items: flex-start;
   }
+`;
+
+const AuthorProfile = styled.div<{ bgphoto: string }>`
+  background-image: url(${(props) => props.bgphoto});
+  background-size: cover;
+  background-position: center center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
 `;
 
 const CommentText = styled.p`
@@ -411,7 +444,7 @@ const InputSection = styled.div`
     padding: 0 15px;
     border: none;
     background: none;
-    border-top: 1px solid black;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.3);
     color: black;
   }
   button {
@@ -424,6 +457,16 @@ const InputSection = styled.div`
     border: none;
     background: none;
     color: black;
-    font-size: 30px;
+    font-size: 25px;
   }
+`;
+
+const Like = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const LikeCount = styled.div`
+  margin-left: 5px;
+  font-size: 20px;
 `;

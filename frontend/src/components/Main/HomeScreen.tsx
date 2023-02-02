@@ -100,6 +100,7 @@ const MainWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  background: ${(props) => props.theme.colors.skyblue};
 `;
 
 const Slider = styled.div`

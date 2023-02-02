@@ -89,7 +89,7 @@ const Map = () => {
           </div>
         ) : (
           <>
-            <span>오늘의 제주</span>
+            <span>지금 제주는</span>
             <Icon>{selectIcon()}</Icon>
             <Temp>{celsius}&#8451;</Temp>
           </>
@@ -313,8 +313,8 @@ const Weather = styled.div`
   justify-content: center;
   align-items: center;
   position: absolute;
-  bottom: 100px;
-  right: 90px;
+  bottom: 90px;
+  right: 120px;
   padding: 10px 15px;
   background: #95d5fd;
   border-radius: 10px;

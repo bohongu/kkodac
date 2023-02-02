@@ -48,7 +48,7 @@ export const ContentVariants = {
 
 export const navVariants = {
   top: { backgroundColor: 'rgba(0,0,0,0)' },
-  down: { backgroundColor: 'rgba(0,0,0,1)' },
+  down: { backgroundColor: '#7CD0FD' },
 };
 
 export const logVariants = {

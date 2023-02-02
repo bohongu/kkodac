@@ -133,7 +133,9 @@ const TourScreen = () => {
               <Content variants={ContentVariants}>
                 <h1>{post.title}</h1>
                 <h2>{post.authorId.nickname}</h2>
-                <h3>❤ {post.likes.length}</h3>
+                <h3>
+                  <span>❤</span>&nbsp;{post.likes.length}
+                </h3>
               </Content>
             </Post>
           ))
@@ -167,13 +169,17 @@ const RegionNav = styled.nav`
 
 const RegionBtn = styled.button<{ region: boolean }>`
   border: none;
-  background: none;
-  border-bottom: ${(props) => (props.region ? '2px solid tomato' : 'none')};
+  background: ${(props) => (props.region ? props.theme.colors.green : 'none')};
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+    rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  border-radius: 10px;
+  font-family: Neo;
+  font-weight: 600;
+  font-size: 16px;
 `;
 
 const ToggleWrapper = styled.div`
   display: flex;
-  margin-bottom: 20px;
   ${(props) => props.theme.flex.flexCenterColumn}
   span {
     font-size: 12px;
@@ -208,25 +214,34 @@ const Content = styled(motion.div)`
   justify-content: center;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
-  background: white;
+  background: #f1f3f5;
   h1 {
-    font-size: 20px;
+    font-size: 18px;
+    font-weight: bold;
     margin-bottom: 10px;
   }
   h2 {
     font-size: 12px;
     margin-bottom: 10px;
   }
+  h3 {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    span {
+      color: red;
+    }
+  }
 `;
 
 const Tags = styled.div`
-  margin-top: 10px;
+  margin-top: 18px;
   width: 100%;
   display: flex;
   flex-wrap: wrap;
   min-height: 100px;
   padding: 10px;
-  border: 1px solid black;
+  border-bottom: 1px solid black;
 `;
 
 const Tag = styled.div<{ check: boolean }>`
@@ -235,10 +250,11 @@ const Tag = styled.div<{ check: boolean }>`
   margin: 5px 20px;
   cursor: pointer;
   height: 20px;
-  color: ${(props) => (props.check ? 'red' : 'black')};
-  border-color: ${(props) => (props.check ? 'red' : 'black')};
+  color: ${(props) => (props.check ? props.theme.colors.harderGreen : 'black')};
+  border-color: ${(props) =>
+    props.check ? props.theme.colors.harderGreen : 'black'};
   &:hover {
-    color: tomato;
-    border-bottom: 1px solid tomato;
+    color: ${(props) => props.theme.colors.hardGreen};
+    border-bottom: 1px solid ${(props) => props.theme.colors.hardGreen};
   }
 `;

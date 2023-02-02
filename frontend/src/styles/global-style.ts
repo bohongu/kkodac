@@ -10,9 +10,9 @@ export const GlobalStyle = createGlobalStyle`
   
   body {
     height: 100vh;
-    background: ${(props) => props.theme.colors.skyblue};
     font-family:Neo;
     font-weight: 600;
+    background: #f8f9fa;
   }
 
   button {
