@@ -132,8 +132,8 @@ const UserScreen = () => {
             >
               <PostInfo variants={ContentVariants}>
                 <h1>{post.title}</h1>
-                <h4>{post.regionId.name}</h4>
-                <h2>{post.createdAt.slice(0, 10)}</h2>
+                <h4>{post.createdAt.slice(0, 10)}</h4>
+                <h2>{post.regionId.name}</h2>
                 <h3>
                   <span>❤</span>&nbsp;{post.likes.length}
                 </h3>
@@ -155,8 +155,9 @@ const UserWrapper = styled.div`
 
 const Info = styled.div`
   display: flex;
-  padding: 10px;
+  padding: 20px 10px;
   margin-bottom: 30px;
+  border-bottom: 2px solid ${(props) => props.theme.colors.gray};
 `;
 
 const ImageSection = styled.div`
@@ -217,6 +218,18 @@ const Personal = styled.div`
 const Btn = styled.div`
   display: flex;
   align-items: center;
+  button {
+    font-family: Neo;
+    padding: 6px 7px;
+    border-radius: 9px;
+    border: none;
+    font-weight: bold;
+    color: white;
+    background: ${(props) => props.theme.colors.green};
+    &:hover {
+      background: ${(props) => props.theme.colors.hardGreen};
+    }
+  }
 `;
 
 const Posts = styled.div`
@@ -266,6 +279,6 @@ const PostInfo = styled(motion.div)`
   }
   h4 {
     margin-bottom: 10px;
-    font-size: 12px;
+    font-size: 10px;
   }
 `;

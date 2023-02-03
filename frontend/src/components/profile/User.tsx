@@ -243,7 +243,7 @@ const UserImage = styled.img<{ photo: string }>`
 `;
 
 const UserImageBtn = styled.div`
-  border: 1px solid black;
+  border: none;
   ${(props) => props.theme.flex.flexCenter}
   height: 30px;
   width: 30px;
@@ -251,25 +251,35 @@ const UserImageBtn = styled.div`
   bottom: 55px;
   left: 280px;
   font-size: 30px;
-  background: white;
+  border: 0.5px solid black;
+  color: black;
   position: absolute;
   cursor: pointer;
+  &:hover {
+    color: ${(props) => props.theme.colors.hardGreen};
+    border-color: ${(props) => props.theme.colors.hardGreen};
+  }
 `;
 
 const Drop = styled.div`
   ${(props) => props.theme.flex.flexCenterColumn}
-  bottom: 5px;
-  right: -30px;
+  bottom: 10px;
+  right: -40px;
   position: absolute;
-  border: 1px solid black;
+  border: 0.5px solid black;
   border-radius: 5px;
+  background: white;
+  &:hover {
+    border-color: ${(props) => props.theme.colors.hardGreen};
+  }
   div {
     width: 100px;
     padding: 5px;
-    font-size: 12px;
+    font-size: 10px;
     cursor: pointer;
     &:hover {
-      background: tomato;
+      background: ${(props) => props.theme.colors.hardGreen};
+      border-color: ${(props) => props.theme.colors.hardGreen};
     }
   }
 
@@ -301,7 +311,17 @@ const Introduce = styled.div`
 `;
 
 const UserInfoBtn = styled.button`
+  padding: 5px;
   margin-bottom: 15px;
+  border-radius: 8px;
+  color: ${(props) => props.theme.colors.ivory};
+  font-family: Neo;
+  font-weight: bold;
+  border: none;
+  background: ${(props) => props.theme.colors.green};
+  &:hover {
+    background: ${(props) => props.theme.colors.hardGreen};
+  }
 `;
 
 const Followers = styled.span`
@@ -339,13 +359,17 @@ const Edit = styled.div`
     justify-content: flex-end;
     margin: 10px 0;
     button {
-      margin-left: 5px;
-      height: 30px;
-      border-radius: 5px;
+      font-family: Neo;
+      margin-left: 8px;
+      padding: 5px;
+      border-radius: 8px;
       border: none;
-      background: tomato;
+      background: ${(props) => props.theme.colors.green};
       font-size: bold;
       color: white;
+      &:hover {
+        background: ${(props) => props.theme.colors.hardGreen};
+      }
     }
   }
 `;

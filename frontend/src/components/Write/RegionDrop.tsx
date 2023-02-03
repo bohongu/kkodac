@@ -61,10 +61,13 @@ const Tags = styled.div`
 `;
 
 const Label = styled.label<{ check: boolean }>`
-  border: 1px solid black;
   ${(props) => props.theme.flex.flexCenter}
-  background: ${(props) => (props.check ? 'tomato' : 'white')};
-  padding: 3px;
+  background: ${(props) =>
+    props.check ? props.theme.colors.hardGreen : 'white'};
+  color: ${(props) => (props.check ? 'white' : 'black')};
+  border-radius: 8px;
+  padding: 10px 3px;
   cursor: pointer;
   font-size: 12px;
+  border: 0.5px solid ${(props) => props.theme.colors.gray};
 `;

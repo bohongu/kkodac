@@ -73,7 +73,7 @@ const LikeModal = styled(motion.div)`
     rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
   padding: 15px;
   background: white;
-  z-index: 30;
+  z-index: 200;
   top: 5vh;
   margin: 0 auto;
   left: 0;

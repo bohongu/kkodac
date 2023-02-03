@@ -242,7 +242,7 @@ const Content = styled(motion.div)`
   }
   h4 {
     margin-bottom: 10px;
-    font-size: 12px;
+    font-size: 10px;
   }
 `;
 

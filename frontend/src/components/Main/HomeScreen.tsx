@@ -19,7 +19,7 @@ const Jeju = () => {
   const cUser = useRecoilValue(currentUser);
 
   const { data: springPosts } = useQuery<IRecommendPost[]>('recommend', () =>
-    getPostTag('봄'),
+    getPostTag('제발'),
   );
   const navigate = useNavigate();
 
@@ -82,7 +82,11 @@ const Jeju = () => {
                   >
                     <Content variants={ContentVariants}>
                       <h1>{post.title}</h1>
-                      <h2>{post.authorId.nickname}</h2>
+                      <h4>{post.createdAt.slice(0, 10)}</h4>
+                      <h2>{post.regionId.name}</h2>
+                      <h3>
+                        <span>❤</span>&nbsp;{post.likes.length}
+                      </h3>
                     </Content>
                   </ThumbNail>
                 ))}
@@ -145,25 +149,34 @@ const ThumbNail = styled(motion.div)<{ bgphoto: string }>`
 `;
 
 const Content = styled(motion.div)`
-  position: relative;
-  top: 180px;
-  height: 120px;
-  opacity: 0;
   padding: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  background: white;
+  height: 120px;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  background: #f1f3f5;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
-  border-top: 0.5px solid rgba(0, 0, 0, 0.3);
+  opacity: 0;
   h1 {
-    font-size: 20px;
+    font-size: 18px;
     margin-bottom: 10px;
   }
   h2 {
     font-size: 12px;
     margin-bottom: 10px;
+  }
+  h3 {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    span {
+      color: ${(props) => props.theme.colors.red};
+    }
+  }
+  h4 {
+    margin-bottom: 10px;
+    font-size: 10px;
   }
 `;
 

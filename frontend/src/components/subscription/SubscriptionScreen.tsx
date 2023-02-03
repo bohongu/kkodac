@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { IFollow, IPost } from './../../utils/interface';
 import { getFollows, getUserPost } from './../../api/api';
 import { useRecoilValue } from 'recoil';
 import { currentUser } from '../../recoil/atoms';
 import LoadingSpinner from '../ui/LoadingSpinner';
+import { motion } from 'framer-motion';
+import { ContentVariants, HoverDownVariants } from '../../utils/variants';
 
 const SubscriptionScreen = () => {
   const { userId } = useParams();
   const cUser = useRecoilValue(currentUser);
+  const navigate = useNavigate();
 
   const { data: follows, isLoading: followLoading } = useQuery<IFollow>(
     'follows',
@@ -32,6 +35,10 @@ const SubscriptionScreen = () => {
     }, 100);
   };
 
+  const postDetailHandler = (region: string, postId: string) => {
+    navigate(`/tour/${region}/${postId}`);
+  };
+
   return (
     <SubscriptionWrapper>
       {followLoading && <LoadingSpinner />}
@@ -50,7 +57,25 @@ const SubscriptionScreen = () => {
       </Subscribers>
       <Posts>
         {posts &&
-          posts.map((post) => <Post key={post.postId}>{post.title}</Post>)}
+          posts.map((post) => (
+            <Post
+              key={post.postId}
+              variants={HoverDownVariants}
+              whileHover="hover"
+              bgphoto={post.fileMappers[0].file.fileUrl}
+              onClick={() => postDetailHandler(post.regionId.name, post.postId)}
+              layoutId={post.postId}
+            >
+              <Content variants={ContentVariants}>
+                <h1>{post.title}</h1>
+                <h4>{post.createdAt.slice(0, 10)}</h4>
+                <h2>{post.regionId.name}</h2>
+                <h3>
+                  <span>❤</span>&nbsp;{post.likes.length}
+                </h3>
+              </Content>
+            </Post>
+          ))}
       </Posts>
     </SubscriptionWrapper>
   );
@@ -112,7 +137,48 @@ const Posts = styled.div`
   }
 `;
 
-const Post = styled.div`
-  border: 1px solid black;
+const Post = styled(motion.div)<{ bgphoto: string }>`
+  position: relative;
+  background-image: url(${(props) => props.bgphoto});
+  background-size: cover;
+  background-position: center center;
   height: 300px;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  cursor: pointer;
+  z-index: 80;
+  position: relative;
+`;
+
+const Content = styled(motion.div)`
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 110px;
+  opacity: 0;
+  padding: 10px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  background: #f1f3f5;
+  h1 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  h2 {
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+  h3 {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    span {
+      color: ${(props) => props.theme.colors.red};
+    }
+  }
+
+  h4 {
+    margin-bottom: 10px;
+    font-size: 10px;
+  }
 `;

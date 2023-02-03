@@ -437,8 +437,8 @@ const CommentItem = styled.li`
 
 const CommentAuthorNick = styled(Link)`
   padding-left: 3px;
-  margin-bottom: 5px;
-  font-size: 12px;
+  margin-bottom: 7px;
+  font-size: 14px;
 `;
 
 const AuthorProfile = styled(Link)<{ bgphoto: string }>`
@@ -493,6 +493,9 @@ const InputSection = styled.div`
     background: none;
     color: black;
     font-size: 25px;
+    &:hover {
+      color: ${(props) => props.theme.colors.hardGreen};
+    }
   }
 `;
 

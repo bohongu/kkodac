@@ -38,7 +38,7 @@ const Tag = () => {
           <div key={tag.id}>
             #{tag.data}
             <TiDelete
-              style={{ fontSize: '18px', marginLeft: '5px' }}
+              style={{ fontSize: '18px', marginLeft: '5px', cursor: 'pointer' }}
               onClick={() => deleteTag(tag.id)}
             />
           </div>
@@ -78,14 +78,15 @@ const Tags = styled.div`
     margin: 5px;
     padding: 10px;
     padding-right: 5px;
-    background-color: tomato;
+    background-color: ${(props) => props.theme.colors.green};
     border-radius: 5px;
     color: white;
-    font-size: 12px;
+    font-size: 14px;
   }
 `;
 
 const TagInput = styled.input`
+  background: #f8f9fa;
   width: auto;
   margin: 10px;
   display: inline-flex;
@@ -94,4 +95,5 @@ const TagInput = styled.input`
   min-width: 8rem;
   border: none;
   line-height: 10px;
+  font-family: Neo;
 `;

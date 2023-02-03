@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaImages } from 'react-icons/fa';
-import { MdDeleteOutline } from 'react-icons/md';
+import { TiDeleteOutline } from 'react-icons/ti';
 import RegionDrop from './RegionDrop';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
@@ -138,7 +138,7 @@ const Editor = () => {
           <Title
             value={title}
             onChange={titleChangeHandler}
-            placeholder="TITLE"
+            placeholder="제목"
           />
           <Submit>
             <div>{error ? error : null}</div>
@@ -167,7 +167,7 @@ const Editor = () => {
             {postImage.map((data, id) => (
               <Choosen photo={data.url} key={id}>
                 <Delete onClick={() => deleteImageHandler(data.id)}>
-                  <MdDeleteOutline />
+                  <TiDeleteOutline />
                 </Delete>
               </Choosen>
             ))}
@@ -192,8 +192,7 @@ export default Editor;
 
 const EditorWrapper = styled.div`
   width: 60%;
-  padding: 15px;
-  margin-top: 50px;
+  margin-top: 70px;
 `;
 
 const EditorForm = styled.form`
@@ -213,8 +212,12 @@ const Title = styled.input`
   height: 40px;
   border: none;
   border-bottom: 1px solid black;
-  font-size: 22px;
-  width: 70%;
+  font-size: 18px;
+  width: 330%;
+  font-family: Neo;
+  &:focus {
+    outline: 1px solid ${(props) => props.theme.colors.hardGray};
+  }
 `;
 
 const Region = styled.div``;
@@ -226,7 +229,7 @@ const ImageSection = styled.div`
 `;
 
 const ImageInput = styled.div`
-  border: 1px solid black;
+  border: 2px solid ${(props) => props.theme.colors.gray};
   ${(props) => props.theme.flex.flexCenterColumn}
   label {
     display: flex;
@@ -252,7 +255,7 @@ const Images = styled.div`
 `;
 
 const Choosen = styled.div<{ photo: string }>`
-  border: 1px solid black;
+  border: 0.5px solid ${(props) => props.theme.colors.gray};
   background-image: url(${(props) => props.photo});
   background-size: contain;
   background-repeat: no-repeat;
@@ -260,24 +263,35 @@ const Choosen = styled.div<{ photo: string }>`
   position: relative;
   background-color: black;
   width: 25%;
+  border-radius: 5px;
 `;
 
 const Delete = styled.div`
   position: absolute;
   ${(props) => props.theme.flex.flexCenter}
   color:white;
-  right: 0;
-  width: 25px;
-  height: 25px;
+  top: 3px;
+  right: 3px;
+  width: 20px;
+  height: 20px;
   font-size: 23px;
+  cursor: pointer;
+  &:hover {
+    color: red;
+  }
 `;
 
 const Description = styled.textarea`
-  height: 500px;
+  height: 400px;
   font-size: 16px;
   margin: 10px 0;
   resize: none;
   padding: 10px;
+  font-family: Neo;
+  border: none;
+  &:focus {
+    outline: 1px solid ${(props) => props.theme.colors.hardGray};
+  }
 `;
 
 const Bottom = styled.div`
@@ -296,8 +310,13 @@ const Submit = styled.div`
   }
 
   button {
-    width: 50px;
-    height: 30px;
-    align-self: flex-end;
+    padding: 10px 15px;
+    border: 0.5px solid ${(props) => props.theme.colors.gray};
+    font-family: Neo;
+    color: white;
+    font-weight: bold;
+    background: orange;
+    border-radius: 5px;
+    font-size: 15px;
   }
 `;
