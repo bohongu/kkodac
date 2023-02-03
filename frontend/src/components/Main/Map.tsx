@@ -324,7 +324,9 @@ const Weather = styled.div`
   }
 `;
 
-const Icon = styled.div``;
+const Icon = styled.div`
+  margin: 5px 0;
+`;
 
 const Temp = styled.div`
   font-size: 25px;

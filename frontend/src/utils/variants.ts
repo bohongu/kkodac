@@ -17,7 +17,7 @@ export const HoverDownVariants = {
     scale: 1,
   },
   hover: {
-    zInedx: 100,
+    zIndex: 100,
     scale: 1.2,
     transition: {
       delay: 0.3,
@@ -40,6 +40,7 @@ export const sliderVariants = {
 export const ContentVariants = {
   hover: {
     opacity: 1,
+    zIndex: 100,
     transition: {
       delay: 0.3,
     },

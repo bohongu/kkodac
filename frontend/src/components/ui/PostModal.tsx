@@ -126,12 +126,20 @@ const PostModal = ({ id }: IModal) => {
                   {like ? (
                     <FaHeart
                       onClick={onUnLike}
-                      style={{ fontSize: '20px', color: 'red' }}
+                      style={{
+                        fontSize: '20px',
+                        color: 'red',
+                        cursor: 'pointer',
+                      }}
                     />
                   ) : (
                     <FaRegHeart
                       onClick={onLike}
-                      style={{ fontSize: '20px', color: 'red' }}
+                      style={{
+                        fontSize: '20px',
+                        color: 'red',
+                        cursor: 'pointer',
+                      }}
                     />
                   )}
                   <LikeCount>{data.likes.length}</LikeCount>

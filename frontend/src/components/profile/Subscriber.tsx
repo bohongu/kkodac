@@ -94,7 +94,7 @@ const FollowingModal = styled(motion.div)`
   top: 5vh;
   left: 5vh;
   background: white;
-  z-index: 30;
+  z-index: 150;
 `;
 
 const Lists = styled.ul`

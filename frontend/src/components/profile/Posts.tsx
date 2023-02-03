@@ -55,6 +55,7 @@ const PostSection = () => {
               </Delete>
               <Content variants={ContentVariants}>
                 <h1>{data.title}</h1>
+                <h4>{data.createdAt.slice(0, 10)}</h4>
                 <h2>{data.regionId.name}</h2>
                 <h3>
                   <span>❤</span>&nbsp;{data.likes.length}
@@ -111,12 +112,15 @@ const Post = styled(motion.div)<{ bgphoto: string }>`
   border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   cursor: pointer;
+  z-index: 80;
+  position: relative;
 `;
 
 const Content = styled(motion.div)`
-  position: relative;
-  top: 200px;
-  height: 100px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 110px;
   opacity: 0;
   padding: 10px;
   border-bottom-left-radius: 10px;
@@ -124,7 +128,6 @@ const Content = styled(motion.div)`
   background: #f1f3f5;
   h1 {
     font-size: 18px;
-    font-weight: bold;
     margin-bottom: 10px;
   }
   h2 {
@@ -138,5 +141,10 @@ const Content = styled(motion.div)`
     span {
       color: ${(props) => props.theme.colors.red};
     }
+  }
+
+  h4 {
+    margin-bottom: 10px;
+    font-size: 12px;
   }
 `;

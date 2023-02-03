@@ -6,6 +6,7 @@ import { profile, refresh } from './api/api';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { accessToken, currentUser, loggedInState } from './recoil/atoms';
 import { useQuery } from 'react-query';
+import { Helmet } from 'react-helmet';
 
 const App = () => {
   const token = localStorage.getItem('token');
@@ -44,6 +45,9 @@ const App = () => {
     <>
       <GlobalFonts />
       <GlobalStyle />
+      <Helmet>
+        <title>꼬닥꼬닥</title>
+      </Helmet>
       <Router />
     </>
   );

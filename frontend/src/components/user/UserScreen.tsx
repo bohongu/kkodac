@@ -9,6 +9,7 @@ import { createFollow, getFollows } from './../../api/api';
 import { useRecoilValue } from 'recoil';
 import { currentUser } from '../../recoil/atoms';
 import LoadingSpinner from '../ui/LoadingSpinner';
+import { ContentVariants, HoverDownVariants } from '../../utils/variants';
 
 const UserScreen = () => {
   const [canFollow, setCanFollow] = useState(false);
@@ -105,38 +106,41 @@ const UserScreen = () => {
             <Personal>
               <h1>{user.result.nickname}</h1>
               <h2>{user.result.username}</h2>
-              <p>{user.result.introduce}</p>
+              {user.result.introduce ? <h3>{user.result.introduce}</h3> : null}
             </Personal>
-            <Btn>
-              <button onClick={onFollow}>
-                {canFollow ? 'UnFollow' : 'Follow'}
-              </button>
-            </Btn>
           </Text>
+          <Btn>
+            <button onClick={onFollow}>
+              {canFollow ? 'UnFollow' : 'Follow'}
+            </button>
+          </Btn>
         </Info>
       )}
 
       <Posts>
-        {posts &&
-          posts.map((post) => (
+        {posts && posts.length < 0 ? (
+          <span>게시물이 없습니다.</span>
+        ) : (
+          posts?.map((post) => (
             <Post
               key={post.postId}
+              variants={HoverDownVariants}
+              whileHover="hover"
               layoutId={post.postId}
               onClick={() => postDetailHandler(post.regionId.name, post.postId)}
+              bgphoto={post.fileMappers[0].file.fileUrl}
             >
-              <Thumb bgphoto={post.fileMappers[0].file.fileUrl} />
-              <PostInfo>
+              <PostInfo variants={ContentVariants}>
                 <h1>{post.title}</h1>
+                <h4>{post.regionId.name}</h4>
                 <h2>{post.createdAt.slice(0, 10)}</h2>
-                <p>
-                  {post.description.length < 100
-                    ? post.description
-                    : post.description.slice(0, 100) + '...'}
-                </p>
-                <span>❤ 300</span>
+                <h3>
+                  <span>❤</span>&nbsp;{post.likes.length}
+                </h3>
               </PostInfo>
             </Post>
-          ))}
+          ))
+        )}
       </Posts>
     </UserWrapper>
   );
@@ -145,27 +149,26 @@ const UserScreen = () => {
 export default UserScreen;
 
 const UserWrapper = styled.div`
-  margin: 0 30%;
+  margin: 0 150px;
   margin-top: 80px;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 `;
 
 const Info = styled.div`
-  border: 1px solid black;
-  height: 21rem;
-  display: grid;
-  grid-template-columns: 21rem auto;
+  display: flex;
+  padding: 10px;
+  margin-bottom: 30px;
 `;
 
 const ImageSection = styled.div`
   display: flex;
   ${(props) => props.theme.flex.flexCenter}
+  margin-right: 50px;
 `;
 
 const Image = styled.div<{ bgphoto: string }>`
-  border: 1px solid black;
-  height: 19rem;
-  width: 19rem;
+  border: 0.5px solid ${(props) => props.theme.colors.gray};
+  height: 11rem;
+  width: 11rem;
   border-radius: 50%;
   background-image: url(${(props) => props.bgphoto});
   background-size: cover;
@@ -173,66 +176,96 @@ const Image = styled.div<{ bgphoto: string }>`
 `;
 
 const Text = styled.div`
-  display: grid;
-  grid-template-rows: 5rem auto 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
 `;
 
 const Statistic = styled.div`
-  border: 1px solid blue;
   display: flex;
-  align-items: center;
-  justify-content: space-around;
+  margin-bottom: 10px;
 `;
 
 const Box = styled.div`
-  border: 1px solid black;
+  height: 45px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-`;
-
-const Personal = styled.div`
-  border: 1px solid yellow;
-`;
-
-const Btn = styled.div`
-  border: 1px solid green;
-`;
-
-const Posts = styled.div`
-  padding: 10px;
-  display: grid;
-  grid-template-rows: 1fr;
-  gap: 10px;
-`;
-
-const Post = styled(motion.div)`
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  height: 15rem;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  background: white;
-`;
-
-const Thumb = styled.div<{ bgphoto: string }>`
-  background-image: url(${(props) => props.bgphoto});
-  background-size: cover;
-  background-position: center center;
-  border: 1px solid black;
-  height: 15rem;
-  width: 15rem;
+  justify-content: space-between;
   margin-right: 20px;
 `;
 
-const PostInfo = styled.div`
-  padding: 5px;
-  height: 15rem;
+const Personal = styled.div`
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
   h1 {
-    font-size: 25px;
+    font-size: 24px;
   }
   h2 {
+    font-size: 14px;
+    color: ${(props) => props.theme.colors.hardGray};
+    margin: 10px 0;
+  }
+  h3 {
+    font-size: 12px;
+  }
+`;
+
+const Btn = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const Posts = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+`;
+
+const Post = styled(motion.div)<{ bgphoto: string }>`
+  position: relative;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  height: 20rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  background-image: url(${(props) => props.bgphoto});
+  background-size: cover;
+  background-position: center center;
+  border-radius: 10px;
+`;
+
+const PostInfo = styled(motion.div)`
+  padding: 10px;
+  height: 120px;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  background: #f1f3f5;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  opacity: 0;
+  h1 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  h2 {
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+  h3 {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    span {
+      color: ${(props) => props.theme.colors.red};
+    }
+  }
+  h4 {
+    margin-bottom: 10px;
     font-size: 12px;
   }
 `;
