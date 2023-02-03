@@ -470,6 +470,7 @@ const CommentNav = styled.nav`
 const InputSection = styled.div`
   ${(props) => props.theme.flex.flexCenter}
   align-items: flex-end;
+
   label {
     position: relative;
   }
@@ -481,6 +482,10 @@ const InputSection = styled.div`
     background: none;
     border-top: 0.5px solid rgba(0, 0, 0, 0.3);
     color: black;
+    font-family: Neo;
+    &:focus {
+      outline: none;
+    }
   }
   button {
     display: flex;

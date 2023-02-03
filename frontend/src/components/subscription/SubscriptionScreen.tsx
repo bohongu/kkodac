@@ -60,13 +60,11 @@ const SubscriptionScreen = () => {
           posts.map((post) => (
             <Post
               key={post.postId}
-              variants={HoverDownVariants}
-              whileHover="hover"
               bgphoto={post.fileMappers[0].file.fileUrl}
               onClick={() => postDetailHandler(post.regionId.name, post.postId)}
               layoutId={post.postId}
             >
-              <Content variants={ContentVariants}>
+              <Content>
                 <h1>{post.title}</h1>
                 <h4>{post.createdAt.slice(0, 10)}</h4>
                 <h2>{post.regionId.name}</h2>
@@ -93,18 +91,18 @@ const SubscriptionWrapper = styled.div`
 const Subscribers = styled.div`
   display: flex;
   overflow: scroll;
-  border: 1px solid black;
+  border-bottom: 2px solid ${(props) => props.theme.colors.hardGray};
+  padding-bottom: 10px;
   width: 100%;
-  height: 100px;
-  margin-bottom: 10px;
+  margin-bottom: 25px;
   ::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera*/
   }
 `;
 
 const Subscriber = styled.div`
-  height: 100px;
-  width: 90px;
+  height: 110px;
+  width: 110px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -113,6 +111,7 @@ const Subscriber = styled.div`
   h1 {
     margin-top: 5px;
     font-size: 12px;
+    cursor: pointer;
   }
 `;
 
@@ -120,10 +119,12 @@ const Image = styled.div<{ bgphoto: string }>`
   background-image: url(${(props) => props.bgphoto});
   background-size: cover;
   background-position: center center;
-  border: 1px solid black;
+  border: 0.5px solid ${(props) => props.theme.colors.gray};
   width: 70px;
   height: 70px;
   border-radius: 50%;
+  margin-bottom: 7px;
+  cursor: pointer;
 `;
 
 const Posts = styled.div`
@@ -150,12 +151,11 @@ const Post = styled(motion.div)<{ bgphoto: string }>`
   position: relative;
 `;
 
-const Content = styled(motion.div)`
+const Content = styled.div`
   position: absolute;
   bottom: 0;
   width: 100%;
   height: 110px;
-  opacity: 0;
   padding: 10px;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
@@ -176,7 +176,6 @@ const Content = styled(motion.div)`
       color: ${(props) => props.theme.colors.red};
     }
   }
-
   h4 {
     margin-bottom: 10px;
     font-size: 10px;

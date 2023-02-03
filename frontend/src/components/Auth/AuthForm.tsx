@@ -4,8 +4,6 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { loggedInState, newAcountState } from '../../recoil/atoms';
 import { theme } from '../../styles/theme';
-import { RiKakaoTalkFill } from 'react-icons/ri';
-import { AiOutlineGoogle } from 'react-icons/ai';
 import { useMutation } from 'react-query';
 import { currentUser, accessToken } from './../../recoil/atoms';
 import { signUp, login, BASE_URL } from '../../api/api';
@@ -99,14 +97,6 @@ const Auth = () => {
     }
   };
 
-  const kakaoHandler = () => {
-    console.log('카카오 로그인');
-  };
-  const googleHandler = () => {
-    /* 구글 로그인 */
-    console.log('구글 로그인');
-  };
-
   return (
     <AuthWrapper>
       <Form onSubmit={handleSubmit(authSubmitHandler)}>
@@ -157,18 +147,7 @@ const Auth = () => {
         )}
         <AuthButton>{newAccount ? '회원가입' : '로그인'}</AuthButton>
       </Form>
-      {!newAccount && (
-        <>
-          <SocialLoginWrapper>
-            <SocialLogin onClick={kakaoHandler}>
-              <RiKakaoTalkFill />
-            </SocialLogin>
-            <SocialLogin onClick={googleHandler}>
-              <AiOutlineGoogle />
-            </SocialLogin>
-          </SocialLoginWrapper>
-        </>
-      )}
+
       <AuthToggle onClick={toggleAuthHandler}>
         {newAccount ? '로그인하러가기' : '회원가입하러가기'}
       </AuthToggle>
@@ -212,22 +191,6 @@ const AuthButton = styled.button`
   height: 2.5rem;
   margin-bottom: 1rem;
   border: none;
-`;
-
-const SocialLoginWrapper = styled.div`
-  ${(props) => props.theme.flex.flexCenter}
-  width: 100%;
-`;
-
-const SocialLogin = styled.button`
-  ${(props) => props.theme.flex.flexCenter}
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 1.25rem;
-  border: none;
-  margin: 1rem;
-  margin-bottom: 0;
-  font-size: 20px;
 `;
 
 const AuthToggle = styled.div`

@@ -12,8 +12,9 @@ import { useQuery } from 'react-query';
 import { getPostTag } from '../../api/api';
 import { IRecommendPost } from '../../utils/interface';
 import { useNavigate, Link } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { currentUser } from '../../recoil/atoms';
+import { loggedInState, accessToken } from './../../recoil/atoms';
 
 const Jeju = () => {
   const cUser = useRecoilValue(currentUser);
@@ -39,6 +40,30 @@ const Jeju = () => {
     navigate(`/tour/${region}/${postId}`);
   };
 
+  const logout = useSetRecoilState(loggedInState);
+  const setCurrentUser = useSetRecoilState(currentUser);
+  const setAccessToken = useSetRecoilState(accessToken);
+
+  const logoutHandler = () => {
+    localStorage.removeItem('token');
+    setAccessToken('');
+    setCurrentUser({
+      createdAt: '',
+      googleAccount: '',
+      introduce: '',
+      kakaoAccount: '',
+      nickname: '',
+      password: '',
+      refreshToken: '',
+      updatedAt: '',
+      userId: '',
+      username: '',
+      _id: '',
+      fileId: { fileUrl: '', fileId: '' },
+    });
+    logout(false);
+  };
+
   return (
     <MainWrapper>
       <NavWapper>
@@ -46,13 +71,14 @@ const Jeju = () => {
           <Menu to={`/profile/${cUser.userId}`}>프로필</Menu>
           <Menu to="/write">글쓰기</Menu>
           <Menu to={`/subscribes/${cUser.userId}`}>구독</Menu>
+          <Logout onClick={logoutHandler}>로그아웃</Logout>
         </Nav>
       </NavWapper>
 
       <Map />
       <Slider>
         <SliderHeader>
-          <h1>봄</h1>
+          <h1>연인과 함께 가면 좋은 곳</h1>
           <NextArrow onClick={nextSlide}>
             <BsFillArrowRightCircleFill />
           </NextArrow>
@@ -120,6 +146,9 @@ const SliderHeader = styled.header`
   justify-content: space-between;
   h1 {
     font-size: 28px;
+    color: ${(props) => props.theme.colors.ivory};
+    padding-bottom: 10px;
+    border-bottom: 3px solid ${(props) => props.theme.colors.ivory};
   }
 `;
 
@@ -128,6 +157,10 @@ const NextArrow = styled.button`
   ${(props) => props.theme.flex.flexCenter}
   border:none;
   background: none;
+  color: ${(props) => props.theme.colors.ivory};
+  &:hover {
+    color: #ffec99;
+  }
 `;
 
 const Line = styled(motion.div)`
@@ -190,7 +223,7 @@ const NavWapper = styled.div`
 `;
 
 const Nav = styled.div`
-  width: 180px;
+  width: 250px;
   display: flex;
   justify-content: space-between;
 `;
@@ -198,6 +231,16 @@ const Nav = styled.div`
 const Menu = styled(Link)`
   border-bottom: 1px solid black;
   padding-bottom: 2px;
+  &:hover {
+    color: ${(props) => props.theme.colors.ivory};
+    border-bottom: ${(props) => props.theme.colors.ivory};
+  }
+`;
+
+const Logout = styled.div`
+  border-bottom: 1px solid black;
+  padding-bottom: 2px;
+  cursor: pointer;
   &:hover {
     color: ${(props) => props.theme.colors.ivory};
     border-bottom: ${(props) => props.theme.colors.ivory};

@@ -163,13 +163,13 @@ const UserSection = () => {
         </Info>
       ) : (
         <Edit>
-          <label htmlFor="nickname">Nickname</label>
+          <label htmlFor="nickname">닉네임</label>
           <input
             id="nickname"
             value={nickname}
             onChange={nicknameChangeHandler}
           />
-          <label htmlFor="introduce">Bio</label>
+          <label htmlFor="introduce">자기소개</label>
           <textarea id="introduce" value={bio} onChange={bioChangeHandler} />
           <div>
             <button onClick={submitProfileHandler}>Save</button>
@@ -349,10 +349,13 @@ const Edit = styled.div`
   input {
     height: 30px;
     padding-left: 5px;
+    font-family: Neo;
   }
   textarea {
     height: 100px;
     resize: none;
+    font-family: Neo;
+    padding: 5px;
   }
   div {
     display: flex;

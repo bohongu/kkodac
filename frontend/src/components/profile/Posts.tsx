@@ -142,7 +142,6 @@ const Content = styled(motion.div)`
       color: ${(props) => props.theme.colors.red};
     }
   }
-
   h4 {
     margin-bottom: 10px;
     font-size: 10px;

@@ -66,6 +66,7 @@ const DropdownWrapper = styled.div`
   box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px,
     rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
   width: 150px;
+  left: 60px;
   top: 30px;
   background: white;
   border-radius: 10px;
