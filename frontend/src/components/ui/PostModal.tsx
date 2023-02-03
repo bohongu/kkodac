@@ -185,20 +185,22 @@ const PostModal = ({ id }: IModal) => {
               <CommentList>
                 {data.commentMappers.map((comment) => (
                   <CommentItem key={comment.comment.commentId}>
-                    <AuthorProfile
-                      bgphoto={comment.comment.authorId.fileId.fileUrl}
-                    />
                     <h1>{comment.comment.authorId.nickname}</h1>
-                    <CommentText>{comment.comment.description}</CommentText>
-                    <CommentNav>
-                      {comment.comment.authorId.userId === cUser.userId ? (
-                        <TiDeleteOutline
-                          onClick={() =>
-                            deleteCommentHandler(comment.comment.commentId)
-                          }
-                        />
-                      ) : null}
-                    </CommentNav>
+                    <section>
+                      <AuthorProfile
+                        bgphoto={comment.comment.authorId.fileId.fileUrl}
+                      />
+                      <CommentText>{comment.comment.description}</CommentText>
+                      <CommentNav>
+                        {comment.comment.authorId.userId === cUser.userId ? (
+                          <TiDeleteOutline
+                            onClick={() =>
+                              deleteCommentHandler(comment.comment.commentId)
+                            }
+                          />
+                        ) : null}
+                      </CommentNav>
+                    </section>
                   </CommentItem>
                 ))}
               </CommentList>
@@ -334,6 +336,7 @@ const Image = styled.div<{ bgPhoto: string; z: number }>`
   width: 550px;
   height: 550px;
   z-index: ${(props) => props.z};
+  border: 0.5px solid ${(props) => props.theme.colors.gray};
 `;
 
 const Thumb = styled.div<{ bgPhoto: string }>`
@@ -343,7 +346,7 @@ const Thumb = styled.div<{ bgPhoto: string }>`
   width: 550px;
   height: 550px;
   position: absolute;
-  border: 0.5px solid rgba(0, 0, 0, 0.2);
+  border: 0.5px solid ${(props) => props.theme.colors.gray};
 `;
 
 const ImageGrid = styled.div`
@@ -362,7 +365,7 @@ const Images = styled.div<{ bgPhoto: string }>`
   background-position: center center;
   height: 270px;
   cursor: pointer;
-  border: 0.5px solid rgba(0, 0, 0, 0.2);
+  border: 0.5px solid ${(props) => props.theme.colors.gray};
 `;
 
 const Description = styled.p`
@@ -386,6 +389,7 @@ const Profile = styled.img<{ photo: string }>`
   height: 50px;
   border-radius: 50%;
   margin-right: 15px;
+  border: 0.5px solid ${(props) => props.theme.colors.gray};
 `;
 
 const CommentList = styled.ul`
@@ -398,17 +402,21 @@ const CommentList = styled.ul`
 `;
 
 const CommentItem = styled.li`
-  margin-bottom: 3px;
-  display: grid;
-  grid-template-columns: 1fr 1fr 8.5fr 0.5fr;
-  gap: 3px;
-
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  padding: 5px 0;
+  border-bottom: 0.5px solid ${(props) => props.theme.colors.gray};
+  section {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
   h1 {
+    padding-left: 3px;
+    margin-bottom: 5px;
     font-size: 12px;
-    font-weight: bold;
-    padding-top: 5px;
-    ${(props) => props.theme.flex.flexCenter}
-    align-items: flex-start;
   }
 `;
 
@@ -416,20 +424,25 @@ const AuthorProfile = styled.div<{ bgphoto: string }>`
   background-image: url(${(props) => props.bgphoto});
   background-size: cover;
   background-position: center center;
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
+  border: 0.5px solid ${(props) => props.theme.colors.gray};
+  margin-right: 20px;
 `;
 
 const CommentText = styled.p`
-  ${(props) => props.theme.flex.flexCenter}
   align-items: flex-start;
   font-size: 12px;
+  width: 90%;
 `;
 
 const CommentNav = styled.nav`
-  display: flex;
-  justify-content: center;
+  height: 20px;
+  cursor: pointer;
+  &:hover {
+    color: ${(props) => props.theme.colors.red};
+  }
 `;
 
 const InputSection = styled.div`

@@ -7,6 +7,8 @@ export const theme: DefaultTheme = {
     hardGreen: '#54B435',
     green: '#C6D868',
     ivory: '#FEFEE4',
+    gray: '#DEE2E6',
+    red: '#E03131',
   },
   flex: {
     flexCenter: `

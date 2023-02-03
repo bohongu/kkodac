@@ -229,7 +229,7 @@ const Content = styled(motion.div)`
     align-items: center;
     justify-content: end;
     span {
-      color: red;
+      color: ${(props) => props.theme.colors.red};
     }
   }
 `;
@@ -241,7 +241,7 @@ const Tags = styled.div`
   flex-wrap: wrap;
   min-height: 100px;
   padding: 10px;
-  border-bottom: 1px solid black;
+  border-bottom: 3px solid ${(props) => props.theme.colors.gray};
 `;
 
 const Tag = styled.div<{ check: boolean }>`

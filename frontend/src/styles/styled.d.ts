@@ -8,6 +8,8 @@ declare module 'styled-components' {
       hardGreen: string;
       green: string;
       ivory: string;
+      gray: string;
+      red: string;
     };
     flex: {
       flexCenter: string;
