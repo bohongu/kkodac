@@ -185,10 +185,23 @@ const PostModal = ({ id }: IModal) => {
               <CommentList>
                 {data.commentMappers.map((comment) => (
                   <CommentItem key={comment.comment.commentId}>
-                    <h1>{comment.comment.authorId.nickname}</h1>
+                    <CommentAuthorNick
+                      to={
+                        cUser.userId === comment.comment.authorId.userId
+                          ? `/profile/${cUser.userId} `
+                          : `/user/${comment.comment.authorId.userId}`
+                      }
+                    >
+                      {comment.comment.authorId.nickname}
+                    </CommentAuthorNick>
                     <section>
                       <AuthorProfile
                         bgphoto={comment.comment.authorId.fileId.fileUrl}
+                        to={
+                          cUser.userId === comment.comment.authorId.userId
+                            ? `/profile/${cUser.userId} `
+                            : `/user/${comment.comment.authorId.userId}`
+                        }
                       />
                       <CommentText>{comment.comment.description}</CommentText>
                       <CommentNav>
@@ -407,20 +420,20 @@ const CommentItem = styled.li`
   align-items: flex-start;
   margin-bottom: 10px;
   padding: 5px 0;
-  border-bottom: 0.5px solid ${(props) => props.theme.colors.gray};
   section {
     display: flex;
     justify-content: space-between;
     width: 100%;
   }
-  h1 {
-    padding-left: 3px;
-    margin-bottom: 5px;
-    font-size: 12px;
-  }
 `;
 
-const AuthorProfile = styled.div<{ bgphoto: string }>`
+const CommentAuthorNick = styled(Link)`
+  padding-left: 3px;
+  margin-bottom: 5px;
+  font-size: 12px;
+`;
+
+const AuthorProfile = styled(Link)<{ bgphoto: string }>`
   background-image: url(${(props) => props.bgphoto});
   background-size: cover;
   background-position: center center;
@@ -429,6 +442,7 @@ const AuthorProfile = styled.div<{ bgphoto: string }>`
   border-radius: 50%;
   border: 0.5px solid ${(props) => props.theme.colors.gray};
   margin-right: 20px;
+  cursor: pointer;
 `;
 
 const CommentText = styled.p`

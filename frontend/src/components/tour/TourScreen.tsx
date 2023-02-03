@@ -183,6 +183,7 @@ const ToggleWrapper = styled.div`
   ${(props) => props.theme.flex.flexCenterColumn}
   span {
     font-size: 12px;
+    margin-bottom: 8px;
   }
 `;
 
