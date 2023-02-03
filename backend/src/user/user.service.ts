@@ -259,7 +259,6 @@ export class UserService {
     delete result.createdAt;
     delete result.googleAccount;
     delete result.kakaoAccount;
-    delete result.nickname;
     delete result.password;
     delete result.refreshToken;
     delete result.updatedAt;
