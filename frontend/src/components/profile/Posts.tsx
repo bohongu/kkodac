@@ -40,7 +40,7 @@ const PostSection = () => {
     <PostWrapper>
       {isLoading && <LoadingSpinner />}
       <Posts>
-        {data &&
+        {data && data.length > 0 ? (
           data.map((data) => (
             <Post
               variants={HoverDownVariants}
@@ -55,9 +55,16 @@ const PostSection = () => {
               </Delete>
               <Content variants={ContentVariants}>
                 <h1>{data.title}</h1>
+                <h2>{data.regionId.name}</h2>
+                <h3>
+                  <span>❤</span>&nbsp;{data.likes.length}
+                </h3>
               </Content>
             </Post>
-          ))}
+          ))
+        ) : (
+          <span>게시물이 없습니다.</span>
+        )}
       </Posts>
     </PostWrapper>
   );
@@ -69,6 +76,7 @@ const PostWrapper = styled.div`
   display: flex;
   width: 80%;
   flex-direction: column;
+  margin-right: 100px;
 `;
 
 const Posts = styled.div`
@@ -109,10 +117,26 @@ const Content = styled(motion.div)`
   position: relative;
   top: 200px;
   height: 100px;
-  border-top: 1px solid black;
   opacity: 0;
   padding: 10px;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
-  background: white;
+  background: #f1f3f5;
+  h1 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  h2 {
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+  h3 {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    span {
+      color: ${(props) => props.theme.colors.red};
+    }
+  }
 `;

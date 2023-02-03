@@ -7,6 +7,7 @@ export const theme: DefaultTheme = {
     hardGreen: '#54B435',
     green: '#C6D868',
     ivory: '#FEFEE4',
+    hardGray: '#ADB5BD',
     gray: '#DEE2E6',
     red: '#E03131',
   },

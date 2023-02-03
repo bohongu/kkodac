@@ -9,9 +9,9 @@ import {
 import { MdFace } from 'react-icons/md';
 import { FILE_MAX_SIZE } from '../../utils/jeju';
 import { useMutation, useQuery } from 'react-query';
-import { likePosts, postFile } from '../../api/api';
+import { getUserPost, likePosts, postFile } from '../../api/api';
 import { editingProfile, getFollows } from './../../api/api';
-import { IFollow, ILikePost } from './../../utils/interface';
+import { IFollow, ILikePost, IPost } from './../../utils/interface';
 import LoadingSpinner from '../ui/LoadingSpinner';
 
 const UserSection = () => {
@@ -34,6 +34,10 @@ const UserSection = () => {
   /* React-Query */
   const sendFile = useMutation(postFile);
   const updateProfile = useMutation(editingProfile);
+
+  const { data: posts } = useQuery<IPost[]>('getUserPost', () =>
+    getUserPost(cUser.userId),
+  );
 
   const { data: follow, isLoading: followLoading } = useQuery<IFollow>(
     'getFollowsUser',
@@ -150,13 +154,13 @@ const UserSection = () => {
         )}
       </UserImageSection>
       {!editProfile ? (
-        <>
-          <UserId>{cUser.nickname}</UserId>
-          <Nickname>{cUser.username}</Nickname>
+        <Info>
+          <Nickname>{cUser.nickname}</Nickname>
+          <UserId>{cUser.username}</UserId>
           <Introduce>
             {cUser.introduce ? cUser.introduce : '자기소개가 없습니다.'}
           </Introduce>
-        </>
+        </Info>
       ) : (
         <Edit>
           <label htmlFor="nickname">Nickname</label>
@@ -177,22 +181,36 @@ const UserSection = () => {
         <UserInfoBtn onClick={setEditProfileHandler}>프로필 변경</UserInfoBtn>
       )}
       <Followers>
-        구독 :
-        <span
-          onClick={() => {
-            setModal({ showModal: true, exit: false });
-          }}
-        >
-          {follow?.users_followed_by_user.length}
-        </span>
-        내가 좋아요한 게시물 :
-        <span
-          onClick={() => {
-            setLikeModal({ showModal: true, exit: false });
-          }}
-        >
-          {likePostDatas?.length}
-        </span>
+        <section>
+          팔로잉 :
+          <span
+            onClick={() => {
+              setModal({ showModal: true, exit: false });
+            }}
+          >
+            {follow?.users_followed_by_user.length}
+          </span>
+        </section>
+        <section>
+          내가 좋아요한 게시물 :
+          <span
+            onClick={() => {
+              setLikeModal({ showModal: true, exit: false });
+            }}
+          >
+            {likePostDatas?.length}
+          </span>
+        </section>
+        <section>
+          나의 게시물 :
+          <span
+            onClick={() => {
+              alert(`나의 게시물은 ${posts?.length}개 입니다.`);
+            }}
+          >
+            {posts?.length}
+          </span>
+        </section>
       </Followers>
     </UserWrapper>
   );
@@ -205,7 +223,7 @@ const UserWrapper = styled.div`
   width: 20%;
   flex-direction: column;
   padding-top: 50px;
-  margin-left: 50px;
+  margin-left: 100px;
 `;
 
 const UserImageSection = styled.div`
@@ -221,6 +239,7 @@ const UserImage = styled.img<{ photo: string }>`
   width: 300px;
   height: 300px;
   border-radius: 50%;
+  border: 0.5px solid ${(props) => props.theme.colors.gray};
 `;
 
 const UserImageBtn = styled.div`
@@ -230,7 +249,7 @@ const UserImageBtn = styled.div`
   width: 30px;
   border-radius: 50%;
   bottom: 55px;
-  right: 45px;
+  left: 280px;
   font-size: 30px;
   background: white;
   position: absolute;
@@ -259,29 +278,39 @@ const Drop = styled.div`
   }
 `;
 
-const UserId = styled.div`
-  font-size: 25px;
-  margin-bottom: 5px;
-  font-weight: bold;
+const Info = styled.div`
+  padding: 5px;
+  margin: 10px 0;
 `;
 
 const Nickname = styled.div`
-  font-size: 18px;
-  color: rgba(0, 0, 0, 0.6);
+  font-size: 25px;
+  color: black;
+`;
+
+const UserId = styled.div`
+  font-size: 16px;
+  margin: 5px 0;
+  color: ${(props) => props.theme.colors.hardGray};
 `;
 
 const Introduce = styled.div`
   font-size: 12px;
-  margin: 10px 0;
+  margin-top: 15px;
   line-height: 22px;
 `;
 
-const UserInfoBtn = styled.button``;
+const UserInfoBtn = styled.button`
+  margin-bottom: 15px;
+`;
 
 const Followers = styled.span`
   padding: 10px 0;
-  ${(props) => props.theme.flex.flexCenter}
-  border:1px solid black;
+  ${(props) => props.theme.flex.flexCenterColumn}
+  section {
+    margin: 5px 0;
+  }
+
   span {
     margin-left: 5px;
     font-size: bold;
