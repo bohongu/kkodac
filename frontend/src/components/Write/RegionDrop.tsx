@@ -70,4 +70,8 @@ const Label = styled.label<{ check: boolean }>`
   cursor: pointer;
   font-size: 12px;
   border: 0.5px solid ${(props) => props.theme.colors.gray};
+  &:hover {
+    background: ${(props) => props.theme.colors.hardGreen};
+    color: white;
+  }
 `;

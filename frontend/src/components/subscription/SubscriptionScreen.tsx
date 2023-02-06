@@ -2,25 +2,23 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
-import { IFollow, IPost } from './../../utils/interface';
-import { getFollows, getUserPost } from './../../api/api';
+import { IFollow, IGetUser, IPost } from './../../utils/interface';
+import { getFollows, getUserPost, getUser } from './../../api/api';
 import { useRecoilValue } from 'recoil';
 import { currentUser } from '../../recoil/atoms';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { motion } from 'framer-motion';
-import { ContentVariants, HoverDownVariants } from '../../utils/variants';
 
 const SubscriptionScreen = () => {
   const { userId } = useParams();
   const cUser = useRecoilValue(currentUser);
   const navigate = useNavigate();
+  const [subUser, setSubUser] = useState<string>(userId!);
 
   const { data: follows, isLoading: followLoading } = useQuery<IFollow>(
     'follows',
     () => getFollows(userId!),
   );
-
-  const [subUser, setSubUser] = useState<string>(userId!);
 
   const {
     data: posts,
@@ -28,10 +26,16 @@ const SubscriptionScreen = () => {
     isLoading: postsLoading,
   } = useQuery<IPost[]>('subGetUserPost', () => getUserPost(subUser!));
 
+  const { data: user, refetch: userRefech } = useQuery<IGetUser>(
+    'gettingUser',
+    () => getUser(subUser),
+  );
+
   const changeSubUser = (id: string) => {
     setSubUser(id);
     setTimeout(() => {
       refetch();
+      userRefech();
     }, 100);
   };
 
@@ -55,6 +59,7 @@ const SubscriptionScreen = () => {
           </Subscriber>
         ))}
       </Subscribers>
+      <SelectUser>{user?.result.nickname}</SelectUser>
       <Posts>
         {posts &&
           posts.map((post) => (
@@ -113,6 +118,10 @@ const Subscriber = styled.div`
     font-size: 12px;
     cursor: pointer;
   }
+`;
+
+const SelectUser = styled.div`
+  margin-bottom: 25px;
 `;
 
 const Image = styled.div<{ bgphoto: string }>`

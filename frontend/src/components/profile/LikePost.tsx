@@ -41,17 +41,23 @@ const LikePost = ({ userId }: IUserId) => {
             exit="exit"
             custom={modal.exit}
           >
+            <Title>내가 좋아요한 게시물</Title>
             <Lists>
               {isLoading && <LoadingSpinner />}
               {data?.map((post) => (
                 <List
                   key={post.post.postId}
+                  bgphoto={post.post.fileMappers[0].file.fileUrl}
                   layoutId={post.post.postId}
                   onClick={() =>
                     postDetailHandler(post.post.regionId.name, post.post.postId)
                   }
                 >
-                  {post.post.title}
+                  <Content>
+                    <h1>{post.post.title}</h1>
+                    <h4>{post.post.createdAt.slice(0, 10)}</h4>
+                    <h2>{post.post.authorId.nickname}</h2>
+                  </Content>
                 </List>
               ))}
             </Lists>
@@ -80,6 +86,12 @@ const LikeModal = styled(motion.div)`
   right: 0;
 `;
 
+const Title = styled.div`
+  border-bottom: 2px solid ${(props) => props.theme.colors.hardGray};
+  padding: 5px 0;
+  margin-bottom: 15px;
+`;
+
 const Lists = styled.div`
   display: grid;
   gap: 10px;
@@ -93,7 +105,40 @@ const Lists = styled.div`
   scrollbar-width: none; /* Firefox */
 `;
 
-const List = styled(motion.div)`
-  border: 1px solid black;
+const List = styled(motion.div)<{ bgphoto: string }>`
   height: 300px;
+  background-image: url(${(props) => props.bgphoto});
+  background-size: cover;
+  background-position: center center;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  cursor: pointer;
+  position: relative;
+`;
+
+const Content = styled.div`
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 110px;
+  padding: 10px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  background: #f1f3f5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  h1 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  h2 {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  h4 {
+    margin-bottom: 10px;
+    font-size: 10px;
+  }
 `;

@@ -246,6 +246,9 @@ const ImageInput = styled.div`
   input {
     display: none;
   }
+  &:hover {
+    border: 2px solid black;
+  }
 `;
 
 const Images = styled.div`
@@ -311,12 +314,15 @@ const Submit = styled.div`
 
   button {
     padding: 10px 15px;
-    border: 0.5px solid ${(props) => props.theme.colors.gray};
+    border: none;
     font-family: Neo;
     color: white;
     font-weight: bold;
     background: orange;
     border-radius: 5px;
     font-size: 15px;
+    &:hover {
+      background: ${(props) => props.theme.colors.hardOrange};
+    }
   }
 `;

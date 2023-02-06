@@ -149,7 +149,7 @@ const Auth = () => {
       </Form>
 
       <AuthToggle onClick={toggleAuthHandler}>
-        {newAccount ? '로그인하러가기' : '회원가입하러가기'}
+        {newAccount ? '로그인 하러가기' : '회원가입 하러가기'}
       </AuthToggle>
     </AuthWrapper>
   );
@@ -173,16 +173,16 @@ const Input = styled.input`
   width: 100%;
   height: 2.5rem;
   padding-left: 10px;
-  font-size: 16px;
+  font-size: 14px;
   border: none;
-  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
+  font-family: Neo;
+  border-radius: 5px;
 `;
 
 const ErrorMsg = styled.span`
   ${(props) => (props) => theme.flex.flexCenter}
   font-size: 12px;
-  margin-top: 0.5rem;
-  margin-bottom: 1rem;
+  margin: 1rem 0;
   color: red;
 `;
 
@@ -191,8 +191,14 @@ const AuthButton = styled.button`
   height: 2.5rem;
   margin-bottom: 1rem;
   border: none;
+  font-family: Neo;
+  border-radius: 5px;
 `;
 
 const AuthToggle = styled.div`
   margin-top: 10%;
+  cursor: pointer;
+  &:hover {
+    color: ${(props) => props.theme.colors.harderGreen};
+  }
 `;

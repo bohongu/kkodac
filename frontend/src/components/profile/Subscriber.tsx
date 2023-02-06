@@ -111,13 +111,17 @@ const List = styled.li`
   padding: 0 10px;
   margin: 2.5px;
   border-radius: 10px;
+  &:hover {
+    transform: scale(1.03);
+    transition: transform 0.4s;
+  }
 `;
 
 const Img = styled.div<{ bgphoto: string }>`
   background-image: url(${(props) => props.bgphoto});
   background-size: cover;
   background-position: center center;
-  border: 1px solid black;
+  border: 0.5px solid ${(props) => props.theme.colors.gray};
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -126,6 +130,9 @@ const Img = styled.div<{ bgphoto: string }>`
 const Nickname = styled(Link)`
   width: 80%;
   padding-left: 10px;
+  display: flex;
+  align-items: center;
+  height: 100%;
 `;
 
 const UnFollow = styled.button`
@@ -136,4 +143,7 @@ const UnFollow = styled.button`
   border: none;
   background: none;
   font-size: 20px;
+  &:hover {
+    color: red;
+  }
 `;

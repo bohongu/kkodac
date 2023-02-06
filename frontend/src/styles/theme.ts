@@ -10,6 +10,7 @@ export const theme: DefaultTheme = {
     hardGray: '#ADB5BD',
     gray: '#DEE2E6',
     red: '#E03131',
+    hardOrange: '#F08C00',
   },
   flex: {
     flexCenter: `

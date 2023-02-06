@@ -5,7 +5,7 @@ export const HoverVariants = {
   hover: {
     zInedx: 100,
     scale: 1.2,
-    y: -100,
+    y: -30,
     transition: {
       delay: 0.3,
     },

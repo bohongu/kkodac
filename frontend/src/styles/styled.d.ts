@@ -11,6 +11,7 @@ declare module 'styled-components' {
       hardGray: string;
       gray: string;
       red: string;
+      hardOrange: string;
     };
     flex: {
       flexCenter: string;
