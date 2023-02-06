@@ -101,6 +101,12 @@ const UserSection = () => {
   };
 
   const submitProfileHandler = () => {
+    if (nickname.length > 8 || nickname.length < 3) {
+      alert('닉네임을 3-8자로 작성해주세요');
+      setNickname('');
+      return;
+    }
+
     updateProfile.mutate(
       {
         userId: cUser.userId,
