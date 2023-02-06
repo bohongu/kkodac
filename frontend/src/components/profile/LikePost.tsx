@@ -78,7 +78,7 @@ const LikeModal = styled(motion.div)`
   box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px,
     rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
   padding: 15px;
-  background: white;
+  background: #f8f9fa;
   z-index: 200;
   top: 5vh;
   margin: 0 auto;
@@ -96,7 +96,6 @@ const Lists = styled.div`
   display: grid;
   gap: 10px;
   grid-template-columns: repeat(3, 1fr);
-  height: 100%;
   overflow: scroll;
   ::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera*/
