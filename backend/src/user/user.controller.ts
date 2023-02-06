@@ -254,20 +254,7 @@ export class UserController {
   }
 
   @Get('like/:id')
-  getUserLike(@Param('id') id: string, @Res() res: Response) {
-    const result = this.postService.getUserLike(id);
-
-    if (result) {
-      this.logger.debug(
-        {
-          message: 'like',
-          param: { id: id },
-        },
-        'User',
-      );
-      res.status(HttpStatus.OK).json('OK');
-    } else {
-      throw new Error('서버 측 에러');
-    }
+  getUserLike(@Param('id') id: string) {
+    return this.postService.getUserLike(id);
   }
 }
