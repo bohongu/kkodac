@@ -85,7 +85,7 @@ const NavigationWrapper = styled(motion.div)`
   align-items: center;
   padding: 0 8%;
   width: 100%;
-  height: 70px;
+  height: 80px;
   align-items: center;
   top: 0;
   z-index: 100;
@@ -95,8 +95,8 @@ const Logo = styled(motion.div)`
   cursor: pointer;
 
   img {
-    width: 170px;
-    height: 50px;
+    width: 150px;
+    height: 60px;
   }
 `;
 

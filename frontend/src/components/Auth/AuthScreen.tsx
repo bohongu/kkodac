@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import AuthForm from './AuthForm';
-import background from '../../assets/images/background.png';
+import background from '../../assets/images/auth_background.png';
 
 const AuthScreen = () => {
   return (

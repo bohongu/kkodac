@@ -301,7 +301,7 @@ export default Map;
 
 const Svg = styled(motion.svg)`
   width: 95vw;
-  height: 800px;
+  height: 85vh;
   background-image: url(${background});
   background-size: cover;
   margin-bottom: 50px;

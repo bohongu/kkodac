@@ -51,6 +51,7 @@ const Subscriber = ({ userId }: IUserId) => {
             exit="exit"
             custom={modal.exit}
           >
+            <Title>팔로잉</Title>
             <Lists>
               {follows?.users_followed_by_user.map((user, idx) => (
                 <List key={idx}>
@@ -81,7 +82,7 @@ export const Overlay = styled(motion.div)`
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 20;
+  z-index: 200;
 `;
 const FollowingModal = styled(motion.div)`
   border-radius: 10px;
@@ -94,7 +95,13 @@ const FollowingModal = styled(motion.div)`
   top: 5vh;
   left: 5vh;
   background: white;
-  z-index: 150;
+  z-index: 250;
+`;
+
+const Title = styled.div`
+  border-bottom: 2px solid ${(props) => props.theme.colors.hardGray};
+  padding: 5px 0;
+  margin-bottom: 5px;
 `;
 
 const Lists = styled.ul`

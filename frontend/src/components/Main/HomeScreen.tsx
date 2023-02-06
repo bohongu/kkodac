@@ -74,52 +74,7 @@ const Jeju = () => {
           <Logout onClick={logoutHandler}>로그아웃</Logout>
         </Nav>
       </NavWapper>
-
       <Map />
-      <Slider>
-        <SliderHeader>
-          <h1>연인과 함께 가면 좋은 곳</h1>
-          <NextArrow onClick={nextSlide}>
-            <BsFillArrowRightCircleFill />
-          </NextArrow>
-        </SliderHeader>
-        <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
-          <Line
-            variants={sliderVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            transition={{ type: 'tween', duration: 1 }}
-            key={index}
-          >
-            {springPosts &&
-              springPosts
-                .slice(offset * index, offset * index + offset)
-                .map((post) => (
-                  <ThumbNail
-                    variants={HoverVariants}
-                    whileHover="hover"
-                    key={post.postId}
-                    bgphoto={post.fileMappers[0].file.fileUrl}
-                    onClick={() =>
-                      postDetailHandler(post.regionId.name, post.postId)
-                    }
-                    layoutId={post.postId}
-                  >
-                    <Content variants={ContentVariants}>
-                      <h1>{post.title}</h1>
-                      <h4>{post.createdAt.slice(0, 10)}</h4>
-                      <h2>{post.regionId.name}</h2>
-                      <h3>
-                        <span>❤</span>&nbsp;{post.likes.length}
-                      </h3>
-                    </Content>
-                  </ThumbNail>
-                ))}
-          </Line>
-        </AnimatePresence>
-      </Slider>
-      <AnimatePresence></AnimatePresence>
     </MainWrapper>
   );
 };
@@ -130,87 +85,8 @@ const MainWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 100vh;
   background: ${(props) => props.theme.colors.skyblue};
-`;
-
-const Slider = styled.div`
-  position: relative;
-  width: 90%;
-  margin-top: 30px;
-  margin-bottom: 350px;
-`;
-
-const SliderHeader = styled.header`
-  display: flex;
-  margin-bottom: 10px;
-  justify-content: space-between;
-  h1 {
-    font-size: 28px;
-    color: ${(props) => props.theme.colors.ivory};
-    padding-bottom: 10px;
-    border-bottom: 3px solid ${(props) => props.theme.colors.ivory};
-  }
-`;
-
-const NextArrow = styled.button`
-  font-size: 28px;
-  ${(props) => props.theme.flex.flexCenter}
-  border:none;
-  background: none;
-  color: ${(props) => props.theme.colors.ivory};
-  &:hover {
-    color: #ffec99;
-  }
-`;
-
-const Line = styled(motion.div)`
-  position: absolute;
-  width: 100%;
-  display: grid;
-  gap: 5px;
-  grid-template-columns: repeat(5, 1fr);
-`;
-
-const ThumbNail = styled(motion.div)<{ bgphoto: string }>`
-  height: 300px;
-  border-radius: 10px;
-  background-image: url(${(props) => props.bgphoto});
-  background-size: cover;
-  background-position: center center;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-  cursor: pointer;
-`;
-
-const Content = styled(motion.div)`
-  padding: 10px;
-  height: 120px;
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-  background: #f1f3f5;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-  opacity: 0;
-  h1 {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-  h2 {
-    font-size: 12px;
-    margin-bottom: 10px;
-  }
-  h3 {
-    display: flex;
-    align-items: center;
-    justify-content: end;
-    span {
-      color: ${(props) => props.theme.colors.red};
-    }
-  }
-  h4 {
-    margin-bottom: 10px;
-    font-size: 10px;
-  }
 `;
 
 const NavWapper = styled.div`

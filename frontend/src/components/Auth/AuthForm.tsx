@@ -193,12 +193,17 @@ const AuthButton = styled.button`
   border: none;
   font-family: Neo;
   border-radius: 5px;
+  font-weight: bold;
+  background: ${(props) => props.theme.colors.gray};
+  &:hover {
+    background: ${(props) => props.theme.colors.hardGray};
+  }
 `;
 
 const AuthToggle = styled.div`
   margin-top: 10%;
   cursor: pointer;
   &:hover {
-    color: ${(props) => props.theme.colors.harderGreen};
+    color: ${(props) => props.theme.colors.hardGray};
   }
 `;
