@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { loggedInState, newAcountState } from '../../recoil/atoms';
 import { theme } from '../../styles/theme';
 import { useMutation } from 'react-query';
-import { currentUser, accessToken } from './../../recoil/atoms';
+import { currentUser, accessToken } from '../../recoil/atoms';
 import { signUp, login, BASE_URL } from '../../api/api';
 import axios from 'axios';
 

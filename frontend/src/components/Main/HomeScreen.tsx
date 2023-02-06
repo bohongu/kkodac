@@ -1,45 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Map from './Map';
 import styled from 'styled-components';
-import { motion, AnimatePresence } from 'framer-motion';
-import { BsFillArrowRightCircleFill } from 'react-icons/bs';
-import {
-  ContentVariants,
-  HoverVariants,
-  sliderVariants,
-} from '../../utils/variants';
-import { useQuery } from 'react-query';
-import { getPostTag } from '../../api/api';
-import { IRecommendPost } from '../../utils/interface';
-import { useNavigate, Link } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { currentUser } from '../../recoil/atoms';
-import { loggedInState, accessToken } from './../../recoil/atoms';
+import { loggedInState, accessToken } from '../../recoil/atoms';
+import { Link } from 'react-router-dom';
 
 const Jeju = () => {
   const cUser = useRecoilValue(currentUser);
-
-  const { data: springPosts } = useQuery<IRecommendPost[]>('recommend', () =>
-    getPostTag('제발'),
-  );
-  const navigate = useNavigate();
-
-  const offset = 5;
-  const [index, setIndex] = useState(0);
-  const [leaving, setLeaving] = useState(false);
-  const nextSlide = () => {
-    if (leaving) return;
-    toggleLeaving();
-    const totalData = springPosts!.length;
-    const maxSlide = Math.floor(totalData / offset) - 1;
-    setIndex((prev) => (prev === maxSlide ? 0 : prev + 1));
-  };
-  const toggleLeaving = () => setLeaving((prev) => !prev);
-
-  const postDetailHandler = (region: string, postId: string) => {
-    navigate(`/tour/${region}/${postId}`);
-  };
-
   const logout = useSetRecoilState(loggedInState);
   const setCurrentUser = useSetRecoilState(currentUser);
   const setAccessToken = useSetRecoilState(accessToken);

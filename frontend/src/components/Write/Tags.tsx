@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import { TiDelete } from 'react-icons/ti';
 import { useRecoilState } from 'recoil';
-import { selectedTagState } from './../../recoil/atoms';
+import { selectedTagState } from '../../recoil/atoms';
 
 const Tag = () => {
   const [tag, setTag] = useState('');

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { svgVariants } from '../../utils/variants';
 import { useQuery } from 'react-query';
 import { getWeather } from '../../api/api';
-import LoadingSpinner from './../ui/LoadingSpinner';
+import LoadingSpinner from '../ui/LoadingSpinner';
 import logo from '../../assets/images/logo2.png';
 import background from '../../assets/images/background.png';
 import sun from '../../assets/images/weather/sun.png';
