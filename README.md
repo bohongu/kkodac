@@ -10,15 +10,15 @@
 
 ## 목차
 
-☘️ **[기능](https://github.com/bohongu/kkodac/edit/main/README.md#%EA%B8%B0%EB%8A%A5)**
+☘️ **[기능](https://github.com/bohongu/kkodac#%EA%B8%B0%EB%8A%A5)**
 
-☘️ **[기술 스택](https://github.com/bohongu/kkodac/edit/main/README.md#%EA%B8%B0%EC%88%A0-%EC%8A%A4%ED%83%9D)**
+☘️ **[기술 스택](https://github.com/bohongu/kkodac/bohongu/README.md#%EA%B8%B0%EC%88%A0-%EC%8A%A4%ED%83%9D)**
 
-☘️ **[아키텍처](https://github.com/bohongu/kkodac/edit/main/README.md#%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98)**
+☘️ **[아키텍처](https://github.com/bohongu/kkodac/bohongu/README.md#%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98)**
 
-☘️ **[ERD](https://github.com/bohongu/kkodac/edit/main/README.md#erd)**
+☘️ **[ERD](https://github.com/bohongu/kkodac/bohongu/README.md#erd)**
 
-☘️ **[팀 소개](https://github.com/bohongu/kkodac/edit/main/README.md#%ED%8C%80-%EC%86%8C%EA%B0%9C)**
+☘️ **[팀 소개](https://github.com/bohongu/kkodac/bohongu/README.md#%ED%8C%80-%EC%86%8C%EA%B0%9C)**
 
 <br/>
 
