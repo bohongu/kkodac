@@ -86,7 +86,7 @@
 ### **🍊** **글 상세 페이지**
 
 <p align="center">
-<img width="95%" src="https://user-images.githubusercontent.com/81624537/217543497-c7889d8a-8d7d-40f1-b6af-0acd2a05092d.gif" />
+<img width="95%" src="https://user-images.githubusercontent.com/81624537/218298055-a63d4ff9-8ef0-443c-964a-bd8aefee372d.gif" />
 </p>
 
 - 글 상세 정보
@@ -121,7 +121,7 @@
 ## 기술 스택
 
 <p align="center">
-<img width="83%" src="https://user-images.githubusercontent.com/81624537/217549497-e1567390-3a80-4105-90e6-575eb1ba56a4.png" />
+<img width="83%" src="https://user-images.githubusercontent.com/81624537/218297933-0bb50e6c-bfc5-4478-ab80-1831f1491b64.png" />
 </p>
 
 <br/>
