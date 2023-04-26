@@ -4,13 +4,7 @@ import * as winston from 'winston';
 export const winstonLogger = WinstonModule.createLogger({
   transports: [
     new winston.transports.Console({
-      level:
-        'local' === process.env.NODE_ENV
-          ? 'silly'
-          : 'development' === process.env.NODE_ENV
-          ? 'debug'
-          : 'info',
-
+      level: 'silly',
       format: winston.format.combine(
         winston.format.timestamp(),
         winston.format.errors({ stack: true }),

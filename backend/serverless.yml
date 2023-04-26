@@ -3,39 +3,48 @@ service: kkodac
 plugins:
   - serverless-plugin-optimize
   - serverless-offline
+  - serverless-dotenv-plugin
+  - serverless-apigw-binary
+  # - serverless-plugin-include-dependencies
 
 provider:
   name: aws
   runtime: nodejs14.x
   region: ap-northeast-2
   stage: dev
+  timeout: 30
   apiGateway:
     binaryMediaTypes:
       - '*/*'
 
 functions:
-  main:
-    handler: 'dist/src/lambda.handler'
-    # vpc:
-    #   {
-    #     'securityGroupIds': ['sg-05da46f2f44b48ad9'],
-    #     'subnetIds':
-    #       [
-    #         'subnet-007817d771ed6f850',
-    #         'subnet-041dc5434ed161647',
-    #         'subnet-0984ae3183bc55be8',
-    #         'subnet-0c0140935e3112840',
-    #       ],
-    #   }
-    events:
-      - http:
-          method: any
-          path: /{any+}
+  main: ${file(env.yml):dev}
 
 package:
   individually: true
+  # excludeDevDependencies: false
+  # patterns:
+  #   - '!node_modules/**'
+  #   - '../config'
 
 custom:
   serverless-offline:
     httpPort: 3049
     lambdaPort: 3002
+  apigwBinary:
+    types: #list of mime-types
+      - '*/*'
+
+  # optimize:
+  #   external:
+  #     [
+  #       'bcrypt',
+  #       '@mapbox/node-pre-gyp',
+  #       'nopt',
+  #       'npmlog',
+  #       'inherits',
+  #       'util-deprecate',
+  #       'delegates',
+  #       'console-control-strings',
+  #     ]
+  #   includePaths: ['node_modules/bcrypt', 'node_modules/@mapbox']

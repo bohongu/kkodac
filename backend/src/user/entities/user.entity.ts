@@ -1,33 +1,46 @@
 import { Exclude } from 'class-transformer';
+import { File } from 'src/file/entities/file.entity';
+import { Like } from 'src/like/entities/like.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
   Index,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { replaceAll } from 'src/utils/uuid.util';
-import { File } from 'src/file/entities/file.entity';
 
-@Entity({ name: 'USER_TB' })
+@Entity({ name: 'user_tb' })
 export class User {
-  @Exclude()
-  @PrimaryGeneratedColumn('increment', { comment: 'rowId' })
+  @PrimaryGeneratedColumn('increment', {
+    type: 'bigint',
+    comment: 'rowId',
+    unsigned: true,
+  })
   _id: number;
 
   @Index({ unique: true })
   @Column({
     name: 'user_id',
+    comment: '유저 UUID',
     type: 'varchar',
     length: 50,
-    comment: '유저 UUID',
     nullable: false,
   })
   userId: string = uuidv4();
+
+  @Column({ nullable: true })
+  kakaoAccount: string;
+
+  @Column({ nullable: true })
+  googleAccount: string;
+
+  @Column({ type: 'text', nullable: true })
+  refreshToken: string;
 
   @OneToOne(() => File, (file) => file, {
     createForeignKeyConstraints: false,
@@ -39,15 +52,28 @@ export class User {
   })
   fileId: File;
 
+  @OneToMany(() => Like, (like) => like.user)
+  likes: Like[];
+
+  @Column({
+    name: 'social_file_id',
+    type: 'varchar',
+    length: 100,
+    comment: '유저 비밀번호',
+    nullable: true,
+  })
+  socialFileId: string;
+
   @Column({
     name: 'password',
     type: 'varchar',
-    length: 40,
+    length: 100,
     comment: '유저 비밀번호',
-    nullable: false,
+    nullable: true,
   })
   password: string;
 
+  @Index({ unique: true })
   @Column({
     name: 'user_name',
     type: 'varchar',
@@ -55,7 +81,7 @@ export class User {
     comment: '유저 아이디',
     nullable: false,
   })
-  userName: string;
+  username: string;
 
   @Column({
     name: 'nickname',
@@ -77,7 +103,7 @@ export class User {
 
   @CreateDateColumn({
     name: 'created_at',
-    comment: '등록일',
+    comment: '생성일',
     type: 'datetime',
   })
   createdAt: Date;
